@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^(v\d+[uz]\.[A-Za-z0-9\-_]+)/?$ index.php?dna=$1 [QSA,L]
