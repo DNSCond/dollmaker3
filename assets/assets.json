@@ -1,1 +1,120 @@
-{"categories": ["body", "Clothes", "Clothes", "Clothes", "Clothes", "Clothes", "hats", "hats", "character"], "global": {"Legacy": {"default": {"body": {"001": {"latestVersion": 1, "name": "Legacy dress", "cost": 0, "zIndex": 0, "private": false, "storeReq": [], "requirements": [], "incompatibleWidth": [], "anomalies": {}}}, "Clothes": {"001": {"latestVersion": 1, "name": "\"Tariffica\" dress", "cost": 50, "zIndex": 0, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {}}, "002": {"latestVersion": 1, "name": "Dress Pattern 1", "cost": 25, "zIndex": 0, "private": true, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {}}, "003": {"latestVersion": 1, "name": "long cape", "cost": 50, "zIndex": 0, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {"01": ["back"]}}, "004": {"latestVersion": 1, "name": "backdress", "cost": 50, "zIndex": 0, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": ["Legacy/default/Clothes/001v01"], "anomalies": {}}, "005": {"latestVersion": 1, "name": "Wings", "cost": 50, "zIndex": 0, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {"01": ["back"]}}}, "hats": {"001": {"latestVersion": 1, "name": "car ears", "cost": 50, "zIndex": 0, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {}}, "002": {"latestVersion": 1, "name": "bow", "cost": 50, "zIndex": 10, "private": false, "storeReq": [], "requirements": ["Legacy/default/body/001v01"], "incompatibleWidth": [], "anomalies": {}}}}}, "Sticker": {"default": {"character": {"001": {"latestVersion": 1, "name": "Kuga-Ai-Basic", "cost": false, "zIndex": 0, "private": false, "storeReq": [], "requirements": [], "incompatibleWidth": [], "anomalies": {}}}}}}}
+{
+  "classic": {
+    "0000-f--normal": {
+      "name": "Legacy dress",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "anomalies": {}
+    },
+    "0001-f--normal": {
+      "name": "\"Tariffica\" dress",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {},
+      "$assetId": [
+        "Legacy/default/Clothes/004v01"
+      ]
+    },
+    "0002-f--normal": {
+      "private": true,
+      "name": "Dress Pattern 1",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 25,
+      "anomalies": {}
+    },
+    "0003-f--normal": {
+      "name": "long cape",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {
+        "01": [
+          "back"
+        ]
+      }
+    },
+    "0004-f--normal": {
+      "name": "backdress",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {},
+      "incompatibleWidth": [
+        "Legacy/default/Clothes/001v01"
+      ]
+    },
+    "0005-f--normal": {
+      "name": "Wings",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {
+        "01": [
+          "back"
+        ]
+      }
+    },
+    "0006-f--normal": {
+      "name": "car ears",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {},
+      "zIndex": 0
+    },
+    "0007-f--normal": {
+      "name": "bow",
+      "tag": [
+        "Legacy"
+      ],
+      "latestVersion": 1,
+      "requirements": [
+        "Legacy/default/body/001v01"
+      ],
+      "storeReq": [],
+      "cost": 50,
+      "anomalies": {},
+      "zIndex": 10
+    }
+  }
+}

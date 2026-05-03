@@ -1,7 +1,9 @@
 <?php use JSONWT\JWT;
-use DataViewed\DataView;
+use DataViewed\BinaryView;
+use function HashApi\sha384Base64;
 
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/JSONWT.php";
+require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
 require_once "BinaryHelper.php";
 
 // must match the one in /gallery/
@@ -24,8 +26,14 @@ if (array_key_exists('token', $_GET))
 if ($GLOBALS['__FILE__'] !== __FILE__)
     header('content-type: image/svg+xml');
 require_once 'PathSVG.php';
-ob_start(fn(string $string): string => preg_replace('/\\s+/', " ", $string));
-if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+ob_start(function (string $string): string {
+    $return = preg_replace('/\\s+/', " ", $string);
+    $hash = 'sha384b64-' . sha384Base64($return);
+    header("hashtag: \"$hash\"");
+    return $return;
+});
+
 $isTransparent = false;
 if (isset($GLOBALS['CharacterTransparent'])) {
     $isTransparent = $GLOBALS['CharacterTransparent'];
@@ -33,9 +41,35 @@ if (isset($GLOBALS['CharacterTransparent'])) {
 $isTransparent = !$isTransparent;
 $opacity = 0 ? 1 : 0.5;
 $stroke = 1;
+$fullDirection = '';
 {
+    $direction = 'fr';
     if (preg_match('/^v(\\d+)(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
-        $dataView = new DataView($matches[3],);
+        $dataView = BinaryView::fromBase64URL($matches[3]);
+        $offset = 7 * 4;
+        // F is Front, R is Right, L is Left, B is Back
+        $dirByte = $dataView->getUint8($offset);
+        $frontBack = (bool)($dirByte & (1 << 0));
+        $leftRight = (bool)($dirByte & (1 << 1));
+        $deg45 = (bool)($dirByte & (1 << 2));
+        $direction = ($frontBack ? 'b' : 'f') . ($leftRight ? 'l' : 'r');
+        if ($deg45) {
+            $direction = match ($direction) {
+                'bl' => 'b-',
+                'br' => '-r',
+                'fl' => '-l',
+                'fr' => 'f-',
+            };
+        }
+        header('Character-Direction: ' . ($fullDirection = trim((match ($direction[0]) {
+                            'f' => 'Front',
+                            'b' => 'Back',
+                            default => '-',
+                        }) . '-' . (match ($direction[1]) {
+                            'r' => 'Right',
+                            'l' => 'Left',
+                            default => '-',
+                        }), '-')));
     } else {
         $dataView = null;
     }
@@ -58,7 +92,6 @@ $stroke = 1;
             <path d="M 0 896 L 800 1000 L 800 1280 L 0 1280 Z" fill="<?= $pants ?>" class="bgc"/>
             <path d="M 600 0 L 400 1280 L 800 1280 L 800 0 Z" fill="<?= $shoes ?>" class="bgc"/>
         </g>
-        <!--<image x="-100" y="0" width="1024" height="1236" href="-ignore/1000005903.webp" opacity="0.7"/>-->
         <!--<?php } ?>-->
     </g>
     <g><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
@@ -73,11 +106,7 @@ $stroke = 1;
             <rect x="0" y="$DownY" width="800" height="$width" class="wall down"/>
             SVG;
         })() . "\n" ?></g>
-    <g>
-        <!--<?= ' PHPX -->';
-        if (!$nowatermark) {
-            require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker2/watermark.svg.php";
-        }
-        echo '<!-- PHPX ' ?>-->
-    </g>
+    <g><?= '<!-- PHPX -->';
+        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker2/watermark.svg.php";
+        echo '<!-- PHPX -->' ?></g>
 </svg>
