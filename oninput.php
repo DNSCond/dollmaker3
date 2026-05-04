@@ -2,7 +2,6 @@
 use function DataViewed\RGBToRGBA32;
 
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/createHead2.php";
-header('content-type: application/json');
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 global $colors;
@@ -10,9 +9,10 @@ $keys = array_keys($colors);
 if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
     implode(';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
         $keys)) . ';', $matches)) {
-    $result = new BinaryView((count($keys) * 4) + 1);
-    foreach ($keys as $index => $_colorKey)
+    $result = new BinaryView((count($keys) * 4) + 1 + 1);
+    foreach ($keys as $index => $_colorKey) {
         RGBToRGBA32($result, (int)hexdec($matches[$index + 1]), $index * 4);
+    }
     $b111 = 0b100;
     if (array_key_exists('direction', $_POST)) {
         if (preg_match('/^(Front|Back)-(Left|Right)$/D', "{$_POST['direction']}", $matched)) {

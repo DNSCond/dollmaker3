@@ -1,34 +1,20 @@
-<?php use JSONWT\JWT;
-use DataViewed\BinaryView;
-use function HashApi\sha384Base64;
+<?php use function HashApi\sha384Base64;
 
-require_once "{$_SERVER['DOCUMENT_ROOT']}/require/JSONWT.php";
+header('cache-control: public, max-age=15, s-max-age=15');
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
-require_once "BinaryHelper.php";
-
-// must match the one in /gallery/
-const secret = '026c56c425825f58b24b96f3ea54dfa46b563a4139687039e837e2824868c75bc5fb6ca2e07e41be46b830faeedb0c99a6c42ed12d6e14a39748bdf55802e827ca5526';
-
-/**
- * @param string $token
- * @return false|array
- */
-function validateToken(string $token): false|array
-{
-
-    return new JWT(secret)->validate($token);
-}
+//$GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
+require_once "preprocessor.php";
 
 $nowatermark = str_starts_with($_SERVER['HTTP_REFERER'], 'https://antrequest.nl');
-if (array_key_exists('token', $_GET))
-    if ($token = validateToken($_GET['token']))
-        if ($token['nowatermark']) $nowatermark = true;
+if (!isset($GLOBALS['__FILE__']))
+    $GLOBALS['__FILE__'] = null;
 if ($GLOBALS['__FILE__'] !== __FILE__)
     header('content-type: image/svg+xml');
 require_once 'PathSVG.php';
 if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 ob_start(function (string $string): string {
     $return = preg_replace('/\\s+/', " ", $string);
+    $return = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $return) . '</svg>';
     $hash = 'sha384b64-' . sha384Base64($return);
     header("hashtag: \"$hash\"");
     return $return;
@@ -41,39 +27,7 @@ if (isset($GLOBALS['CharacterTransparent'])) {
 $isTransparent = !$isTransparent;
 $opacity = 0 ? 1 : 0.5;
 $stroke = 1;
-$fullDirection = '';
 {
-    $direction = 'fr';
-    if (preg_match('/^v(\\d+)(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
-        $dataView = BinaryView::fromBase64URL($matches[3]);
-        $offset = 7 * 4;
-        // F is Front, R is Right, L is Left, B is Back
-        $dirByte = $dataView->getUint8($offset);
-        $frontBack = (bool)($dirByte & (1 << 0));
-        $leftRight = (bool)($dirByte & (1 << 1));
-        $deg45 = (bool)($dirByte & (1 << 2));
-        $direction = ($frontBack ? 'b' : 'f') . ($leftRight ? 'l' : 'r');
-        if ($deg45) {
-            $direction = match ($direction) {
-                'bl' => 'b-',
-                'br' => '-r',
-                'fl' => '-l',
-                'fr' => 'f-',
-            };
-        }
-        header('Character-Direction: ' . ($fullDirection = trim((match ($direction[0]) {
-                            'f' => 'Front',
-                            'b' => 'Back',
-                            default => '-',
-                        }) . '-' . (match ($direction[1]) {
-                            'r' => 'Right',
-                            'l' => 'Left',
-                            default => '-',
-                        }), '-')));
-    } else {
-        $dataView = null;
-    }
-    require_once 'getColor.php';
     global $colors;
     $shoes = $colors['shoes'];
     $pants = $colors['pants'];
@@ -94,7 +48,7 @@ $fullDirection = '';
         </g>
         <!--<?php } ?>-->
     </g>
-    <g><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
+    <g class="!$nowatermark"><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
     <g fill="#ae782f"><?= (function () {
             $width = 20;
             $RightX = 800 - $width;
@@ -106,7 +60,33 @@ $fullDirection = '';
             <rect x="0" y="$DownY" width="800" height="$width" class="wall down"/>
             SVG;
         })() . "\n" ?></g>
-    <g><?= '<!-- PHPX -->';
+    <g class="PHPX"><?= '<!-- PHPX -->';
         if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker2/watermark.svg.php";
-        echo '<!-- PHPX -->' ?></g>
+        global $direction;
+        foreach ($GLOBALS['assets-'] as $asset) {
+            $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+            ob_start(fn(string $string): string => str_replace('data-opts=""',
+                    "data-asset-id=\"$assetId\" data-asset-options=\"{$asset['opt']}\"", $string));
+            $inclusionResult = (bool)include_once __DIR__ . "/assets/anime/$assetId-$direction-.svg.php";
+            if (!$inclusionResult) echo "<g data-opts=\"\"/>";
+            ob_end_flush();
+        }
+        echo '<!-- PHPX -->';
+        function json_fromArray2(mixed $json, bool|int $JSON_PRETTY_PRINT = true,
+                                 bool  $insertToHTML = false): false|string
+        {
+            $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+            if ($insertToHTML) $options |= JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_TAG | JSON_HEX_QUOT;
+            if (is_int($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT >= 0) {
+                $options |= JSON_PRETTY_PRINT;
+                $json = json_encode($json, $options);
+                return preg_replace_callback('/^ +/m', (function (array $matches)
+                use ($JSON_PRETTY_PRINT): string {
+                    return str_repeat(' ', (strlen($matches[0]) / 4) * $JSON_PRETTY_PRINT);
+                }), $json);
+            } elseif (is_bool($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT) {
+                $options |= JSON_PRETTY_PRINT;
+            }
+            return json_encode($json, $options);
+        } ?></g>
 </svg>

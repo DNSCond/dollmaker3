@@ -23,6 +23,21 @@ class BinaryView
         return $this->string;
     }
 
+    public function resize(int $to): bool
+    {
+        if ($to < 0) return false;
+
+        $currentLength = strlen($this->string);
+
+        if ($to > $currentLength) {
+            $this->string = str_pad($this->string, $to, "\x00");
+        } else {
+            $this->string = substr($this->string, 0, $to);
+        }
+
+        return true;
+    }
+
     public function toBase64(): string
     {
         return base64_encode($this->string);
@@ -52,14 +67,14 @@ class BinaryView
     function setUint8(int $offset, int $byte): bool
     {
         if ($byte < 0 || $byte > 0xfF) return false;
-        if ($offset > strlen($this->string) || $offset < 0) return false;
+        if ($offset >= strlen($this->string) || $offset < 0) return false;
         $this->string[$offset] = pack('C', $byte);
         return true;
     }
 
     function getUint8(int $offset): false|int
     {
-        if ($offset > strlen($this->string) || $offset < 0) return false;
+        if ($offset >= strlen($this->string) || $offset < 0) return false;
         $bytes = substr($this->string, $offset, 1);
         return +unpack('C', $bytes)[1];
     }
@@ -77,7 +92,7 @@ class BinaryView
 
     function getUint16(int $offset, bool $littleEndian = true): false|int
     {
-        if ($offset + 1 > strlen($this->string) || $offset < 0) return false;
+        if ($offset < 0 || $offset + 1 >= strlen($this->string)) return false;
         $bytes = substr($this->string, $offset, 2);
         return +unpack($littleEndian ? 'v' : 'n', $bytes)[1];
     }
@@ -105,7 +120,7 @@ class BinaryView
         return strlen($this->string);
     }
 
-    public function asArray(): false|array
+    public function asArray(): array
     {
         return array_values(unpack('C*', $this->string));
     }
@@ -117,7 +132,11 @@ class BinaryView
 
     static function fromBase58(string $bytes): self
     {
-        return new self(base58_encode($bytes));
+        try {
+            return new self(base58_decode($bytes));
+        } catch (Exception) {
+            return new self(false);
+        }
     }
 }
 
@@ -192,19 +211,24 @@ function base58_decode($input): string
     return str_repeat("\x00", $nLeadingZeros) . $decoded;
 }
 
-
 function RGBA32ToRGB(BinaryView $dataview, int $offset): int
 {
-    $r = $dataview->getUint8($offset);
-    $g = $dataview->getUint8(++$offset);
-    $b = $dataview->getUint8(++$offset);
-    return ($r << 16) | ($g << 8) | $b;
+    // Read the full 32-bit integer (RGBA)
+    // true = Little Endian (ABGR in memory), false = Big Endian (RGBA in memory)
+    $rgba = $dataview->getUint32($offset);
+
+    // If memory is RGBA:
+    // $rgba >> 8  strips the 'A' and gives you 0x00RRGGBB
+    return ($rgba >> 8) & 0xFFFFFF;
 }
 
 function RGBToRGBA32(BinaryView $dataview, int $color, int $offset): void
 {
-    $dataview->setUint8($offset, ($color >> 16) & 0xFF);
-    $dataview->setUint8(++$offset, ($color >> 8) & 0xFF);
-    $dataview->setUint8(++$offset, $color & 0xFF);
-    $dataview->setUint8(++$offset, 0xFF);
+    // Assuming $color is 0xRRGGBB
+    // We shift it left 8 bits to make room for Alpha: 0xRRGGBB00
+    // Then OR it with 0xFF to set Alpha: 0xRRGGBBFF
+    $rgba = ($color << 8) | 0xFF;
+
+    // Write the full 32-bit integer
+    $dataview->setUint32($offset, $rgba);
 }

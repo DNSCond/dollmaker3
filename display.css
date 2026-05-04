@@ -1,0 +1,12 @@
+:host {
+    border: 2px solid gray;
+    display: inline-block;
+    margin: 1em 0 1em 1em;
+}
+
+.store-img {
+    width: 200px;
+    height: auto;
+    border-top: 2px solid grey;
+    display: block;
+}
