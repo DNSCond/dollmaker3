@@ -25,10 +25,14 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
             default => 0,
         };
     }
+    if (array_key_exists('opaque', $_POST)) {
+        header('dev-result: ' . decbin(+(bool)$_POST['opaque'] << 3));
+        $b111 |= +(bool)$_POST['opaque'] << 3;
+    }
     $result->setUint8(count($keys) * 4, $b111);
     http_response_code(303);
     header("dataview-length:{$result->getLength()}");
-    header("Location: /dollmaker3/v1u.{$result->toBase64URL()}/");
+    header("Location: /dollmaker3/v1u.{$result->toBase64URL()}");
     exit;
 }
 

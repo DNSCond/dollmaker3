@@ -1,10 +1,11 @@
 <?php /** @noinspection HtmlUnknownTarget */
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/createHead2.php";
 
-use ANTHeader\ANTNavIStyle;
-use ANTHeader\ANTNavLinkTag;
-use ANTHeader\ANTNavOption;
 use DataViewed\BinaryView;
+use ANTHeader\ANTNavIStyle;
+use ANTHeader\ANTNavOption;
+use ANTHeader\ANTNavLinkTag;
+use ANTHeader\ANTNavArbitraryHTML;
 use function ANTHeader\ANTNavHome;
 use function ANTHeader\create_head2;
 use function Helpers\htmlspecialchars12;
@@ -13,26 +14,30 @@ $GLOBALS['canonical_redir_path'] = '/dollmaker3/';
 require_once "preprocessor.php";
 global $colors;
 $links = create_head2('Character Customizer Version5', [
-        'base' => '/dollmaker3/',], [
-        new ANTNavLinkTag('stylesheet', [
-                'styles.css', 'ddDL-table.css',
-        ]),// new ANTNavIStyle('.divs{max-width:650px}'),
-        new ANTNavIStyle('div.divs.nav-home{max-width:unset;}'),
-        new ANTNavIStyle('h1{margin-top:0;}'),
+        'base' => '/dollmaker3/', 'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here'], [
+        new ANTNavLinkTag('stylesheet', ['styles.css', 'ddDL-table.css',]),
+        new ANTNavIStyle('div.divs.nav-home{max-width:unset;}'), new ANTNavIStyle('h1{margin-top:0;}'),
         new ANTNavLinkTag('canonical', "http://localhost/dollmaker3/{$GLOBALS['canonicalFullString']}"),
-    //new ANTNavLinkTag('canonical', "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}/"),
+    //new ANTNavLinkTag('canonical', "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}"),
+        new ANTNavArbitraryHTML('open-graph',
+                "<meta property=og:description content=\"ANTRequest.nl's Character Creator, create your ANTRequest.nl's Character lookalike here\">" .
+                "<meta property=og:title content=\"Character Customizer Version5\">" .
+                "<meta property=og:url content=https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}>" .
+                "<meta property=og:image content=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING']) . '"' .
+                "<meta property=og:image:width content=800><meta property=og:image:height content=1280>" .
+                "<meta property=og:image:type content=image/svg+xml>"),
+        new ANTNavArbitraryHTML('preload','<link rel=preload href=ddDL-table.css as=style><link rel=preload href=display.css as=style>'),
 ], [ANTNavHome(),
         new ANTNavOption('/dollmaker3/', '/dollmaker2/icon/endpoint.php?preset=Bee',
                 'dollmakerV4 ANT', new Color('a68300'),
                 new Color('fff100'), true),
 ]); ?>
 <div class=divs>
-    <h1><a href=?>Character Customizer Version4 of ANT.Ractoc.com</a></h1>
+    <h1><a href=?>Character Customizer Version5</a></h1>
     <div><p>copyright &copy; all rights reversed</div>
     <form method=post action=oninput.php>
-        <div><?= /*"<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
-            . "\" id=main-svg width=800 height=1280 alt='the result'>" .*/
-            (function () use ($colors) {
+        <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
+            . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($colors) {
                 $thead = '<table style=display:inline-table><thead><tr><th scope=col>Description' .
                         '<th scope=col>Color Selector<th scope=col>Original Selection</thead>';
                 $result = '';
@@ -40,7 +45,8 @@ $links = create_head2('Character Customizer Version5', [
                     $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name id=color-$name" .
                             " value=\"$color\" size=7 type=color><td style=background-color:$color><span>$color</span>";
                 }
-                return "$thead<tbody>$result</tbody><tfoot><tr><td colspan=3><button type=submit>apply colors</button>";
+                return "$thead<tbody>$result</tbody><tfoot><tr><td colspan=3><label>\$opaque <input ".
+                "type=checkbox name=opaque></label><tr><td colspan=3><button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
         <div hidden><?= (function () {
                 //$result = '';foreach (['Front', 'Back', 'Right', 'Left'] as $z)
@@ -60,7 +66,7 @@ $links = create_head2('Character Customizer Version5', [
         <span><slot name=accessory-name>Accessory Name</slot></span>
     </div>
     <div><?= /** @noinspection RequiredAttributes */
-        "<img data-img-src alt=\"Equip \$AccessoryName\" width=800 height=1280 class=store-img>"; ?></div>
+        "<img data-img-src alt=\"Equip \$AccessoryName\" width=800 height=1280 class=store-img>" ?></div>
     <dl class=descLi style=border-bottom:none;border-left:none;border-right:none>
         <div data-key=cost>
             <dt>cost</dt>

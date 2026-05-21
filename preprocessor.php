@@ -3,11 +3,12 @@ use function DataViewed\RGBToRGBA32;
 
 require_once "BinaryHelper.php";
 
-$TChar = true;
+$TChar = false;
 $direction = 'f-';
 $assets = array();
 $fullDirection = '';
 $dirByte = 0b100;
+$opaque = false;
 if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
     if (+$matches[1] !== 1) {
         http_response_code(400);
@@ -20,6 +21,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     $frontBack = (bool)($dirByte & (1 << 0));
     $leftRight = (bool)($dirByte & (1 << 1));
     $deg45 = (bool)($dirByte & (1 << 2));
+    $opaque = (bool)($dirByte & (1 << 3));
     $direction = ($frontBack ? 'b' : 'f') . ($leftRight ? 'l' : 'r');
     if ($deg45) {
         $direction = match ($direction) {
@@ -73,7 +75,7 @@ foreach ($colors as $color => $value) {
 }
 $i = 0;
 $canonicalColorIndex *= 4;
-$canonicalized->setUint8($canonicalColorIndex++, $dirByte & 0b111);
+$canonicalized->setUint8($canonicalColorIndex++, ($dirByte & 0b111) | ($opaque << 3));
 $canonicalized->setUint8($canonicalColorIndex++, $assetCount);
 foreach ($assets as $asset) {
     $index = $canonicalColorIndex + ($i++ * 3);

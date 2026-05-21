@@ -25,7 +25,7 @@ if (isset($GLOBALS['CharacterTransparent'])) {
     $isTransparent = $GLOBALS['CharacterTransparent'];
 }
 $isTransparent = !$isTransparent;
-$opacity = 0 ? 1 : 0.5;
+$opacity = 1;
 $stroke = 1;
 {
     global $colors;
@@ -35,12 +35,12 @@ $stroke = 1;
     $skin = $arms = $colors['skin'];
     $bgcolor = $secondary = $colors['body'];
     global $bgcolor, $pants, $shoes, $fgcolor, $backgroundColor, $sleeves, $lights, $wheels, $secondary;
-} ?>
+} global $opaque ?>
 <svg width="800" height="1280" viewBox="0 0 800 1280" xmlns="http://www.w3.org/2000/svg">
     <g class="background" stroke-width="0">
         <!--<?php if ($isTransparent) { ?>-->
         <rect width="800" height="1280" fill="#FfFfFf"/>
-        <g opacity="0.7">
+        <g opacity="<?= $opaque ? '1' : '0.7' ?>">
             <rect width="800" height="1280" fill="<?= "$hair" ?>" class="bgc"/>
             <path d="M 0 384 L 800 576 L 800 1280 L 0 1280 Z" fill="<?= $bgcolor ?>" class="bgc"/>
             <path d="M 0 896 L 800 1000 L 800 1280 L 0 1280 Z" fill="<?= $pants ?>" class="bgc"/>
