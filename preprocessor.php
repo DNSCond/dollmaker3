@@ -82,21 +82,14 @@ foreach ($assets as $asset) {
     $canonicalized->setUint8($index + 2, $assetOpt);
 }
 
-$original = $dataView?->toBase64URL();
 $GLOBALS['assets-'] = $assets;
+$original = $dataView?->toBase64URL();
 $GLOBALS['isCanonical'] = ($cDNA = $canonicalized->toBase64URL()) === $original;
 header("T-Canonical-DNAString: $cDNA; isCanonical=?" . (int)($GLOBALS['isCanonical']));
 $GLOBALS['canonicalFullString'] = "v1u." . ($GLOBALS['canonicalB64'] = $cDNA);
 
-$origBytes = $dataView->asArray();
+$origBytes = $dataView?->asArray();
 $canonBytes = $canonicalized->asArray();
-
-foreach ($canonBytes as $i => $byte) {
-    if (!isset($origBytes[$i]) || $origBytes[$i] !== $byte) {
-        header("x-diff: diff at $i: orig=" . ($origBytes[$i] ?? 'null') . " canon=$byte", false);
-        break;
-    }
-}
 if (!$GLOBALS['isCanonical'] && is_string($GLOBALS['canonical_redir_path']) && $original) {
     http_response_code(307);
     header("Location: {$GLOBALS['canonical_redir_path']}{$GLOBALS['canonicalFullString']}");
