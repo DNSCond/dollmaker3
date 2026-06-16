@@ -44,6 +44,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     $maxAssetCount = 50;
     if ($TChar) header('TChar-Direction: ' . ($fullDirection = trim("$y-$x", '-')));
     $assetCount = $dataView->getUint8(++$offset);
+    ++$offset;
     $assetCount = $assetCount === false ? 0 : $assetCount;
     $assetCount = $clamped = max(min($assetCount, $maxAssetCount), 0);
     for ($i = 0; $i < $clamped; $i++) {
@@ -95,4 +96,5 @@ $canonBytes = $canonicalized->asArray();
 if (!$GLOBALS['isCanonical'] && is_string($GLOBALS['canonical_redir_path']) && $original) {
     http_response_code(307);
     header("Location: {$GLOBALS['canonical_redir_path']}{$GLOBALS['canonicalFullString']}");
+    exit;
 }

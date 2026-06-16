@@ -84,9 +84,8 @@ class BinaryView
         if ($byte < 0 || $byte > 0xfFfF) return false;
         if ($offset < 0 || $offset + 1 >= strlen($this->string)) return false;
         $packed = pack($littleEndian ? 'v' : 'n', $byte);
-        for ($i = 0; $i < 2; $i++) {
-            $this->string[$offset + $i] = $packed[$i];
-        }
+        //for ($i = 0; $i < 2; $i++) {$this->string[$offset + $i] = $packed[$i];}
+        $this->string = substr_replace($this->string, $packed, $offset, 2);
         return true;
     }
 
@@ -102,9 +101,8 @@ class BinaryView
         if ($byte < 0 || $byte > 0xfFfFfFfF) return false;
         if ($offset < 0 || $offset + 3 >= strlen($this->string)) return false;
         $packed = pack($littleEndian ? 'V' : 'N', $byte);
-        for ($i = 0; $i < 4; $i++) {
-            $this->string[$offset + $i] = $packed[$i];
-        }
+        //for ($i = 0; $i < 4; $i++) {$this->string[$offset + $i] = $packed[$i];}
+        $this->string = substr_replace($this->string, $packed, $offset, 4);
         return true;
     }
 

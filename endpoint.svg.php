@@ -1,6 +1,7 @@
 <?php use function HashApi\sha384Base64;
 
-header('cache-control: public, max-age=15, s-max-age=15');
+//header('cache-control: public, max-age=15, s-max-age=15');
+header('cache-control: private, max-age=0');
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
 //$GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 require_once "preprocessor.php";
@@ -13,11 +14,11 @@ if ($GLOBALS['__FILE__'] !== __FILE__)
 require_once 'PathSVG.php';
 if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 ob_start(function (string $string): string {
-    $return = preg_replace('/\\s+/', " ", $string);
-    $return = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $return) . '</svg>';
-    $hash = 'sha384b64-' . sha384Base64($return);
+    $string = preg_replace('/\\s+/', " ", $string);
+    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string) . '</svg>';
+    $hash = 'sha384b64-' . sha384Base64($string);
     header("hashtag: \"$hash\"");
-    return $return;
+    return $string;
 });
 
 $isTransparent = false;
@@ -31,6 +32,7 @@ $stroke = 1;
     global $colors;
     $shoes = $colors['shoes'];
     $pants = $colors['pants'];
+    $lights = $colors['lights'];
     $hair = $eyes = $colors['eyes'];
     $skin = $arms = $colors['skin'];
     $bgcolor = $secondary = $colors['body'];
@@ -61,32 +63,30 @@ $stroke = 1;
             SVG;
         })() . "\n" ?></g>
     <g class="PHPX"><?= '<!-- PHPX -->';
-        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker2/watermark.svg.php";
+        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker3/watermark.svg.php";
         global $direction;
-        foreach ($GLOBALS['assets-'] as $asset) {
+        $normal = array();
+        function createAsset(array $asset, string $type = ''): void
+        {
+            global $direction;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(fn(string $string): string => str_replace('data-opts=""',
                     "data-asset-id=\"$assetId\" data-asset-options=\"{$asset['opt']}\"", $string));
-            $inclusionResult = (bool)include_once __DIR__ . "/assets/anime/$assetId-$direction-.svg.php";
-            if (!$inclusionResult) echo "<g data-opts=\"\"/>";
+            if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))
+                $inclusionResult = (bool)include_once __DIR__ . "/store/assets/$assetId-$direction-$type.svg.php";
+            else $inclusionResult = false;
+            if (!$inclusionResult)
+                echo "<g data-opts=\"inclusion-failed\"/>";
             ob_end_flush();
         }
-        echo '<!-- PHPX -->';
-        function json_fromArray2(mixed $json, bool|int $JSON_PRETTY_PRINT = true,
-                                 bool  $insertToHTML = false): false|string
-        {
-            $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-            if ($insertToHTML) $options |= JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_TAG | JSON_HEX_QUOT;
-            if (is_int($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT >= 0) {
-                $options |= JSON_PRETTY_PRINT;
-                $json = json_encode($json, $options);
-                return preg_replace_callback('/^ +/m', (function (array $matches)
-                use ($JSON_PRETTY_PRINT): string {
-                    return str_repeat(' ', (strlen($matches[0]) / 4) * $JSON_PRETTY_PRINT);
-                }), $json);
-            } elseif (is_bool($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT) {
-                $options |= JSON_PRETTY_PRINT;
+
+        foreach ($GLOBALS['assets-'] as $asset) {
+            createAsset($asset, 'Back');
+            $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+            if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-.svg.php")) {
+                $normal[] = $asset;
             }
-            return json_encode($json, $options);
-        } ?></g>
+        }
+        foreach ($normal as $asset) createAsset($asset);
+        echo '<!-- PHPX -->' ?></g>
 </svg>

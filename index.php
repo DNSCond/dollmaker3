@@ -8,7 +8,11 @@ use ANTHeader\ANTNavLinkTag;
 use ANTHeader\ANTNavArbitraryHTML;
 use function ANTHeader\ANTNavHome;
 use function ANTHeader\create_head2;
-use function Helpers\htmlspecialchars12;
+
+function htmlspecialchars12(string $value): string
+{
+    return htmlspecialchars($value, ENT_HTML5 | ENT_QUOTES | ENT_SUBSTITUTE);
+}
 
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/';
 require_once "preprocessor.php";
@@ -17,16 +21,16 @@ $links = create_head2('Character Customizer Version5', [
         'base' => '/dollmaker3/', 'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here'], [
         new ANTNavLinkTag('stylesheet', ['styles.css', 'ddDL-table.css',]),
         new ANTNavIStyle('div.divs.nav-home{max-width:unset;}'), new ANTNavIStyle('h1{margin-top:0;}'),
-        new ANTNavLinkTag('canonical', "http://localhost/dollmaker3/{$GLOBALS['canonicalFullString']}"),
+        new ANTNavLinkTag('canonical', "https://localhost/dollmaker3/{$GLOBALS['canonicalFullString']}"),
     //new ANTNavLinkTag('canonical', "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}"),
         new ANTNavArbitraryHTML('open-graph',
                 "<meta property=og:description content=\"ANTRequest.nl's Character Creator, create your ANTRequest.nl's Character lookalike here\">" .
                 "<meta property=og:title content=\"Character Customizer Version5\">" .
                 "<meta property=og:url content=https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}>" .
-                "<meta property=og:image content=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING']) . '"' .
+                "<meta property=og:image content=\"https://localhost/dollmaker3/endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING']) . '">' .
                 "<meta property=og:image:width content=800><meta property=og:image:height content=1280>" .
                 "<meta property=og:image:type content=image/svg+xml>"),
-        new ANTNavArbitraryHTML('preload','<link rel=preload href=ddDL-table.css as=style><link rel=preload href=display.css as=style>'),
+        new ANTNavArbitraryHTML('preload', '<link rel=preload href=ddDL-table.css as=style><link rel=preload href=display.css as=style>'),
 ], [ANTNavHome(),
         new ANTNavOption('/dollmaker3/', '/dollmaker2/icon/endpoint.php?preset=Bee',
                 'dollmakerV4 ANT', new Color('a68300'),
@@ -35,6 +39,11 @@ $links = create_head2('Character Customizer Version5', [
 <div class=divs>
     <h1><a href=?>Character Customizer Version5</a></h1>
     <div><p>copyright &copy; all rights reversed</div>
+    <script type=application/json is=output-script><?= json_encode([
+                '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
+                'assets' => $GLOBALS['assets-'],
+        ], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
+    <script type=module src=/gallery/JSONScript.js></script>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
             . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($colors) {
@@ -45,8 +54,8 @@ $links = create_head2('Character Customizer Version5', [
                     $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name id=color-$name" .
                             " value=\"$color\" size=7 type=color><td style=background-color:$color><span>$color</span>";
                 }
-                return "$thead<tbody>$result</tbody><tfoot><tr><td colspan=3><label>\$opaque <input ".
-                "type=checkbox name=opaque></label><tr><td colspan=3><button type=submit>apply colors</button>";
+                return "$thead<tbody>$result</tbody><tfoot><tr><td colspan=3><label>\$opaque <input name=opaque" .
+                        " type=checkbox></label><tr><td colspan=3><button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
         <div hidden><?= (function () {
                 //$result = '';foreach (['Front', 'Back', 'Right', 'Left'] as $z)
@@ -81,18 +90,38 @@ $links = create_head2('Character Customizer Version5', [
     $templateContent = preg_replace('/^-->\\s+/', '', $templateContent) ?>-->
 </template>
 <div class=divs><?= "\n";
-    $json = json_decode(file_get_contents(__DIR__ . '/assets/assets.json'), true);
-    foreach ($json['anime'] as $key => $item) {
+    $afterColors = (7 * 4);
+    $filegc = file_get_contents(__DIR__ . '/store/assets.json');
+    if ($filegc) $json = json_decode($filegc, true); else $json = array('failure');
+    echo '<script type=application/json is=output-script>' . json_encode($json, JSON_INVALID_UTF8_SUBSTITUTE) . '</script>';
+    foreach ($json['assets'] as $key => $item) {
         if (array_key_exists('private', $item) && $item['private']) continue;
         $htmlName = htmlspecialchars12($item['name']);
         $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
-        $view->resize((7 * 4) + (2 + 3));
+        $totalAssets = 2; // Or count($your_assets_array)
+        $view->resize($afterColors + 2 + ($totalAssets * 3));
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
 
-        $view->setUint8((7 * 4) + 1, 1); // count
-        $view->setUint16((7 * 4) + 2, +$matches[1]);
-        $view->setUint8((7 * 4) + 3, 210); // options
-        $htmlName .= ' ' . +$matches[1];
+        // 1. Force preserve or set the character direction/global options flag
+        // Use the global $dirByte variable from your decoder script
+        $view->setUint8($afterColors, $GLOBALS['dirByte'] ?? 0b100);
+
+        // 2. Set the Asset Count to 1
+        $view->setUint8($afterColors + 1, 2);
+
+        // 3. Write the Asset ID (takes offsets 30 and 31)
+        $view->setUint16($afterColors + 2, (int)$matches[1]);
+
+        // 4. Write the Asset Option (offset 32)
+        $view->setUint8($afterColors + 4, 0);
+
+        // 5. put the body in it
+        $view->setUint16($afterColors + 5, 1);
+
+        // 4. Write the Asset Option
+        $view->setUint8($afterColors + 7, 0);
+
+        //$htmlName.=' '.+$matches[1];
         $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
         $content = str_replace('data-img-src', "src=\"$img_src\"", $templateContent);
         $content = str_replace('$AccessoryName', $htmlName, $content);
