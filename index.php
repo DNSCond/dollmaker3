@@ -53,14 +53,15 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
                             " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>" .
                             "<td style=background-color:$color><span>$color</span>";
                 }
-                return "$thead<tbody>$result</tbody><tfoot><tr><td colspan=3><label>\$opaque <input name=opaque type" .
-                        "=checkbox $isopaque></label><tr><td colspan=3><button type=submit>apply colors</button>";
+                return "$thead<tbody>$result</tbody><tfoot><tr><td><label>\$opaque <input name=opaque type" .
+                        "=checkbox $isopaque></label><td colspan=2><button type=button class=convertpng>" .
+                        "Convert to PNG</button><tr><td colspan=3><button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
         <div hidden><?= (function () {
                 //$result = '';foreach (['Front', 'Back', 'Right', 'Left'] as $z)
                 //$result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
                 //foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y)$result .=
-                // "<div><label for=dir-$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
+                //"<div><label for=dir-$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
                 return '';
             })() ?></div>
         <div hidden><?= '<!--assets-->';
@@ -69,6 +70,22 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
                 echo "<input type=hidden value=$id name=assets[]>" ?></div>
     </form>
 </div>
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedReference -->
+<script type=module>
+    const img = document.querySelector('#main-svg'), a = document.createElement('a');
+    document.querySelector('button[type=button].convertpng').addEventListener('click',
+        () => createImageBitmap(img).then(imageBitmap => {
+            const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
+            canvas.getContext("2d").drawImage(imageBitmap, 0, 0);
+            return canvas.convertToBlob();
+        }).then(blob => {
+            a.download =  Date();
+            const blobHref = a.href = URL.createObjectURL(blob);
+            document.body.append(a);a.click();
+            return new Promise(resolve => setTimeout(resolve, 5000, blobHref));
+        }).then(URL.revokeObjectURL).finally(() => a.remove())
+    );
+</script>
 <form class=divs method=post action=oninput.php><?= "<!-- HTTPS QUERY -->";
     $afterColors = (7 * 4);
     foreach ($colors as $name => $color) {
@@ -76,8 +93,8 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
     }
     $filegc = file_get_contents(__DIR__ . '/store/assets.json');
     if ($filegc) $json = json_decode($filegc, true); else $json = array('failure');
-    echo "\n<script type=application/json is=output-script>" . json_encode($json,
-                    JSON_INVALID_UTF8_SUBSTITUTE) . "</script>\n";
+    //echo"\n<script type=application/json is=output-script>".
+    //json_encode($json,JSON_INVALID_UTF8_SUBSTITUTE)."</script>\n";
     foreach ($json['assets'] as $key => $item) {
         if (array_key_exists('private', $item) && $item['private']) continue;
         $htmlName = htmlspecialchars12($item['name']);
@@ -122,7 +139,6 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
                 . "cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl></character-display>";
     }
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>"; ?></form>
-<script type=application/json is=output-script><?= json_encode([
-            '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'assets' => $GLOBALS['assets-'],
-    ], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
+<!--<script type=application/json is=output-script>&lt;?= json_encode([
+'$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
+'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>-->

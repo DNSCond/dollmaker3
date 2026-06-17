@@ -85,7 +85,8 @@ $stroke = 1;
         function createAsset(array $asset, string $type): void
         {
             global $direction;
-            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.55' : 1;
+            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.6' : 1;
+            //$opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(fn(string $string): string => "<g opacity='$opacity' data-opts=\"{$asset['id']}\" data-type=\"$type\">$string</g>");
             if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))
