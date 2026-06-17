@@ -1,10 +1,8 @@
 <svg>
-    <g>
-        <path fill="<?= "{$GLOBALS['secondary']}" ?>"
-              d="M 530 700 L 630 1100 L 430 800 L 470 460 L 485 420 L 640 400 L 660 500 L 530 500 Z"
-              stroke-width="8" stroke="#000000"/>
-        <path fill="<?= "{$GLOBALS['secondary']}" ?>"
-              d="M 270 700 L 170 1100 L 370 800 L 330 460 L 315 420 L 160 400 L 140 500 L 270 500 Z"
-              stroke-width="8" stroke="#000000"/>
-    </g>
+    <path fill="<?= "{$GLOBALS['secondary']}" ?>"
+          d="M 530 700 L 630 1100 L 430 800 L 470 460 L 485 420 L 640 400 L 660 500 L 530 500 Z"
+          stroke-width="8" stroke="#000000"/>
+    <path fill="<?= "{$GLOBALS['secondary']}" ?>"
+          d="M 270 700 L 170 1100 L 370 800 L 330 460 L 315 420 L 160 400 L 140 500 L 270 500 Z"
+          stroke-width="8" stroke="#000000"/>
 </svg>

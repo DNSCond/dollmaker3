@@ -21,6 +21,21 @@ ob_start(function (string $string): string {
     return $string;
 });
 
+function mkshadow(string $shadow, int $shadowpercent): string
+{
+    $shadow = str_replace(['#', '0x'], '', $shadow);
+    $hex = hexdec($shadow);
+    $r = ($hex >> 16) & 0xFF;
+    $g = ($hex >> 8) & 0xFF;
+    $b = ($hex) & 0xFF;
+    $factor = $shadowpercent / 100;
+    $r = max(0, floor($r * $factor));
+    $g = max(0, floor($g * $factor));
+    $b = max(0, floor($b * $factor));
+    // '%06x' forces the string to be padded with leading zeros up to 6 characters
+    return '#' . sprintf('%06x', ($r << 16) | ($g << 8) | $b);
+}
+
 $isTransparent = false;
 if (isset($GLOBALS['CharacterTransparent'])) {
     $isTransparent = $GLOBALS['CharacterTransparent'];
@@ -32,10 +47,11 @@ $stroke = 1;
     global $colors;
     $shoes = $colors['shoes'];
     $pants = $colors['pants'];
+    $bgcolor = $colors['body'];
     $lights = $colors['lights'];
     $hair = $eyes = $colors['eyes'];
     $skin = $arms = $colors['skin'];
-    $bgcolor = $secondary = $colors['body'];
+    $secondary = $colors['secondary'];
     global $bgcolor, $pants, $shoes, $fgcolor, $backgroundColor, $sleeves, $lights, $wheels, $secondary;
 } global $opaque ?>
 <svg width="800" height="1280" viewBox="0 0 800 1280" xmlns="http://www.w3.org/2000/svg">
@@ -66,17 +82,19 @@ $stroke = 1;
         if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker3/watermark.svg.php";
         global $direction;
         $normal = array();
-        function createAsset(array $asset, string $type = ''): void
+        function createAsset(array $asset, string $type): void
         {
             global $direction;
+            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            ob_start(fn(string $string): string => str_replace('data-opts=""',
-                    "data-asset-id=\"$assetId\" data-asset-options=\"{$asset['opt']}\"", $string));
+            ob_start(fn(string $string): string => "<g opacity='$opacity' data-opts=\"{$asset['id']}\" data-type=\"$type\">$string</g>");
             if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))
-                $inclusionResult = (bool)include_once __DIR__ . "/store/assets/$assetId-$direction-$type.svg.php";
+                ($inclusionResult = (bool)include_once __DIR__ . "/store/assets/$assetId-$direction-$type.svg.php");
             else $inclusionResult = false;
-            if (!$inclusionResult)
-                echo "<g data-opts=\"inclusion-failed\"/>";
+            if (!$inclusionResult) {
+                $type = $type === '' ? 'Middle' : $type;
+                echo "<g data-opts=\"inclusion-failed\" data-type=\"$type\"/>";
+            }
             ob_end_flush();
         }
 
@@ -87,6 +105,6 @@ $stroke = 1;
                 $normal[] = $asset;
             }
         }
-        foreach ($normal as $asset) createAsset($asset);
+        foreach ($normal as $asset) createAsset($asset, '');
         echo '<!-- PHPX -->' ?></g>
 </svg>

@@ -1,4 +1,4 @@
-<svg><g>
+<svg>
     <path d="M 280 140 l +30 -80 l +30 60" fill="<?= "{$GLOBALS['hair']}" ?>" stroke-width="8" stroke="#000000"/>
     <path d="M 520 140 l -30 -80 l -30 60" fill="<?= "{$GLOBALS['hair']}" ?>" stroke-width="8" stroke="#000000"/>
-</g></svg>
+</svg>

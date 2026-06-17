@@ -50,7 +50,9 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     for ($i = 0; $i < $clamped; $i++) {
         $index = $i * 3;
         $assetId = $dataView->getUint16($offset + $index);
-        $assetOpt = $dataView->getUint8($offset + $index + 2);
+        $assetOpt = $dataView->getUint8($offset + $index + 2) & 0b11;
+        $assetIdStr = str_pad($assetId, 4, '0', STR_PAD_LEFT);
+        if (!file_exists("store/assets/$assetIdStr-$direction-.svg.metadata.json")) continue;
         if ($TChar) header("TChar-asset-Addition: assetid=$assetId, option=$assetOpt", false);
         $assets[] = array('id' => $assetId, 'opt' => $assetOpt);
     }

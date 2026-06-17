@@ -2,7 +2,6 @@ from glob import glob
 import json, re
 
 
-@lambda _: _()
 def main():
     array = dict()
     for i in glob('./*/*.metadata.json'):
@@ -16,4 +15,6 @@ def main():
         file.write(json.dumps(array))
 
 
+if __name__ == '__main__':
+    main()
 pass

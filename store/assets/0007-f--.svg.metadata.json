@@ -1,1 +1,4 @@
-{"name": "bow", "cost": 50}
+{
+  "name": "bow",
+  "cost": 50, "baseBody":1
+}
