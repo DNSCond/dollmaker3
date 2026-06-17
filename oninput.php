@@ -9,7 +9,9 @@ $keys = array_keys($colors);
 if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
     implode(';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
         $keys)) . ';', $matches)) {
-    $result = new BinaryView((count($keys) * 4) + 1 + 1);
+    //$result = new BinaryView((count($keys) * 4) + 1 + 1);
+    // Sets the buffer size to exactly 29 bytes (28 bytes for colors + 1 byte for flags)
+    $result = new BinaryView((count($keys) * 4) + 1);
     foreach ($keys as $index => $_colorKey) {
         RGBToRGBA32($result, (int)hexdec($matches[$index + 1]), $index * 4);
     }

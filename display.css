@@ -1,10 +1,24 @@
-:host {
+character-display {
     border: 2px solid gray;
     display: inline-block;
-    margin: 1em 0 1em 1em;
+    margin: 1em 0 0 1em;
+
+    dl.descLi {
+        border-bottom: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    input {
+        vertical-align: middle;
+    }
 }
 
-.store-img {
+character-display:last-child {
+    margin-bottom: 1em;
+}
+
+character-display .store-img {
     width: 200px;
     height: auto;
     border-top: 2px solid grey;
