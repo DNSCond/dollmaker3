@@ -35,7 +35,7 @@ $links = create_head2('Character Customizer Version5', [
                 new Color('fff100'), true),
 ]);
 global $opaque;
-$isopaque = $opaque ? 'checked' : 'data-checked'; ?>
+$isopaque = $opaque ? 'checked' : 'data-checked' ?>
 <div class=divs>
     <h1><a href=?>Character Customizer Version5</a></h1>
     <div><p>copyright &copy; all rights reversed</div>
@@ -79,9 +79,10 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
             canvas.getContext("2d").drawImage(imageBitmap, 0, 0);
             return canvas.convertToBlob();
         }).then(blob => {
-            a.download =  Date();
+            a.download = Date();
             const blobHref = a.href = URL.createObjectURL(blob);
-            document.body.append(a);a.click();
+            document.body.append(a);
+            a.click();
             return new Promise(resolve => setTimeout(resolve, 5000, blobHref));
         }).then(URL.revokeObjectURL).finally(() => a.remove())
     );
@@ -91,6 +92,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
     foreach ($colors as $name => $color) {
         echo "<input type=hidden value=$color name=$name>";
     }
+    echo "\n<div style='margin: 1em 0 0 1em'><button type=submit>apply preview</button></div>";
     $filegc = file_get_contents(__DIR__ . '/store/assets.json');
     if ($filegc) $json = json_decode($filegc, true); else $json = array('failure');
     //echo"\n<script type=application/json is=output-script>".
@@ -138,7 +140,27 @@ $isopaque = $opaque ? 'checked' : 'data-checked'; ?>
                 "Equip $htmlName\" width=800 height=1280 class=store-img></div><dl class=descLi><div data-key="
                 . "cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl></character-display>";
     }
-    echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>"; ?></form>
+    echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <!--<script type=application/json is=output-script>&lt;?= json_encode([
 '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
 'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>-->
+<div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
+        $array = array(
+                'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
+                'Card Basic' => 'v1u._wAspP8ALKT_ueH8_wCkAP-kcQD_vYnk_wDx_QQEAQABAgABBgABBwAB',
+                'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
+                'Lime Like' => 'v1u._yyVWf8slVn_ueH8_13xhP_8Can_hCAh_wDx_QQCAQABAgAB',
+                'Red' => 'v1u._1xtHP9cbRz_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCAQABAgAB',
+                'Peasant' => 'v1u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFAQABAgABAwABBgABBwAB',
+                'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
+        );
+        $output = [];
+        foreach ($array as $name => $href) {
+            $output[] = <<<HTML
+                <div class=store-div><div style=padding:0.5em><a href="$href">$name</a></div>
+                <a href="$href"><img src="endpoint.svg.php?dna=$href" width=800 height=1280
+                class=store-img alt="clothing option &quot;$name&quot;"/></a></div>
+                HTML;
+        }
+        return "\n" . implode("\n", $output);
+    })() . "\n" ?></div>

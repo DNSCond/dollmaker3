@@ -2,31 +2,35 @@
     <!--<?= 'Controls';
     $neckWidth = 50;
     $neckVWidth = 50;
-    $neckHeight = 130;
+    $neckHeight = 90; //130;
     $neckHeightV = 100;
     // ---
-    $topHeight = 200; // 150; // 200
+    $topHeight = 170; // 150; // 200
     $dressWidth = 450; // 490; // 510;
     $dressWidthInverted = 800 - $dressWidth;
-    $headDownward = 50;
+    $headDownward = 0;
     // ---
     $armLength = 120 * 3;
     $armLengthReturn = $armLength + 30 ?>-->
-    <path d="<?= "M $dressWidth 400 L 610 1250 L 190 1250 L $dressWidthInverted 400 Z" ?>"
+    <!--<?= 'PHPIF';
+    if (!hasEquipped(2002)): ?>-->
+    <path d="<?= "M $dressWidth 400 L 610 1210 L 190 1210 L $dressWidthInverted 400 Z" ?>"
           fill="<?= "{$GLOBALS['colors']['pants']}" ?>"
           stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
-    <path d="M 530 470 l -15 <?= $topHeight ?> H 285 l -15 -<?= $topHeight ?> L 400 400 Z"
+    <!--<?= 'PHPENDIF';
+    endif ?>-->
+    <path d="M 530 430 l -15 <?= $topHeight ?> H 285 l -15 -<?= $topHeight ?> L 400 360 Z"
           fill="<?= "{$GLOBALS['secondary']}" ?>" stroke-width="8" stroke="#000000"/>
     <g>
-        <path d="M 400 400 L 300 500 l -50 <?= $armLength ?> l -50 -10 l +40 -<?= $armLengthReturn ?> L 280 390 H 400 Z"
+        <path d="M 400 360 L 300 460 l -50 <?= $armLength ?> l -50 -10 l +40 -<?= $armLengthReturn ?> L 280 350 H 400 Z"
               fill="<?= "{$GLOBALS['colors']['skin']}" ?>" stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
-        <path d="M 400 400 L 500 500 l +50 <?= $armLength ?> l +50 -10 l -40 -<?= $armLengthReturn ?> L 520 390 H 400 Z"
+        <path d="M 400 360 L 500 460 l +50 <?= $armLength ?> l +50 -10 l -40 -<?= $armLengthReturn ?> L 520 350 H 400 Z"
               fill="<?= "{$GLOBALS['colors']['skin']}" ?>" stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
     </g>
     <g>
-        <path d="M 400 400 L 300 500 l +0 +50 l -90 -10 L <?= (300 - 50 - 50 + 40) . "\x20" . (500 + $armLength - 10 - $armLengthReturn) ?> L 280 390 H 400 Z"
+        <path d="M 400 360 L 300 460 l +0 +50 l -90 -10 L <?= (300 - 50 - 50 + 40) . "\x20" . (460 + $armLength - 10 - $armLengthReturn) ?> L 280 350 H 400 Z"
               fill="<?= "{$GLOBALS['colors']['body']}" ?>" stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
-        <path d="M 400 400 L 500 500 l -0 +50 l +90 -10 L <?= (500 + 50 + 50 - 40) . "\x20" . (500 + $armLength - 10 - $armLengthReturn) ?> L 520 390 H 400 Z"
+        <path d="M 400 360 L 500 460 l -0 +50 l +90 -10 L <?= (500 + 50 + 50 - 40) . "\x20" . (460 + $armLength - 10 - $armLengthReturn) ?> L 520 350 H 400 Z"
               fill="<?= "{$GLOBALS['colors']['body']}" ?>" stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
     </g>
     <g class="head">

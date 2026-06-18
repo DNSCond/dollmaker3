@@ -85,18 +85,25 @@ $stroke = 1;
         function createAsset(array $asset, string $type): void
         {
             global $direction;
+            $svgType = $type === '' ? 'Middle' : $type;
             $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.6' : 1;
             //$opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            ob_start(fn(string $string): string => "<g opacity='$opacity' data-opts=\"{$asset['id']}\" data-type=\"$type\">$string</g>");
+            ob_start(fn(string $string): string => "<g opacity='$opacity' data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
             if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))
                 ($inclusionResult = (bool)include_once __DIR__ . "/store/assets/$assetId-$direction-$type.svg.php");
             else $inclusionResult = false;
             if (!$inclusionResult) {
-                $type = $type === '' ? 'Middle' : $type;
-                echo "<g data-opts=\"inclusion-failed\" data-type=\"$type\"/>";
+                echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";
             }
             ob_end_flush();
+        }
+
+        $assetsEquipped = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
+        function hasEquipped(int $id): bool
+        {
+            global $assetsEquipped;
+            return in_array($id, $assetsEquipped);
         }
 
         foreach ($GLOBALS['assets-'] as $asset) {
