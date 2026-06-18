@@ -9,8 +9,10 @@ def main():
             found = re.search('/([^/]+)/([^/]+)\\.metadata\\.json$', i.replace('\\', '/'))
             if found:
                 if found.group(1) != 'assets': continue;
+                data = json.loads(file.read())
+                if data.get('private'): continue;
                 if found.group(1) not in array: array[found.group(1)] = dict()
-                array[found.group(1)][found.group(2)] = json.loads(file.read())
+                array[found.group(1)][found.group(2)] = data
     with open('assets.json', 'wt', encoding='utf8') as file:
         file.write(json.dumps(array))
 

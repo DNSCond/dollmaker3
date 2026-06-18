@@ -14,7 +14,7 @@ if ($GLOBALS['__FILE__'] !== __FILE__)
 require_once 'PathSVG.php';
 if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 ob_start(function (string $string): string {
-    $string = preg_replace('/\\s+/', " ", $string);
+    //$string = preg_replace('/\\s+/', " ", $string);
     $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string) . '</svg>';
     $hash = 'sha384b64-' . sha384Base64($string);
     header("hashtag: \"$hash\"");
@@ -111,9 +111,13 @@ $stroke = 1;
 
         foreach ($GLOBALS['assets-'] as $asset) {
             $ZindexLayer = array('');
-            if (array_key_exists('ZindexLayer', $json ?? array())) {
-                $ZindexLayer = $json['ZindexLayer'];
-                if (count($ZindexLayer)) $ZindexLayer = array('');
+            $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+            $jsonArray = $json["assets"]["$assetId-$direction-.svg"] ?? array();
+            if (array_key_exists('ZindexLayer', $jsonArray)) {
+                $ZindexLayer = $jsonArray['ZindexLayer'];
+                if (count($ZindexLayer) == 0) {
+                    $ZindexLayer = array('');
+                }
             }
             if (in_array('Back', $ZindexLayer))
                 createAsset($asset, 'Back');
