@@ -95,8 +95,10 @@ $GLOBALS['canonicalFullString'] = "v1u." . ($GLOBALS['canonicalB64'] = $cDNA);
 
 $origBytes = $dataView?->asArray();
 $canonBytes = $canonicalized->asArray();
-if (!$GLOBALS['isCanonical'] && is_string($GLOBALS['canonical_redir_path']) && $original) {
-    http_response_code(307);
-    header("Location: {$GLOBALS['canonical_redir_path']}{$GLOBALS['canonicalFullString']}");
-    exit;
+if (array_key_exists('canonical_redir_path', $GLOBALS)) {
+    if (!$GLOBALS['isCanonical'] && is_string($GLOBALS['canonical_redir_path']) && $original) {
+        http_response_code(307);
+        header("Location: {$GLOBALS['canonical_redir_path']}{$GLOBALS['canonicalFullString']}");
+        exit;
+    }
 }

@@ -79,9 +79,12 @@ $stroke = 1;
             SVG;
         })() . "\n" ?></g>
     <g class="PHPX"><?= '<!-- PHPX -->';
-        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker3/watermark.svg.php";
         global $direction;
         $normal = array();
+        $json = file_get_contents('store/assets.json');
+        if ($json) $json = json_decode($json, true);
+        else $json = null;
+        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker3/watermark.svg.php";
         function createAsset(array $asset, string $type): void
         {
             global $direction;
@@ -107,10 +110,18 @@ $stroke = 1;
         }
 
         foreach ($GLOBALS['assets-'] as $asset) {
-            createAsset($asset, 'Back');
-            $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-.svg.php")) {
-                $normal[] = $asset;
+            $ZindexLayer = array('');
+            if (array_key_exists('ZindexLayer', $json ?? array())) {
+                $ZindexLayer = $json['ZindexLayer'];
+                if (count($ZindexLayer)) $ZindexLayer = array('');
+            }
+            if (in_array('Back', $ZindexLayer))
+                createAsset($asset, 'Back');
+            if (in_array('', $ZindexLayer)) {
+                $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+                if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-.svg.php")) {
+                    $normal[] = $asset;
+                }
             }
         }
         foreach ($normal as $asset) createAsset($asset, '');

@@ -38,7 +38,6 @@ global $opaque;
 $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 <div class=divs>
     <h1><a href=?>Character Customizer Version5</a></h1>
-    <div><p>copyright &copy; all rights reversed</div>
     <script type=module src=/gallery/JSONScript.js></script>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
