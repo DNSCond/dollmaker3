@@ -145,6 +145,8 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>-->
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
+                'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQC0AcB0QcB',
+                'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_JSgs_wDx_QQC0AcB0QcB',
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
                 'Card Basic' => 'v1u._wAspP8ALKT_ueH8_wCkAP-kcQD_vYnk_wDx_QQEAQABAgABBgABBwAB',
                 'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
