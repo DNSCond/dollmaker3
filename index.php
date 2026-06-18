@@ -135,9 +135,10 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
         echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
-                " value=$integerid id=$inputname name=$iname></label></div><div><img src=\"$img_src\" alt=\"" .
-                "Equip $htmlName\" width=800 height=1280 class=store-img></div><dl class=descLi><div data-key="
-                . "cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl></character-display>";
+                " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
+                "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
+                . " class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl>" .
+                "</character-display>";
     }
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <!--<script type=application/json is=output-script>&lt;?= json_encode([
@@ -146,7 +147,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQC0AcB0QcB',
-                'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_JSgs_wDx_QQC0AcB0QcB',
+                'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQC0AcB0QcB',
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
                 'Card Basic' => 'v1u._wAspP8ALKT_ueH8_wCkAP-kcQD_vYnk_wDx_QQEAQABAgABBgABBwAB',
                 'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',

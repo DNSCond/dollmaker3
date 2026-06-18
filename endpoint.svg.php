@@ -81,6 +81,7 @@ $stroke = 1;
     <g class="PHPX"><?= '<!-- PHPX -->';
         global $direction;
         $normal = array();
+        $fronts = array();
         $json = file_get_contents('store/assets.json');
         if ($json) $json = json_decode($json, true);
         else $json = null;
@@ -127,7 +128,14 @@ $stroke = 1;
                     $normal[] = $asset;
                 }
             }
+            if (in_array('Front', $ZindexLayer)) {
+                $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+                if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-Front.svg.php")) {
+                    $fronts[] = $asset;
+                }
+            }
         }
         foreach ($normal as $asset) createAsset($asset, '');
+        foreach ($fronts as $asset) createAsset($asset, 'Front');
         echo '<!-- PHPX -->' ?></g>
 </svg>
