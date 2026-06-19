@@ -31,7 +31,7 @@ $links = create_head2('Character Customizer Version5', [
     //"<meta property=og:image:type content=image/svg+xml>"),
 ], [ANTNavHome(),
         new ANTNavOption('/dollmaker3/', '/dollmaker2/icon/endpoint.php?preset=Bee',
-                'dollmakerV4 ANT', new Color('a68300'),
+                'dollmakerV5 ANT', new Color('a68300'),
                 new Color('fff100'), true),
 ]);
 global $opaque;

@@ -55,7 +55,7 @@ $stroke = 1;
     global $bgcolor, $pants, $shoes, $fgcolor, $backgroundColor, $sleeves, $lights, $wheels, $secondary;
 } global $opaque ?>
 <svg width="800" height="1280" viewBox="0 0 800 1280" xmlns="http://www.w3.org/2000/svg">
-    <g class="background" stroke-width="0">
+    <g class="background" stroke-width="0" visibility='visible'>
         <!--<?php if ($isTransparent) { ?>-->
         <rect width="800" height="1280" fill="#FfFfFf"/>
         <g opacity="<?= $opaque ? '1' : '0.7' ?>">
@@ -66,7 +66,7 @@ $stroke = 1;
         </g>
         <!--<?php } ?>-->
     </g>
-    <g class="!$nowatermark"><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
+    <g class="!$nowatermark" visibility='visible'><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
     <g fill="#ae782f"><?= (function () {
             $width = 20;
             $RightX = 800 - $width;
@@ -78,7 +78,7 @@ $stroke = 1;
             <rect x="0" y="$DownY" width="800" height="$width" class="wall down"/>
             SVG;
         })() . "\n" ?></g>
-    <g class="PHPX"><?= '<!-- PHPX -->';
+    <g class="PHPX" visibility='visible'><?= '<!-- PHPX -->';
         global $direction;
         $normal = array();
         $fronts = array();
