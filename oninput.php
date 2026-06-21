@@ -59,7 +59,6 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
 
     // Write the Global Options Byte at index 28
     $result->setUint8($afterColors, $b111);
-    // Write the Global Options Byte at index 28
     $result->setUint8(++$afterColors, count($validAssets));
 
     // 5. Pack the Assets sequentially right after the flag byte
@@ -69,7 +68,7 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
         $result->setUint16($currentOffset, $assetId);
 
         // Write the 1-byte Asset Option (uint8) right after the ID (+2 bytes)
-        $result->setUint8($currentOffset + 2, 1); // Currently hardcoded to 0
+        $result->setUint8($currentOffset + 2, 0); // Currently hardcoded to 0
 
         // Move pointer forward by exactly 3 bytes for the next block
         $currentOffset += 3;

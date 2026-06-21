@@ -3,7 +3,7 @@
 //header('cache-control: public, max-age=15, s-max-age=15');
 header('cache-control: private, max-age=0');
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
-//$GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
+$GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 require_once "preprocessor.php";
 
 $nowatermark = str_starts_with($_SERVER['HTTP_REFERER'], 'https://antrequest.nl');

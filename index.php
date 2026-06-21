@@ -110,7 +110,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $view->setUint8($afterColors, $GLOBALS['dirByte'] ?? 0b100);
 
         // 2. Set the Asset Count to 2
-        $view->setUint8($afterColors + 1, 2);
+        $view->setUint8($afterColors + 1, $totalAssets);
         {
             // 3. Write the Asset ID (takes offsets 30 and 31)
             $view->setUint16($afterColors + 2, (int)$matches[1]);
@@ -122,6 +122,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
             $view->setUint16($afterColors + 5, $item['baseBody']);
             $view->setUint8($afterColors + 7, 2);
         }
+        //{$view->setUint16($afterColors + 8, 2003);$view->setUint8($afterColors + 10, 0);}
         if (array_key_exists('cost', $item)) $cost = match ($item['cost']) {
             true => 'default',
             false => 'Off Sale',
@@ -141,13 +142,13 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 "</character-display>";
     }
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
-<!--<script type=application/json is=output-script>&lt;?= json_encode([
-'$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>-->
+<script type=application/json is=output-script><?= json_encode([
+            '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
+            'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
-                'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQC0AcB0QcB',
-                'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQC0AcB0QcB',
+                'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
+                'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQD0AcA0QcA0wcA',
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
                 'Card Basic' => 'v1u._wAspP8ALKT_ueH8_wCkAP-kcQD_vYnk_wDx_QQEAQABAgABBgABBwAB',
                 'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
