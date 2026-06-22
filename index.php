@@ -91,6 +91,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     foreach ($colors as $name => $color) {
         echo "<input type=hidden value=$color name=$name>";
     }
+    $appleLocked = array();
     echo "\n<div style='margin: 1em 0 0 1em'><button type=submit>apply preview</button></div>";
     $filegc = file_get_contents(__DIR__ . '/store/assets.json');
     if ($filegc) $json = json_decode($filegc, true); else $json = array();
@@ -133,14 +134,30 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $integerid = +$matches[1];
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
-        echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
+        $echo = "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
                 " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
                 "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
                 . " class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl>" .
                 "</character-display>";
+        if (array_key_exists('appleLocked', $item)) if ($item['appleLocked']) {
+            $appleLocked[] = $echo;
+            continue;
+        }
+        echo $echo;
     }
     global $dirByte;
+    echo "<div is=applelocked-unblocked style=display:contents></div>";
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
+<TEMPLATE id=applelocked><?= implode('', $appleLocked) ?></TEMPLATE>
+<script>
+    class AppleLockedUnblocked extends HTMLDivElement {
+        connectedCallback() {
+            this.append(document.getElementById('applelocked').content);
+        }
+    }
+
+    customElements.define('applelocked-unblocked', AppleLockedUnblocked, {extends: 'div'});
+</script>
 <script type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
             'currentlyEquipped' => array_map(function (array $asset) use ($json): array {
@@ -168,6 +185,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 'bright' => 'v1u.__zpcf9cJEH_ueH8_yj44f_Qyf3_DNXw_1z1MAQE0AcA0gcA0wcA1AcA',
                 'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
                 'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
+                'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
         ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
@@ -177,5 +195,5 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 class=store-img alt="clothing option &quot;$name&quot;"/></a></div>
                 HTML;
         }
-        return "\n" . implode("\n", $output);
+        return "\n" . implode("", $output);
     })() . "\n" ?></div>

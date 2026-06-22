@@ -40,7 +40,7 @@ h2.store-header {
 .store-div {
     border: 2px solid gray;
     display: inline-block;
-    margin: 1em 0 1em 1em;
+    margin: 1em 0 0 1em;
 }
 
 .store-img {
