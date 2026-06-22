@@ -161,16 +161,16 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     global $dirByte;
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <DIV class=divs>
-    <H2>Checkout</H2>
+    <H2 ID=checkout>Checkout</H2>
     <DETAILS OPEN><?= '<SUMMARY>View Checkout</SUMMARY>';
         $count = !!count($GLOBALS['assets-']);
         if ($count) {
-            echo '<TABLE STYLE=margin-top:1em><THEAD><TR><TH SCOPE=col>Item ' .
-                    'Name<TH SCOPE=col>Item Id<TH SCOPE=col>Item Price<tBODY>';
+            echo '<TABLE STYLE=margin-top:1em><THEAD><TR><TH SCOPE' .
+                    '=col>Item Name<TH SCOPE=col>Item Price<tBODY>';
         } else echo "<p>No Checkout Needed.";
         $assetCheckout = array();
         global $direction;
-        $total = 0;
+        $assetCheckoutTotal = 0;
         foreach ($GLOBALS['assets-'] as $asset) {
             $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
             $jsonic = $json['assets']["$antiNull-$direction-.svg"];
@@ -183,10 +183,10 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 null, 0 => 'Free',
                 default => "{$asset['cost']} units",
             };
-            if (is_integer($asset['cost'])) $total += $asset['cost'];
-            if ($count) echo "<TR><TD>{$asset['name']}<TD>{$asset['id']}<TD>$cost";
+            if (is_integer($asset['cost'])) $assetCheckoutTotal += $asset['cost'];
+            if ($count) echo "<TR><TD>{$asset['name']}<TD>$cost";
         }
-        if ($count) echo "<tFoot><TR><TD COLSPAN=2>Total<TD>$total Units</TABLE>" ?></DETAILS>
+        if ($count) echo "<tFoot><TR><TH COLSPAN=1 SCOPE=row>Total<TD>$assetCheckoutTotal Units</TABLE>" ?></DETAILS>
 </DIV>
 <TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
 <SCRIPT type=module>
@@ -204,7 +204,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 </SCRIPT>
 <SCRIPT type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'currentlyEquipped' => $assetCheckout,
+            'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(

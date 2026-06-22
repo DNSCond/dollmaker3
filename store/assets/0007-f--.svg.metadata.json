@@ -1,6 +1,6 @@
 {
   "name": "bow",
-  "cost": 50,
+  "cost": 25,
   "baseBody": 1,
   "ZindexLayer": [
     "Front"
