@@ -3,12 +3,13 @@ use function DataViewed\RGBToRGBA32;
 
 require_once "BinaryHelper.php";
 
-$TChar = false;
+$TChar = 1;
 $direction = 'f-';
 $assets = array();
 $fullDirection = '';
 $dirByte = 0b100;
 $opaque = false;
+$specified = 0;
 if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
     if (+$matches[1] !== 1) {
         http_response_code(400);
@@ -43,7 +44,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     };
     $maxAssetCount = 50;
     if ($TChar) header('TChar-Direction: ' . ($fullDirection = trim("$y-$x", '-')));
-    $assetCount = $dataView->getUint8(++$offset);
+    $specified = $assetCount = $dataView->getUint8(++$offset);
     ++$offset;
     $assetCount = $assetCount === false ? 0 : $assetCount;
     $assetCount = $clamped = max(min($assetCount, $maxAssetCount), 0);
@@ -62,7 +63,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     $assetCount = 0;
 }
 usort($assets, fn($le, $ri) => $le['id'] - $ri['id']);
-if ($TChar) header("TChar-asset-Count: assetCount=$assetCount, actual=" . count($assets));
+if ($TChar) header("TChar-asset-Count: assetCount=$assetCount, specified=$specified, actual=" . count($assets));
 require_once 'getColor.php';
 global $colors;
 $canonicalColorIndex = 0;
@@ -79,19 +80,28 @@ foreach ($colors as $color => $value) {
 $i = 0;
 $canonicalColorIndex *= 4;
 $canonicalized->setUint8($canonicalColorIndex++, ($dirByte & 0b111) | ($opaque << 3));
-$canonicalized->setUint8($canonicalColorIndex++, $assetCount);
+$canonicalized->setUint8($assetCountByte = $canonicalColorIndex++, 0);
+$matchedAssets = array(0 => true);
+$assetsCounted = 0;
 foreach ($assets as $asset) {
-    $index = $canonicalColorIndex + ($i++ * 3);
     ['id' => $assetId, 'opt' => $assetOpt] = $asset;
+    if (array_key_exists($assetId, $matchedAssets)) continue;
+    $matchedAssets[$assetId] = true;
+    $index = $canonicalColorIndex + ($i++ * 3);
     $canonicalized->setUint16($index, $assetId);
     $canonicalized->setUint8($index + 2, $assetOpt);
+    $assetsCounted++;
 }
+$canonicalized->setUint8($assetCountByte, $assetsCounted);
+$canonicalized->resize((7 * 4) + 1 + 1 + ($assetsCounted * 3));
 
 $GLOBALS['assets-'] = $assets;
 $original = $dataView?->toBase64URL();
 $GLOBALS['isCanonical'] = ($cDNA = $canonicalized->toBase64URL()) === $original;
 header("T-Canonical-DNAString: $cDNA; isCanonical=?" . (int)($GLOBALS['isCanonical']));
 $GLOBALS['canonicalFullString'] = "v1u." . ($GLOBALS['canonicalB64'] = $cDNA);
+header("X-CO:$original");
+header("X-CC:$cDNA");
 
 $origBytes = $dataView?->asArray();
 $canonBytes = $canonicalized->asArray();

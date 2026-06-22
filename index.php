@@ -5,7 +5,6 @@ use DataViewed\BinaryView;
 use ANTHeader\ANTNavIStyle;
 use ANTHeader\ANTNavOption;
 use ANTHeader\ANTNavLinkTag;
-use ANTHeader\ANTNavArbitraryHTML;
 use function ANTHeader\ANTNavHome;
 use function ANTHeader\create_head2;
 
@@ -54,16 +53,17 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 }
                 return "$thead<tbody>$result</tbody><tfoot><tr><td><label>\$opaque <input name=opaque type" .
                         "=checkbox $isopaque></label><td colspan=2><button type=button class=convertpng>" .
-                        "Convert to PNG</button><tr><td colspan=3><button type=submit>apply colors</button>";
+                        "Convert to PNG</button> <a href=random.php>Random</a><tr><td colspan=3>" .
+                        "<button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
-        <div hidden><?= (function () {
-                //$result = '';foreach (['Front', 'Back', 'Right', 'Left'] as $z)
-                //$result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
-                //foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y)$result .=
-                //"<div><label for=dir-$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
-                return '';
-            })() ?></div>
-        <div hidden><?= '<!--assets-->';
+        <div><?= (function () {
+                $result = '';
+                foreach (['Front', 'Back', 'Right', 'Left'] as $z)
+                    $result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
+                foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) $result .=
+                        "<div><label for=dir-$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
+                return $result;
+            })();
             $mapped = array_map(fn($mapped) => +$mapped['id'], $GLOBALS['assets-']);
             foreach ($mapped as $id) if (in_array($id, $mapped))
                 echo "<input type=hidden value=$id name=assets[]>" ?></div>
@@ -83,7 +83,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
             document.body.append(a);
             a.click();
             return new Promise(resolve => setTimeout(resolve, 5000, blobHref));
-        }).then(URL.revokeObjectURL).finally(() => a.remove())
+        }).then(URL.revokeObjectURL).finally(() => a.remove()),
     );
 </script>
 <form class=divs method=post action=oninput.php><?= "<!-- HTTPS QUERY -->";
@@ -93,9 +93,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     }
     echo "\n<div style='margin: 1em 0 0 1em'><button type=submit>apply preview</button></div>";
     $filegc = file_get_contents(__DIR__ . '/store/assets.json');
-    if ($filegc) $json = json_decode($filegc, true); else $json = array('failure');
-    //echo"\n<script type=application/json is=output-script>".
-    //json_encode($json,JSON_INVALID_UTF8_SUBSTITUTE)."</script>\n";
+    if ($filegc) $json = json_decode($filegc, true); else $json = array();
     foreach ($json['assets'] as $key => $item) {
         if (array_key_exists('private', $item) && $item['private']) continue;
         $htmlName = htmlspecialchars12($item['name']);
@@ -141,10 +139,17 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 . " class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl>" .
                 "</character-display>";
     }
+    global $dirByte;
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <script type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'assets' => $GLOBALS['assets-'],], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
+            'currentlyEquipped' => array_map(function (array $asset) use ($json): array {
+                global $direction;
+                $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
+                $asset['name'] = $json['assets']["$antiNull-$direction-.svg"]['name'];
+                return $asset;
+            }, $GLOBALS['assets-']),
+    ], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
@@ -156,7 +161,14 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 'Red' => 'v1u._1xtHP9cbRz_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCAQABAgAB',
                 'Peasant' => 'v1u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFAQABAgABAwABBgABBwAB',
                 'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
-        );
+                'randInt' => 'v1u._5HYqP-lBSX_1UlZ_wgZGf_0EQz__Vhx_1QtzQQFAQAABAAABQAABwAA1AcA',
+                'some?' => 'v1u.__QtRf8ZkQz_ueH8_8T96f99uMX_nZGU_-jcUQQD0AcA0QcA0gcA',
+                'v1u._-R9GP8NDJn_ueH8_8CxAf8F3JT_iSyU_3ip7AQFAQAABAAABQAABgAABwAA',
+                'v1u._4llUf-gBcj_ueH8_wlZ4P_dcGD_fE1R_0glfQQBAQAA',
+                'bright' => 'v1u.__zpcf9cJEH_ueH8_yj44f_Qyf3_DNXw_1z1MAQE0AcA0gcA0wcA1AcA',
+                'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
+                'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
+        ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
             $output[] = <<<HTML
