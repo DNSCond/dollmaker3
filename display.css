@@ -14,9 +14,6 @@ character-display {
     }
 }
 
-character-display:last-child {
-    margin-bottom: 1em;
-}
 
 character-display .store-img {
     width: 200px;
