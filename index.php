@@ -86,7 +86,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         }).then(URL.revokeObjectURL).finally(() => a.remove()),
     );
 </script>
-<form class=divs method=post action=oninput.php><?= "<!-- HTTPS QUERY -->";
+<form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
     $afterColors = (7 * 4);
     foreach ($colors as $name => $color) {
         echo "<input type=hidden value=$color name=$name>";
@@ -126,12 +126,11 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         }
 
         if (array_key_exists('cost', $item)) $cost = match ($item['cost']) {
-            true => 'default',
             false => 'Off Sale',
-            0 => 'Free',
+            true => 'default',
+            null, 0 => 'Free',
             default => "{$item['cost']} units",
         }; else $cost = 'Free';
-        //$htmlName.=' '.+$matches[1];
         $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
         $inputname = "asset-$matches[1]";
         $integerid = +$matches[1];
@@ -140,7 +139,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $echo = "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
                 " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
                 "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
-                . " class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl>" .
+                . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>" .
                 "</character-display>";
         if ($isAppleLocked) {
             $writeCount++;
@@ -152,15 +151,42 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
             $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
             $appleLocked[] = $echo;
             $inputname = "$inputname-unblocked";
-            echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
-                    " value=$integerid id=$inputname name=$iname disabled></label></div><div><label for=$inputname>" .
-                    "<img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img>"
-                    . "</label></div><dl class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>" .
-                    "$cost</slot></div></dl></character-display>";
+            echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=" .
+                    "checkbox value=$integerid id=$inputname name=$iname disabled></label></div><div><label" .
+                    " for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280" .
+                    " class=store-img></label></div><dl class=descLi><div data-key=cost><dt>cost<dd>" .
+                    "$cost</div></dl></character-display>";
         } else echo $echo;
     }
     global $dirByte;
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
+<DIV class=divs>
+    <H2>Checkout</H2>
+    <DETAILS OPEN>
+        <SUMMARY>View Checkout</SUMMARY>
+        <TABLE STYLE=margin-top:1em><?= '<THEAD><TR><TH SCOPE=col>Item' .
+            ' Name<TH SCOPE=col>Item Id<TH SCOPE=col>Item Price<tBODY>';
+            $assetCheckout = array();
+            global $direction;
+            $total = 0;
+            foreach ($GLOBALS['assets-'] as $asset) {
+                $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
+                $jsonic = $json['assets']["$antiNull-$direction-.svg"];
+                $asset['name'] = $jsonic['name'];
+                $asset['cost'] = $jsonic['cost'];
+                $assetCheckout[] = $asset;
+                $cost = match ($asset['cost']) {
+                    false => 'Off Sale',
+                    true => 'default',
+                    null, 0 => 'Free',
+                    default => "{$asset['cost']} units",
+                };
+                if (is_integer($asset['cost'])) $total += $asset['cost'];
+                echo "<TR><TD>{$asset['name']}<TD>{$asset['id']}<TD>$cost";
+            }
+            echo "<tFoot><TR><TD COLSPAN=2>Total<TD>$total Units" ?></TABLE>
+    </DETAILS>
+</DIV>
 <TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
 <SCRIPT type=module>
     class AppleLockedUnblocked extends HTMLTemplateElement {
@@ -175,14 +201,9 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 
     customElements.define('applelocked-unblocked', AppleLockedUnblocked, {extends: 'template'});
 </SCRIPT>
-<SCRIPT type=application/json data-is=output-script><?= json_encode([
+<SCRIPT type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'currentlyEquipped' => array_map(function (array $asset) use ($json): array {
-                global $direction;
-                $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
-                $asset['name'] = $json['assets']["$antiNull-$direction-.svg"]['name'];
-                return $asset;
-            }, $GLOBALS['assets-']),
+            'currentlyEquipped' => $assetCheckout,
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(

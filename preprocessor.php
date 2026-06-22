@@ -118,7 +118,7 @@ if (array_key_exists('canonical_redir_path', $GLOBALS)) {
         exit;
     }
 }
-if (array_key_exists('isFor', $GLOBALS))
+if (array_key_exists('isFor', $GLOBALS)) {
     if ($isLocked && $GLOBALS['isFor'] === 'svgDisplay')
         foreach ($colors as $color => $value)
             if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
@@ -132,5 +132,4 @@ if (array_key_exists('isFor', $GLOBALS))
                 $b = $b & -3;
                 $colors[$color] = '#' . dechex($r << 16 | $g << 8 | $b);
             }
-// ---
-
+}
