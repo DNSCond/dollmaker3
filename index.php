@@ -162,30 +162,31 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <DIV class=divs>
     <H2>Checkout</H2>
-    <DETAILS OPEN>
-        <SUMMARY>View Checkout</SUMMARY>
-        <TABLE STYLE=margin-top:1em><?= '<THEAD><TR><TH SCOPE=col>Item' .
-            ' Name<TH SCOPE=col>Item Id<TH SCOPE=col>Item Price<tBODY>';
-            $assetCheckout = array();
-            global $direction;
-            $total = 0;
-            foreach ($GLOBALS['assets-'] as $asset) {
-                $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
-                $jsonic = $json['assets']["$antiNull-$direction-.svg"];
-                $asset['name'] = $jsonic['name'];
-                $asset['cost'] = $jsonic['cost'];
-                $assetCheckout[] = $asset;
-                $cost = match ($asset['cost']) {
-                    false => 'Off Sale',
-                    true => 'default',
-                    null, 0 => 'Free',
-                    default => "{$asset['cost']} units",
-                };
-                if (is_integer($asset['cost'])) $total += $asset['cost'];
-                echo "<TR><TD>{$asset['name']}<TD>{$asset['id']}<TD>$cost";
-            }
-            echo "<tFoot><TR><TD COLSPAN=2>Total<TD>$total Units" ?></TABLE>
-    </DETAILS>
+    <DETAILS OPEN><?= '<SUMMARY>View Checkout</SUMMARY>';
+        $count = !!count($GLOBALS['assets-']);
+        if ($count) {
+            echo '<TABLE STYLE=margin-top:1em><THEAD><TR><TH SCOPE=col>Item ' .
+                    'Name<TH SCOPE=col>Item Id<TH SCOPE=col>Item Price<tBODY>';
+        } else echo "<p>No Checkout Needed.";
+        $assetCheckout = array();
+        global $direction;
+        $total = 0;
+        foreach ($GLOBALS['assets-'] as $asset) {
+            $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
+            $jsonic = $json['assets']["$antiNull-$direction-.svg"];
+            $asset['name'] = $jsonic['name'];
+            $asset['cost'] = $jsonic['cost'];
+            $assetCheckout[] = $asset;
+            $cost = match ($asset['cost']) {
+                false => 'Off Sale',
+                true => 'default',
+                null, 0 => 'Free',
+                default => "{$asset['cost']} units",
+            };
+            if (is_integer($asset['cost'])) $total += $asset['cost'];
+            if ($count) echo "<TR><TD>{$asset['name']}<TD>{$asset['id']}<TD>$cost";
+        }
+        if ($count) echo "<tFoot><TR><TD COLSPAN=2>Total<TD>$total Units</TABLE>" ?></DETAILS>
 </DIV>
 <TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
 <SCRIPT type=module>
