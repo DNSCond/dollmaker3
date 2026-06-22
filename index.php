@@ -56,7 +56,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                         "Convert to PNG</button> <a href=random.php>Random</a><tr><td colspan=3>" .
                         "<button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
-        <div><?= (function () {
+        <div hidden><?= (function () {
                 $result = '';
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z)
                     $result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
