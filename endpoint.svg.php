@@ -4,6 +4,7 @@
 header('cache-control: private, max-age=0');
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
+$GLOBALS['isFor'] = 'svgDisplay';
 require_once "preprocessor.php";
 
 $nowatermark = str_starts_with($_SERVER['HTTP_REFERER'], 'https://antrequest.nl');
@@ -66,7 +67,8 @@ $stroke = 1;
         </g>
         <!--<?php } ?>-->
     </g>
-    <g class="!$nowatermark" visibility='visible'><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
+    <g class="!$nowatermark"
+       visibility='visible'><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
     <g fill="#ae782f"><?= (function () {
             $width = 20;
             $RightX = 800 - $width;
@@ -90,8 +92,8 @@ $stroke = 1;
         {
             global $direction;
             $svgType = $type === '' ? 'Middle' : $type;
-            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.6' : 1;
-            //$opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.55' : 1;
+            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.8' : 1;
+            //$opacity=($asset['opt'] & (1 << 1)) !== 0 ?'0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(fn(string $string): string => "<g opacity='$opacity' data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
             if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))

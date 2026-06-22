@@ -99,29 +99,32 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         if (array_key_exists('private', $item) && $item['private']) continue;
         $htmlName = htmlspecialchars12($item['name']);
         $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
-        $totalAssets = 2; // Or count($your_assets_array)
-        $view->resize($afterColors + 2);
-        $view->resize($afterColors + 2 + ($totalAssets * 3));
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
+        $isAppleLocked = false;
+        if (array_key_exists('appleLocked', $item))
+            if ($item['appleLocked']) $isAppleLocked = true;
 
-        // 1. Force preserve or set the character direction/global options flag
-        // Use the global $dirByte variable from your decoder script
+        $writeCount = 1;
+        if (array_key_exists('baseBody', $item)) $writeCount++;
+
+        $view->resize($afterColors + 2);
+        $view->resize($afterColors + 2 + ($writeCount * 3));
+        $view->setUint8($afterColors + 1, $writeCount);
         $view->setUint8($afterColors, $GLOBALS['dirByte'] ?? 0b100);
+        $baseOffset = $afterColors + 2;
+        $assetIdx = 0;
 
-        // 2. Set the Asset Count to 2
-        $view->setUint8($afterColors + 1, $totalAssets);
-        {
-            // 3. Write the Asset ID (takes offsets 30 and 31)
-            $view->setUint16($afterColors + 2, (int)$matches[1]);
+        // Asset 1: Primary Asset
+        $view->setUint16($baseOffset + ($assetIdx * 3), (int)$matches[1]);
+        $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
+        $assetIdx++;
 
-            // 4. Write the Asset Option (offset 32)
-            $view->setUint8($afterColors + 4, 0);
-        }
         if (array_key_exists('baseBody', $item)) {
-            $view->setUint16($afterColors + 5, $item['baseBody']);
-            $view->setUint8($afterColors + 7, 2);
+            $view->setUint16($baseOffset + ($assetIdx * 3), $item['baseBody']);
+            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 2);
+            $assetIdx++;
         }
-        //{$view->setUint16($afterColors + 8, 2003);$view->setUint8($afterColors + 10, 0);}
+
         if (array_key_exists('cost', $item)) $cost = match ($item['cost']) {
             true => 'default',
             false => 'Off Sale',
@@ -139,26 +142,40 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
                 . " class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>$cost</slot></div></dl>" .
                 "</character-display>";
-        if (array_key_exists('appleLocked', $item)) if ($item['appleLocked']) {
+        if ($isAppleLocked) {
+            $writeCount++;
+            $view->resize($afterColors + 2 + ($writeCount * 3));
+            $view->setUint8($afterColors + 1, $writeCount);
+            $view->setUint16($baseOffset + ($assetIdx * 3), 5000);
+            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
+            $assetIdx++;
+            $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
             $appleLocked[] = $echo;
-            continue;
-        }
-        echo $echo;
+            $inputname = "$inputname-unblocked";
+            echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
+                    " value=$integerid id=$inputname name=$iname disabled></label></div><div><label for=$inputname>" .
+                    "<img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img>"
+                    . "</label></div><dl class=descLi><div data-key=cost><dt>cost<dd><slot name=cost>" .
+                    "$cost</slot></div></dl></character-display>";
+        } else echo $echo;
     }
     global $dirByte;
-    echo "<div is=applelocked-unblocked style=display:contents></div>";
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
-<TEMPLATE id=applelocked><?= implode('', $appleLocked) ?></TEMPLATE>
-<script>
-    class AppleLockedUnblocked extends HTMLDivElement {
+<TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
+<SCRIPT type=module>
+    class AppleLockedUnblocked extends HTMLTemplateElement {
         connectedCallback() {
-            this.append(document.getElementById('applelocked').content);
+            this.content.querySelectorAll('character-display').forEach(each => {
+                const id = each.querySelector('input').getAttribute('id'),
+                    unblocked = this.ownerDocument.getElementById(id + '-unblocked');
+                unblocked.parentElement.parentElement.parentElement.replaceWith(each);
+            });
         }
     }
 
-    customElements.define('applelocked-unblocked', AppleLockedUnblocked, {extends: 'div'});
-</script>
-<script type=application/json is=output-script><?= json_encode([
+    customElements.define('applelocked-unblocked', AppleLockedUnblocked, {extends: 'template'});
+</SCRIPT>
+<SCRIPT type=application/json data-is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
             'currentlyEquipped' => array_map(function (array $asset) use ($json): array {
                 global $direction;
@@ -166,7 +183,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 $asset['name'] = $json['assets']["$antiNull-$direction-.svg"]['name'];
                 return $asset;
             }, $GLOBALS['assets-']),
-    ], JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
+    ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',

@@ -7,6 +7,7 @@ $TChar = 1;
 $direction = 'f-';
 $assets = array();
 $fullDirection = '';
+$isLocked = false;
 $dirByte = 0b100;
 $opaque = false;
 $specified = 0;
@@ -56,6 +57,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
         if (!file_exists("store/assets/$assetIdStr-$direction-.svg.metadata.json")) continue;
         if ($TChar) header("TChar-asset-Addition: assetid=$assetId, option=$assetOpt", false);
         $assets[] = array('id' => $assetId, 'opt' => $assetOpt);
+        if ($assetId === 5000) $isLocked = true;
     }
 } else {
     header('x-error: no dataview found');
@@ -70,9 +72,13 @@ $canonicalColorIndex = 0;
 $canonicalized = new BinaryView((7 * 4) + 1 + 1 + ($assetCount * 3));
 foreach ($colors as $color => $value) {
     if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
-        $r = hexdec($matches[1]) & -3;
-        $g = hexdec($matches[2]) & -3;
-        $b = hexdec($matches[3]) & -3;
+        $r = hexdec($matches[1]);
+        $g = hexdec($matches[2]);
+        $b = hexdec($matches[3]);
+        // might edit
+        $r = $r & -3;
+        $g = $g & -3;
+        $b = $b & -3;
         RGBToRGBA32($canonicalized, $r << 16 | $g << 8 | $b, $canonicalColorIndex++ * 4);
     }
     if ($TChar) header("TChar-Color-$color:$value");
@@ -112,3 +118,19 @@ if (array_key_exists('canonical_redir_path', $GLOBALS)) {
         exit;
     }
 }
+if (array_key_exists('isFor', $GLOBALS))
+    if ($isLocked && $GLOBALS['isFor'] === 'svgDisplay')
+        foreach ($colors as $color => $value)
+            if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
+                $r = hexdec($matches[1]);
+                $g = hexdec($matches[2]);
+                $b = hexdec($matches[3]);
+                $gray = (int)round(0.299 * $r + 0.587 * $g + 0.114 * $b);
+                $r = $g = $b = $gray;
+                $r = $r & -3;
+                $g = $g & -3;
+                $b = $b & -3;
+                $colors[$color] = '#' . dechex($r << 16 | $g << 8 | $b);
+            }
+// ---
+
