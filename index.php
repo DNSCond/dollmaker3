@@ -162,7 +162,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
 <DIV class=divs>
     <H2>Checkout</H2>
-    <DETAILS><?= '<SUMMARY>View Checkout</SUMMARY>';
+    <DETAILS OPEN><?= '<SUMMARY>View Checkout</SUMMARY>';
         $count = !!count($GLOBALS['assets-']);
         if ($count) {
             echo '<TABLE STYLE=margin-top:1em><THEAD><TR><TH SCOPE=col>Item ' .
