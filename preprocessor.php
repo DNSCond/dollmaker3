@@ -3,7 +3,7 @@ use function DataViewed\RGBToRGBA32;
 
 require_once "BinaryHelper.php";
 
-$TChar = 1;
+$TChar = 0;
 $direction = 'f-';
 $assets = array();
 $fullDirection = '';

@@ -7,6 +7,7 @@ use ANTHeader\ANTNavOption;
 use ANTHeader\ANTNavLinkTag;
 use function ANTHeader\ANTNavHome;
 use function ANTHeader\create_head2;
+use function DataViewed\RGBToRGBA32;
 
 function htmlspecialchars12(string $value): string
 {
@@ -44,17 +45,20 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 $thead = '<table style=display:inline-table><thead><tr><th scope=col>Description' .
                         '<th scope=col>Color Selector<th scope=col>Original Selection</thead>';
                 $result = '';
+                $index = 0;
+                $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
                 foreach ($colors as $name => $color) {
-                    //$result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name id=color-$name" .
-                    //" value=\"$color\" type=color><td style=background-color:$color><span>$color</span>";
                     $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
                             " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>" .
                             "<td style=background-color:$color><span>$color</span>";
+                    if ($name === 'skin') $index++;
+                    else RGBToRGBA32($view, hexdec(trim($color,
+                                    '#')) ^ 0xffFFff, $index++ * 4);
                 }
                 return "$thead<tbody>$result</tbody><tfoot><tr><td><label>\$opaque <input name=opaque type" .
                         "=checkbox $isopaque></label><td colspan=2><button type=button class=convertpng>" .
-                        "Convert to PNG</button> <a href=random.php>Random</a><tr><td colspan=3>" .
-                        "<button type=submit>apply colors</button>";
+                        "Convert to PNG</button> <a href=random.php>Random</a>, <a href=v1u.{$view->toBase64URL()}>" .
+                        "Invert Colors</a><tr><td colspan=3><button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
         <div hidden><?= (function () {
                 $result = '';
@@ -225,6 +229,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
                 'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
                 'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
+                'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
         ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
