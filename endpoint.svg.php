@@ -15,7 +15,7 @@ if ($GLOBALS['__FILE__'] !== __FILE__)
 require_once 'PathSVG.php';
 if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 ob_start(function (string $string): string {
-    //$string = preg_replace('/\\s+/', " ", $string);
+    $string = preg_replace('/\\s+/', " ", $string);
     $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string) . '</svg>';
     $hash = 'sha384b64-' . sha384Base64($string);
     header("hashtag: \"$hash\"");

@@ -13,10 +13,10 @@
     $armLength = 120 * 3;
     $armLengthReturn = $armLength + 30 ?>-->
     <!--<?= 'PHPIF';
-    if (!hasEquipped(2002)): ?>-->
+    if (!hasEquipped(2002) && !hasEquipped(2005)): ?>-->
     <path d="<?= "M $dressWidth 400 L 610 1210 L 190 1210 L $dressWidthInverted 400 Z" ?>"
-          fill="<?= "{$GLOBALS['colors']['pants']}" ?>"
-          stroke-width="8" stroke="#000000" stroke-linejoin="round"/>
+          fill="<?= "{$GLOBALS['colors']['pants']}" ?>" stroke-width="8"
+          stroke="#000000" stroke-linejoin="round"/>
     <!--<?= 'PHPENDIF';
     endif ?>-->
     <path d="M 530 430 l -15 <?= $topHeight ?> H 285 l -15 -<?= $topHeight ?> L 400 360 Z"

@@ -1,8 +1,9 @@
 {
-  "name": "dress pants",
+  "name": "pants",
   "cost": 50,
   "baseBody": 2000,
   "ZindexLayer": [
     "Back"
-  ]
+  ],
+  "private": true
 }
