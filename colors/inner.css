@@ -1,0 +1,18 @@
+:host {
+    vertical-align: top;
+}
+
+.outer {
+    margin: 0.25em;
+    border: 2px solid gray;
+    display: inline-block;
+    width: 40ch;
+    height: 5em;
+}
+
+/*noinspection CssUnresolvedCustomProperty*/
+.inner {
+    background-color: var(--backColor, #ffffff);
+    color: var(--textColor, #000000);
+    padding: 0.1em
+}
