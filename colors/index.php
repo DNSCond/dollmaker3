@@ -1052,7 +1052,7 @@ if (array_key_exists('colors', $_GET)) {
 } else {
     $array = $colors['mycolors'];
 }
-$links = create_head2($title = "car's color schema ($name);", ['base' => '/dollmaker3/colors/colors.php'], [
+$links = create_head2($title = "car's color schema ($name);", ['base' => '/dollmaker3/colors/'], [
     new ANTNavIStyle('.padding2{padding:1em;box-sizing:border-box;}'),
     new ANTNavArbitraryHTML('rel=preload',
         '<link rel=preload href=inner.css as=style>'),
@@ -1075,10 +1075,10 @@ $links = create_head2($title = "car's color schema ($name);", ['base' => '/dollm
             global $colors;
             $return = '';
             foreach ($colors as $key => $_) {
-                $val = htmlspecialchars12("?colors=" . urlencode($key));
-                $return = "$return <a href=\"$val\">$key</a>";
+                $val = htmlspecialchars12(urlencode($key));
+                $return = "$return <a href=$val>$key</a>";
             }
-            return ltrim("$return <a href=?colors=all>all</a>");
+            return ltrim("$return <a href=all>all</a>");
         })() ?></nav>
     <div><?= "\n";
         switch (gettype($array)) {
