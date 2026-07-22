@@ -109,7 +109,9 @@ $colors = [
         ], new_style_shades('modgreen', new Color('#aeef0f')),
         new_style_shades('greeny', Color::fromHSL(130, 50, 50)),
         new_style_shades('purple', new Color('#8e46db')),
-        new_style_shades('dark-magenta', new Color('#9B1C3C')), [
+        new_style_shades('dark-magenta', new Color('#9B1C3C')),
+        ['aisuggested-pink' => '#FF69b4', 'kumagawa-pink' => '#e689bf'],
+        new_style_shades('kumagawa-pink-shades', new Color('#e689bf')), [
             'eyes' => '#758eb1', 'white' => '#fefefe',
             'black' => '#272727', 'skin' => '#fdf5d9',
         ], ['dress-flower' => '#00bf00', 'dress-flower-dark' => '#009500',
@@ -735,12 +737,13 @@ $colors = [
 //https://www.color-hex.com/color-palette/1017352
         ],
     ], 'found-color6' => [
-        [
+         [
             'https://watatabe.fandom.com/wiki/Yaotose_Hinako dress' => '#3e4658',
             'https://watatabe.fandom.com/wiki/Yaotose_Hinako arms' => '#434547',
-        ], ['aisuggested-pink' => '#FF69b4', 'kumagawa-pink' => '#e689bf'],
-        new_style_shades('kumagawa-pink-shades', new Color('#e689bf')),
-        ['bss-blender-endCrafting-red' => '#c9271c',
+        ], ['woman-eyes' => '#ed1a1a', 'woman-innershirt' => '#78cc4e', 'woman-shirt' => '#000000', 'woman-skin' => '#cfb097',
+            'man-innershirt' => '#afceff', 'man-shirt' => '#73a3ff', 'man-skin' => '#a66c4c',
+//https://www.deviantart.com/akulatheautismgod/art/Conjoined-Players-1303631197
+        ], ['bss-blender-endCrafting-red' => '#c9271c',
             'bss-blender-bg-red' => '#641e13',
             'bss-blender-endCrafting-Yellow' => '#c2a52e',
             'bss-blender-bg-green' => '#1acc24',
