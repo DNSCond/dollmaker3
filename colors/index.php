@@ -737,9 +737,11 @@ $colors = [
 //https://www.color-hex.com/color-palette/1017352
                 ],
         ], 'found-color6' => [
-                [
-                        'https://watatabe.fandom.com/wiki/Yaotose_Hinako dress' => '#3e4658',
+                [       'https://watatabe.fandom.com/wiki/Yaotose_Hinako dress' => '#3e4658',
                         'https://watatabe.fandom.com/wiki/Yaotose_Hinako arms' => '#434547',
+                ], [    'sleeves' => '#fffe0d', 'shirt' => '#ffb40b',
+                        'pants' => '#ff3c02', 'skin' => '#f7c04b',
+//https://www.pixiv.net/en/artworks/164634
                 ], ['red-BG' => '#ff0004',
                         'red-stripe' => '#000000',
                         'red-shirt' => '#ba0100',
