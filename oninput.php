@@ -1,7 +1,6 @@
 <?php use DataViewed\BinaryView;
 use function DataViewed\RGBToRGBA32;
 
-require_once "{$_SERVER['DOCUMENT_ROOT']}/require/createHead2.php";
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 global $colors;

@@ -737,16 +737,17 @@ $colors = [
 //https://www.color-hex.com/color-palette/1017352
                 ],
         ], 'found-color6' => [
-                [       'https://watatabe.fandom.com/wiki/Yaotose_Hinako dress' => '#3e4658',
+                ['https://watatabe.fandom.com/wiki/Yaotose_Hinako dress' => '#3e4658',
                         'https://watatabe.fandom.com/wiki/Yaotose_Hinako arms' => '#434547',
-                ], [    'sleeves' => '#9c8946', 'middle shirt' => '#181512', 'shirt' => '#000000',
+                ], ['sleeves' => '#9c8946', 'middle shirt' => '#181512', 'shirt' => '#000000',
                         'dress' => '#8b4d13', 'dress-underline' => '#9c8946', 'skin' => '#593524',
                         'dress-shadow' => '#6b310c', 'dress-underline-shadow' => '#79592d',
                         'sleeves-shadow' => '#77562c',
 //https://www.deviantart.com/jurianologo/art/Humanized-Macrovision-Quality-Protection-1384908653
-                ], [    'sleeves' => '#fffe0d', 'shirt' => '#ffb40b',
+                ], ['sleeves' => '#fffe0d', 'shirt' => '#ffb40b',
                         'pants' => '#ff3c02', 'skin' => '#f7c04b',
 //https://www.pixiv.net/en/artworks/164634
+                ], ['anotherpink' => '#fe9de2', // pix:149084396
                 ], ['red-BG' => '#ff0004',
                         'red-stripe' => '#000000',
                         'red-shirt' => '#ba0100',

@@ -1,8 +1,5 @@
-<?php use function HashApi\sha384Base64;
-
-//header('cache-control: public, max-age=15, s-max-age=15');
-header('cache-control: private, max-age=0');
-require_once "{$_SERVER['DOCUMENT_ROOT']}/require/HashApi.php";
+<?php header('cache-control: public, max-age=15, s-max-age=15');
+//header('cache-control: private, max-age=0');
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 $GLOBALS['isFor'] = 'svgDisplay';
 require_once "preprocessor.php";
@@ -16,10 +13,9 @@ require_once 'PathSVG.php';
 if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 ob_start(function (string $string): string {
     $string = preg_replace('/\\s+/', " ", $string);
-    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string) . '</svg>';
-    $hash = 'sha384b64-' . sha384Base64($string);
-    header("hashtag: \"$hash\"");
-    return $string;
+    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string); //  . '</svg>'
+    //$hash = 'sha384b64-' . sha384Base64($string);header("hashtag: \"$hash\"");
+    return $string . '</svg>';
 });
 
 function mkshadow(string $shadow, int $shadowpercent): string

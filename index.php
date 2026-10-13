@@ -1,12 +1,7 @@
 <?php /** @noinspection HtmlUnknownTarget */
-require_once "{$_SERVER['DOCUMENT_ROOT']}/require/createHead2.php";
 
 use DataViewed\BinaryView;
-use ANTHeader\ANTNavIStyle;
-use ANTHeader\ANTNavOption;
-use ANTHeader\ANTNavLinkTag;
-use function ANTHeader\ANTNavHome;
-use function ANTHeader\create_head2;
+use function ANTHeader\create_head3;
 use function DataViewed\RGBToRGBA32;
 
 function htmlspecialchars12(string $value): string
@@ -17,22 +12,12 @@ function htmlspecialchars12(string $value): string
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/';
 require_once "preprocessor.php";
 global $colors;
-$links = create_head2('Character Customizer Version5', [
-        'base' => '/dollmaker3/', 'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here'], [
-        new ANTNavLinkTag('stylesheet', ['styles.css', 'ddDL-table.css', 'display.css']),
-        new ANTNavIStyle('div.divs.nav-home{max-width:unset;}'), new ANTNavIStyle('h1{margin-top:0;}'),
-        new ANTNavLinkTag('canonical', "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}"),
-    //new ANTNavArbitraryHTML('open-graph',
-    //"<meta property=og:description content=\"ANTRequest.nl's Character Creator, create your ANTRequest.nl's Character lookalike here\">" .
-    //"<meta property=og:title content=\"Character Customizer Version5\">" .
-    //"<meta property=og:url content=https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}>" .
-    //"<meta property=og:image content=\"https://localhost/dollmaker3/endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING']) . '">' .
-    //"<meta property=og:image:width content=800><meta property=og:image:height content=1280>" .
-    //"<meta property=og:image:type content=image/svg+xml>"),
-], [ANTNavHome(),
-        new ANTNavOption('/dollmaker3/', '/dollmaker2/icon/endpoint.php?preset=Bee',
-                'dollmakerV5 ANT', new Color('a68300'),
-                new Color('fff100'), true),
+
+require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
+create_head3('Character Customizer Version5', [
+        'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
+        'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}", 'base' => '/dollmaker3/',
+        'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
 ]);
 global $opaque;
 $isopaque = $opaque ? 'checked' : 'data-checked' ?>
@@ -42,23 +27,23 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
             . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($isopaque, $colors) {
-                $thead = '<table style=display:inline-table><thead><tr><th scope=col>Description' .
-                        '<th scope=col>Color Selector<th scope=col>Original Selection</thead>';
+                $thead = '<table class=inline-table><thead><tr><th scope=col>Description' .
+                        '<th scope=col>Color Selector<!--<th scope=col>Original Selection--></thead>';
                 $result = '';
                 $index = 0;
                 $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
                 foreach ($colors as $name => $color) {
                     $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
-                            " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>" .
-                            "<td style=background-color:$color><span>$color</span>";
+                            " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>";
+                    //."<td style=background-color:$color><span>$color</span>";
                     if ($name === 'skin') $index++;
                     else RGBToRGBA32($view, hexdec(trim($color,
                                     '#')) ^ 0xffFFff, $index++ * 4);
                 }
                 return "$thead<tbody>$result</tbody><tfoot><tr><td><label>\$opaque <input name=opaque type" .
                         "=checkbox $isopaque></label><td colspan=2><button type=button class=convertpng>" .
-                        "Convert to PNG</button> <a href=random.php>Random</a>, <a href=v1u.{$view->toBase64URL()}>" .
-                        "Invert Colors</a><tr><td colspan=3><button type=submit>apply colors</button>";
+                        "Convert to PNG</button> <a hidden>Random</a>, <a href=v1u.{$view->toBase64URL()}>"
+                        . "Invert Colors</a><tr><td colspan=3><button type=submit>apply colors</button>";
             })() . '</table>' ?></div>
         <div hidden><?= (function () {
                 $result = '';
@@ -96,7 +81,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         echo "<input type=hidden value=$color name=$name>";
     }
     $appleLocked = array();
-    echo "\n<div style='margin: 1em 0 0 1em'><button type=submit>apply preview</button></div>";
+    echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
     $filegc = file_get_contents(__DIR__ . '/store/assets.json');
     if ($filegc) $json = json_decode($filegc, true); else $json = array();
     foreach ($json['assets'] as $key => $item) {
@@ -140,7 +125,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $integerid = +$matches[1];
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
-        $echo = "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=checkbox" .
+        $echo = "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
                 " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
                 "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
                 . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>" .
@@ -155,22 +140,21 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
             $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
             $appleLocked[] = $echo;
             $inputname = "$inputname-unblocked";
-            echo "<character-display><div style=padding:0.5em><label for=$inputname>$htmlName <input type=" .
-                    "checkbox value=$integerid id=$inputname name=$iname disabled></label></div><div><label" .
-                    " for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280" .
-                    " class=store-img></label></div><dl class=descLi><div data-key=cost><dt>cost<dd>" .
+            echo "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
+                    " value=$integerid id=$inputname name=$iname disabled></label></div><div><label for=" .
+                    "$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 " .
+                    "class=store-img></label></div><dl class=descLi><div data-key=cost><dt>cost<dd>" .
                     "$cost</div></dl></character-display>";
         } else echo $echo;
     }
     global $dirByte;
-    echo "\n<div style='margin: 1em 0 1em 1em'><button type=submit>apply preview</button></div>" ?></form>
+    echo "\n<div class=marginal2><button type=submit>apply preview</button></div>" ?></form>
 <DIV class=divs>
     <H2 ID=checkout>Checkout</H2>
     <DETAILS OPEN><?= '<SUMMARY>View Checkout</SUMMARY>';
         $count = !!count($GLOBALS['assets-']);
         if ($count) {
-            echo '<TABLE STYLE=margin-top:1em><THEAD><TR><TH SCOPE' .
-                    '=col>Item Name<TH SCOPE=col>Item Price<tBODY>';
+            echo '<TABLE CLASS=mt><THEAD><TR><TH SCOPE=col>Item Name<TH SCOPE=col>Item Price<tBODY>';
         } else echo "<p>No Checkout Needed.";
         $assetCheckout = array();
         global $direction;
@@ -193,22 +177,10 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         if ($count) echo "<tFoot><TR><TH COLSPAN=1 SCOPE=row>Total<TD>$assetCheckoutTotal Units</TABLE>" ?></DETAILS>
 </DIV>
 <TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
-<SCRIPT type=module>
-    class AppleLockedUnblocked extends HTMLTemplateElement {
-        connectedCallback() {
-            this.content.querySelectorAll('character-display').forEach(each => {
-                const id = each.querySelector('input').getAttribute('id'),
-                    unblocked = this.ownerDocument.getElementById(id + '-unblocked');
-                unblocked.parentElement.parentElement.parentElement.replaceWith(each);
-            });
-        }
-    }
-
-    customElements.define('applelocked-unblocked', AppleLockedUnblocked, {extends: 'template'});
-</SCRIPT>
+<SCRIPT type=module src=statics/index.js></SCRIPT>
 <SCRIPT type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal
+            'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal,
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
 <div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
         $array = array(
@@ -233,11 +205,9 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
-            $output[] = <<<HTML
-                <div class=store-div><div style=padding:0.5em><a href="$href">$name</a></div>
-                <a href="$href"><img src="endpoint.svg.php?dna=$href" width=800 height=1280
-                class=store-img alt="clothing option &quot;$name&quot;"/></a></div>
-                HTML;
+            $output[] = "<div class=store-div><div CLASS=padding><a href=\"$href\">$name</a></div>" .
+                    "<a href=\"$href\"><img src=\"endpoint.svg.php?dna=$href\" class=store-img\x20" .
+                    "width=800 height=1280 alt=\"clothing option &quot;$name&quot;\"/></a></div>";
         }
         return "\n" . implode("", $output);
     })() . "\n" ?></div>
