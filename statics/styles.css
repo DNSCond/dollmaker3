@@ -120,3 +120,8 @@ h1 {
 .padding {
     padding: 0.5em;
 }
+
+[data-ori] {
+    /*noinspection CssInvalidPropertyValue,CssInvalidFunction*/
+    background-color: attr(data-ori type(<color>), #00a8f3);
+}

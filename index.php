@@ -27,15 +27,15 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
             . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($isopaque, $colors) {
-                $thead = '<table class=inline-table><thead><tr><th scope=col>Description' .
-                        '<th scope=col>Color Selector<!--<th scope=col>Original Selection--></thead>';
+                $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
+                        ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
                 $result = '';
                 $index = 0;
                 $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
                 foreach ($colors as $name => $color) {
                     $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
-                            " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>";
-                    //."<td style=background-color:$color><span>$color</span>";
+                            " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
+                            . "<td class=bg data-ori=$color><span>$color</span>";
                     if ($name === 'skin') $index++;
                     else RGBToRGBA32($view, hexdec(trim($color,
                                     '#')) ^ 0xffFFff, $index++ * 4);
