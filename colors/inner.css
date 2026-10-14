@@ -6,13 +6,36 @@
     margin: 0.25em;
     border: 2px solid gray;
     display: inline-block;
+    /*noinspection CssInvalidPropertyValue,CssInvalidFunction*/
+    background-color: attr(data-val type(<color>));
     width: 40ch;
     height: 5em;
+    padding: 0.7em;
+    box-sizing: border-box;
 }
 
 /*noinspection CssUnresolvedCustomProperty*/
 .inner {
     background-color: var(--backColor, #ffffff);
     color: var(--textColor, #000000);
-    padding: 0.1em
+    padding: 0.1em;
+}
+
+.padding2 {
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.main {
+    margin: 0 0 0 1em;
+    width: calc(100% - 2em);
+    box-sizing: border-box;
+}
+
+.margin-bottom {
+    margin-bottom: 0.5em;
+}
+
+.line-height {
+    line-height: 1.95em
 }

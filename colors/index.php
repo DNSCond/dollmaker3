@@ -1,12 +1,9 @@
-<?php use ANTHeader\ANTNavArbitraryHTML;
-use ANTHeader\ANTNavIStyle;
-use ANTHeader\ANTNavOption;
-
-use function ANTHeader\ANTNavHome;
-use function ANTHeader\create_head2;
+<?php use function ANTHeader\create_head3;
 use function Helpers\htmlspecialchars12;
 
-require_once "{$_SERVER['DOCUMENT_ROOT']}/require/createHead2.php";
+require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
+require_once 'Color.php';
+
 $innerHTML = [
         'Favicond\'s outerHTML' => '#00a8f3',
         'Favicond\'s windshield' => '#8cfffa',
@@ -1049,7 +1046,7 @@ function colors($name, $array): void
 {
     //$index = 0;
     $zero_split = 0;
-    echo "<div style=line-height:1.95em><h2>$name</h2>\n";
+    echo "<div class=line-height><h2>$name</h2>\n";
     foreach ($array as $innerArray) {
         if ($zero_split++ !== 0) echo "<div class=padding2></div>";
         foreach ($innerArray as $key => $val) {
@@ -1061,9 +1058,9 @@ function colors($name, $array): void
             //(preg_match('/^0x/', "$vl") == 1 ? cbyte(hexdec($vl)) : '');
             echo "</span></div>\n";*/
             /** @noinspection CssUnresolvedCustomProperty */
-            $innerHTML = "<link rel=stylesheet href=inner.css><div class=outer" .
-                    " style=background-color:$val><span class=inner><slot></slot></span></div>";
-            echo "<color-block color=$val><template shadowrootmode=open>$innerHTML</template>&quot;$key&quot; $val;</color-block\n>";
+            $innerHTML = "<template shadowrootmode=open><link rel=stylesheet href=inner.css>" .
+                    "<div class=outer data-val=$val><span class=inner><slot></slot></span></div>";
+            echo "<color-block color=$val>$innerHTML</template>&quot;$key&quot; $val;</color-block>";
         }
     }
     echo '</div>';
@@ -1079,25 +1076,16 @@ if (array_key_exists('colors', $_GET)) {
 } else {
     $array = $colors['mycolors'];
 }
-$links = create_head2($title = "car's color schema ($name);", ['base' => '/dollmaker3/colors/'], [
-        new ANTNavIStyle('.padding2{padding:1em;box-sizing:border-box;}'),
-        new ANTNavArbitraryHTML('rel=preload',
-                '<link rel=preload href=inner.css as=style>'),
-], [
-        ANTNavHome(),
-        new ANTNavOption('.', '/dollmaker2/icon/endpoint.php?preset=Reddcat',
-                'Color Scheme', new Color('a62c00'),
-                new Color('ff4500'), true),
-        new ANTNavOption('..', '/dollmaker2/icon/endpoint.php?preset=Bee',
-                'dollmakerV4 ANT', new Color('a68300'),
-                new Color('fff100')),
+create_head3($title = "$name( car's color schema)", [
+        'linktags' => [['preload', 'inner.css']],
+        'base' => '/dollmaker3/colors/',
 ]) ?>
 <script type=application/json is=output-script><?= json_encode($colors) ?></script>
-<div class="divs nav-home" style="margin: 0 0 0 1em; width: calc(100% - 2em); box-sizing: border-box">
+<div class="divs nav-home main">
     <!--Regular:null; BG: 65,10%; EYES: 49,80%; Pants: 39,61%; dark: 25,10%; -->
     <!--width="1920" height="1080"; width="800" height="1280"; width="2765" height="1620"; -->
-    <h1 style="margin-bottom:0.5em"><?= htmlspecialchars12($title) ?></h1>
-    <script type=module>import '/gallery/ColorBadge.js';</script>
+    <h1 class=margin-bottom><?= htmlspecialchars12($title) ?></h1>
+    <!--<script type=module src='<?= 'ColorBadge.js' ?>'></script>-->
     <nav><?= (function () {
             global $colors;
             $return = '';

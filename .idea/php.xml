@@ -10,13 +10,12 @@
       <path value="$PROJECT_DIR$/../require" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.5" />
   <component name="PhpRuntimeConfiguration">
     <extensions>
       <extension name="Ev" enabled="false" />
       <extension name="SQLite" enabled="false" />
       <extension name="SplType" enabled="false" />
-      <extension name="Zend OPcache" enabled="false" />
       <extension name="ZendDebugger" enabled="false" />
       <extension name="ZendUtils" enabled="false" />
       <extension name="amqp" enabled="false" />
@@ -29,10 +28,13 @@
       <extension name="cubrid" enabled="false" />
       <extension name="curl" enabled="false" />
       <extension name="dba" enabled="false" />
+      <extension name="ddtrace" enabled="false" />
       <extension name="decimal" enabled="false" />
       <extension name="dio" enabled="false" />
+      <extension name="ds_v2" enabled="false" />
       <extension name="elastic_apm" enabled="false" />
       <extension name="enchant" enabled="false" />
+      <extension name="excimer" enabled="false" />
       <extension name="exif" enabled="false" />
       <extension name="fann" enabled="false" />
       <extension name="ffmpeg" enabled="false" />
@@ -51,6 +53,7 @@
       <extension name="http" enabled="false" />
       <extension name="ibm_db2" enabled="false" />
       <extension name="igbinary" enabled="false" />
+      <extension name="imagick" enabled="false" />
       <extension name="imap" enabled="false" />
       <extension name="inotify" enabled="false" />
       <extension name="interbase" enabled="false" />
@@ -60,7 +63,9 @@
       <extension name="ldap" enabled="false" />
       <extension name="libevent" enabled="false" />
       <extension name="libsodium" enabled="false" />
+      <extension name="litespeed" enabled="false" />
       <extension name="mailparse" enabled="false" />
+      <extension name="maxminddb" enabled="false" />
       <extension name="mbstring" enabled="false" />
       <extension name="mcrypt" enabled="false" />
       <extension name="memcache" enabled="false" />
@@ -96,8 +101,6 @@
       <extension name="snmp" enabled="false" />
       <extension name="soap" enabled="false" />
       <extension name="sockets" enabled="false" />
-      <extension name="sodium" enabled="false" />
-      <extension name="sqlite3" enabled="false" />
       <extension name="sqlsrv" enabled="false" />
       <extension name="ssh2" enabled="false" />
       <extension name="suhosin" enabled="false" />
@@ -107,7 +110,6 @@
       <extension name="sysvsem" enabled="false" />
       <extension name="sysvshm" enabled="false" />
       <extension name="tidy" enabled="false" />
-      <extension name="uri" enabled="false" />
       <extension name="v8js" enabled="false" />
       <extension name="wddx" enabled="false" />
       <extension name="win32service" enabled="false" />
