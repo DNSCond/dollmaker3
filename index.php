@@ -18,31 +18,43 @@ create_head3($title = 'Character Customizer Version6', [
         'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}", 'base' => '/dollmaker3/',
         'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
 ]);
-global $opaque;
-$isopaque = $opaque ? 'checked' : 'data-checked' ?>
+global $opaque, $pfpMode;
+$GLOBALS['inherited'] = true;
+$isopaque = $opaque ? 'checked' : 'data-checked';
+$pfpEnabled = $pfpMode ? 'checked' : 'data-check';
+if ($pfpMode) {
+    $w = 512;
+    $h = 512;
+} else {
+    $w = 800;
+    $h = 1280;
+}
+$size = "width=$w height=$h";
+$mainSize = $size . ($pfpMode ? "\x20class=size512" : '');
+$htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
     <form method=post action=oninput.php>
-        <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
-            . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($isopaque, $colors) {
-                $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
-                        ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
-                $result = '';
-                $index = 0;
-                $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
-                foreach ($colors as $name => $color) {
-                    $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
-                            " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
-                            . "<td class=bg data-ori=$color><span>$color</span>";
-                    if ($name === 'skin') $index++;
-                    else RGBToRGBA32($view, hexdec(trim($color,
-                                    '#')) ^ 0xffFFff, $index++ * 4);
-                }
-                return "$thead<tbody>$result</tbody><tfoot><tr><td><label>\$opaque <input name=opaque type" .
-                        "=checkbox $isopaque></label><td colspan=2><button type=button class=convertpng>" .
-                        "Convert to PNG</button> <a hidden>Random</a>, <a href=v1u.{$view->toBase64URL()}>"
-                        . "Invert Colors</a><tr><td colspan=3><button type=submit>apply colors</button>";
-            })() . '</table>' ?></div>
+        <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
+            $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
+                    ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
+            $result = '';
+            $index = 0;
+            $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
+            foreach ($colors as $name => $color) {
+                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
+                        " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
+                        . "<td class=bg data-ori=$color><span>$color</span>";
+                if ($name === 'skin') $index++; else RGBToRGBA32($view, hexdec(trim(
+                                $color, '#')) ^ 0xffFFff, $index++ * 4);
+            }
+            echo "$thead<tbody>$result</tbody><tfoot><tr><td><label for=opaque>opaque</label><td><input name=opaque" .
+                    " type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'checked' : 'not checked') .
+                    "<tr><td><label for=pfpMode>Profile Image Mode</label><td><input name=pfpMode $pfpEnabled" .
+                    " id=pfpMode type=checkbox><TD>" . ($pfpEnabled === 'checked' ? 'checked' : 'not checked') .
+                    "<tr><td colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
+                    "<button type=button class=convertpng>Convert to PNG</button>, <a href=v1u." .
+                    "{$view->toBase64URL()}>Invert Colors</a></div>" ?></div>
         <div hidden><?= (function () {
                 $result = '';
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z)
@@ -59,6 +71,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
 <form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
     $afterColors = (7 * 4);
+    if ($pfpMode) echo "<input type=hidden value=on name=pfpMode>";
     foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
     echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
     foreach ($assetdata['d'] as $key => $item) {
@@ -74,7 +87,7 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $view->resize($afterColors + 2);
         $view->resize($afterColors + 2 + ($writeCount * 3));
         $view->setUint8($afterColors + 1, $writeCount);
-        $view->setUint8($afterColors, $GLOBALS['dirByte'] ?? 0b100);
+        $view->setUint8($afterColors, ($GLOBALS['dirByte'] ?? 0b100));
         $baseOffset = $afterColors + 2;
         $assetIdx = 0;
 
@@ -101,8 +114,8 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
         echo "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
-                " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
-                "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
+                " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname>" .
+                "<img src=\"$img_src\" alt=\"Equip $htmlName\" $size class=store-img></label></div><dl"
                 . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>";
         echo "</character-display>";
     }

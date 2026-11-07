@@ -4,17 +4,16 @@ use function DataViewed\RGBToRGBA32;
 use DataViewed\BinaryView;
 
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
-
-require_once "BinaryHelper.php";
-
 $TChar = 0;
 $specified = 0;
 $opaque = false;
 $dirByte = 0b100;
+$pfpMode = false;
 $direction = 'f-';
 $assets = array();
 $isLocked = false;
 $fullDirection = '';
+require_once "BinaryHelper.php";
 $assetdata = $GLOBALS['assetdata'] = readJSON(__DIR__ . '/assetdata/.assets.json');
 if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
     if (+$matches[1] !== 1) {
@@ -27,17 +26,16 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     $dirByte = $dataView->getUint8($offset);
     $frontBack = (bool)($dirByte & (1 << 0));
     $leftRight = (bool)($dirByte & (1 << 1));
-    $deg45 = (bool)($dirByte & (1 << 2));
+    $pfpMode = (bool)($dirByte & (1 << 4));
     $opaque = (bool)($dirByte & (1 << 3));
+    $deg45 = (bool)($dirByte & (1 << 2));
     $direction = ($frontBack ? 'b' : 'f') . ($leftRight ? 'l' : 'r');
-    if ($deg45) {
-        $direction = match ($direction) {
-            'bl' => 'b-',
-            'br' => '-r',
-            'fl' => '-l',
-            'fr' => 'f-',
-        };
-    }
+    if ($deg45) $direction = match ($direction) {
+        'bl' => 'b-',
+        'br' => '-r',
+        'fl' => '-l',
+        'fr' => 'f-',
+    };
     $y = match ($direction[0]) {
         'f' => 'Front',
         'b' => 'Back',
@@ -92,7 +90,7 @@ foreach ($colors as $color => $value) {
 }
 $i = 0;
 $canonicalColorIndex *= 4;
-$canonicalized->setUint8($canonicalColorIndex++, ($dirByte & 0b111) | ($opaque << 3));
+$canonicalized->setUint8($canonicalColorIndex++, ($dirByte & 0b111) | ($opaque << 3) | ($pfpMode << 4));
 $canonicalized->setUint8($assetCountByte = $canonicalColorIndex++, 0);
 $matchedAssets = array(0 => true);
 $assetsCounted = 0;

@@ -3,15 +3,16 @@
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 $GLOBALS['isFor'] = 'svgDisplay';
 require_once "preprocessor.php";
-if (!isset($GLOBALS['__FILE__'])) $GLOBALS['__FILE__'] = null;
-if ($GLOBALS['__FILE__'] !== __FILE__) header('content-type: image/svg+xml');
 require_once 'PathSVG.php';
-if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+$inherited = array_key_exists('inherited', $GLOBALS) && $GLOBALS['inherited'];
+if (!$inherited) {
+    header('content-type: image/svg+xml');
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+}
 ob_start(function (string $string): string {
     $string = preg_replace('/\\s+/', " ", $string);
-    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string); //  . '</svg>'
-    //$hash = 'sha384b64-' . sha384Base64($string);header("hashtag: \"$hash\"");
-    return $string . '</svg>';
+    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string);
+    return "$string</svg>";
 });
 
 function mkshadow(string $shadow, int $shadowpercent): string
@@ -64,8 +65,21 @@ if ($devMode) {
     header('cache-control: private, max-age=0');
 } else {
     header('cache-control: public, max-age=15, s-max-age=15');
-} ?>
-<svg width="800" height="1280" viewBox="0 0 800 1280" xmlns="http://www.w3.org/2000/svg">
+}
+$yoffset = 0;
+global $pfpMode;
+if ($pfpMode) {
+    $w = 512;
+    $h = 512;
+    $xoffset = 140;
+    $isTransparent = false;
+} else {
+    $w = 800;
+    $h = 1280;
+    $xoffset = 0;
+}
+$bottomWall = ''; ?>
+<svg width="<?= $w ?>" height="<?= $h ?>" viewBox="<?= "$xoffset $yoffset $w $h" ?>" xmlns="http://www.w3.org/2000/svg">
     <g class="background" stroke-width="0" visibility='visible'>
         <!--<?php if ($isTransparent) { ?>-->
         <rect width="800" height="1280" fill="#FfFfFf"/>
@@ -77,15 +91,24 @@ if ($devMode) {
         </g>
         <!--<?php } ?>-->
     </g>
-    <g fill="#ae782f"><?= (function () {
-            $width = 20;
-            $RightX = 800 - $width;
-            $DownY = 1280 - $width;
+    <g fill='#ae782f'><?= (function () use ($pfpMode, $w, $h, $xoffset, &$bottomWall) {
+            $width = $pfpMode ? 10 : 20;
+            $RightX = $xoffset + $w - $width;
+            $DownY = $h - $width;
+            if ($pfpMode) {
+                // add $yoffset here
+                $bottomWall = "<rect x='0' y='$DownY' width='800' height='$width' class='wall down' fill='#ae782f'/>";
+                return "\n" . <<<SVG
+                <rect x="$xoffset" y="0" width="$width" height="1280" class="wall left"/>
+                <rect x="$RightX" y="0" width="$width" height="1280" class="wall right"/>
+                <rect x="0" y="0" width="800" height="$width" class="wall up"/>
+                SVG;
+            }
             return "\n" . <<<SVG
             <rect x="0" y="0" width="$width" height="1280" class="wall left"/>
             <rect x="$RightX" y="0" width="$width" height="1280" class="wall right"/>
-            <rect x="0" y="0" width="800" height="$width" class="wall up"/>
             <rect x="0" y="$DownY" width="800" height="$width" class="wall down"/>
+            <rect x="0" y="0" width="800" height="$width" class="wall up"/>
             SVG;
         })() . "\n" ?></g>
     <g class="PHPX" visibility='visible'><?= '<!-- PHPX -->';
@@ -116,5 +139,5 @@ if ($devMode) {
         foreach ($back_s as $asset) createAsset($asset, 'Back');
         foreach ($normal as $asset) createAsset($asset, '');
         foreach ($fronts as $asset) createAsset($asset, 'Front');
-        echo '<!-- PHPX -->' ?></g>
+        echo $bottomWall ?: '<!-- PHPX -->' ?></g>
 </svg>

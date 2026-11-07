@@ -1,18 +1,13 @@
-/* */
+/* img#main-svg  */
 img#main-svg {
     vertical-align: top;
     /*border: 10px solid #ae782f;*/
     max-height: 700px;
     max-width: calc(100% - 20px);
     box-sizing: content-box;
-    aspect-ratio: 800/1280;
+    display: inline-block;
     height: auto;
     width: auto;
-}
-
-.main-svg {
-    height: auto;
-    aspect-ratio: 800/1280;
 }
 
 .flexbox {
@@ -103,6 +98,14 @@ h1 {
 
 .inline-table {
     display: inline-table;
+}
+
+.inline-block {
+    border: 3px solid #7c7c7c;
+    box-sizing: border-box;
+    text-align: left;
+    padding: 8px;
+    height: 100%;
 }
 
 .marginal {

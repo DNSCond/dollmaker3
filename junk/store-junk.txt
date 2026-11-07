@@ -1,0 +1,17 @@
+function json_fromArray2(mixed $json, bool|int $JSON_PRETTY_PRINT = true,
+bool  $insertToHTML = false): false|string
+{
+    $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    if ($insertToHTML) $options |= JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_TAG | JSON_HEX_QUOT;
+    if (is_int($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT >= 0) {
+        $options |= JSON_PRETTY_PRINT;
+        $json = json_encode($json, $options);
+        return preg_replace_callback('/^ +/m', (function (array $matches)
+        use ($JSON_PRETTY_PRINT): string {
+            return str_repeat(' ', (strlen($matches[0]) / 4) * $JSON_PRETTY_PRINT);
+        }), $json);
+    } elseif (is_bool($JSON_PRETTY_PRINT) && $JSON_PRETTY_PRINT) {
+        $options |= JSON_PRETTY_PRINT;
+    }
+    return json_encode($json, $options);
+}

@@ -8,7 +8,6 @@ $keys = array_keys($colors);
 if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
     implode(';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
         $keys)) . ';', $matches)) {
-
     $afterColors = (7 * 4); // 28 bytes
 
     // 1. Gather and sanitize incoming assets from POST
@@ -51,9 +50,14 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
             default => 0,
         };
     }
+
     if (array_key_exists('opaque', $_POST)) {
         header('dev-result: ' . decbin(+(bool)$_POST['opaque'] << 3));
         $b111 |= +(bool)$_POST['opaque'] << 3;
+    }
+
+    if (array_key_exists('pfpMode', $_POST)) {
+        $b111 |= +(bool)$_POST['pfpMode'] << 4;
     }
 
     // Write the Global Options Byte at index 28
