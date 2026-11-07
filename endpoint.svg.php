@@ -1,16 +1,12 @@
-<?php header('cache-control: public, max-age=15, s-max-age=15');
-//header('cache-control: private, max-age=0');
+<?php use function Helpers\Getters\getThingOrNull;
+
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 $GLOBALS['isFor'] = 'svgDisplay';
 require_once "preprocessor.php";
-
-$nowatermark = str_starts_with($_SERVER['HTTP_REFERER'], 'https://antrequest.nl');
-if (!isset($GLOBALS['__FILE__']))
-    $GLOBALS['__FILE__'] = null;
-if ($GLOBALS['__FILE__'] !== __FILE__)
-    header('content-type: image/svg+xml');
+if (!isset($GLOBALS['__FILE__'])) $GLOBALS['__FILE__'] = null;
+if ($GLOBALS['__FILE__'] !== __FILE__) header('content-type: image/svg+xml');
 require_once 'PathSVG.php';
-if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+if ($GLOBALS['__FILE__'] !== __FILE__) echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 ob_start(function (string $string): string {
     $string = preg_replace('/\\s+/', " ", $string);
     $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string); //  . '</svg>'
@@ -50,7 +46,25 @@ $stroke = 1;
     $skin = $arms = $colors['skin'];
     $secondary = $colors['secondary'];
     global $bgcolor, $pants, $shoes, $fgcolor, $backgroundColor, $sleeves, $lights, $wheels, $secondary;
-} global $opaque ?>
+} global $opaque;
+$devMode = false;
+global $direction;
+$normal = array();
+$fronts = array();
+$back_s = array();
+foreach ($GLOBALS['assets-'] as $asset) {
+    $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
+    $assetObj = getThingOrNull($GLOBALS['assetdata'], ['d', $assetId, $direction]);
+    if (array_key_exists('Front', $assetObj)) $fronts[] = ['asset' => $asset, 'name' => $assetObj['Front']];
+    if (array_key_exists('Back', $assetObj)) $back_s[] = ['asset' => $asset, 'name' => $assetObj['Back']];
+    if (array_key_exists('fn', $assetObj)) $normal[] = ['asset' => $asset, 'name' => $assetObj['fn']];
+    $devMode = $devMode || $assetObj['data']['dev-mode'];
+}
+if ($devMode) {
+    header('cache-control: private, max-age=0');
+} else {
+    header('cache-control: public, max-age=15, s-max-age=15');
+} ?>
 <svg width="800" height="1280" viewBox="0 0 800 1280" xmlns="http://www.w3.org/2000/svg">
     <g class="background" stroke-width="0" visibility='visible'>
         <!--<?php if ($isTransparent) { ?>-->
@@ -63,8 +77,6 @@ $stroke = 1;
         </g>
         <!--<?php } ?>-->
     </g>
-    <g class="!$nowatermark"
-       visibility='visible'><?= !$nowatermark ? '<rect width="440" height="100" fill="#fff100"/>' : '' ?></g>
     <g fill="#ae782f"><?= (function () {
             $width = 20;
             $RightX = 800 - $width;
@@ -77,30 +89,23 @@ $stroke = 1;
             SVG;
         })() . "\n" ?></g>
     <g class="PHPX" visibility='visible'><?= '<!-- PHPX -->';
-        global $direction;
-        $normal = array();
-        $fronts = array();
-        $json = file_get_contents('store/assets.json');
-        if ($json) $json = json_decode($json, true);
-        else $json = null;
-        if (!$nowatermark) require_once "{$_SERVER['DOCUMENT_ROOT']}/dollmaker3/watermark.svg.php";
         function createAsset(array $asset, string $type): void
         {
-            global $direction;
+            $dname = $asset['name'];
+            $asset = $asset['asset'];
             $svgType = $type === '' ? 'Middle' : $type;
             $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.8' : 1;
             //$opacity=($asset['opt'] & (1 << 1)) !== 0 ?'0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(fn(string $string): string => "<g opacity='$opacity' data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
-            if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-$type.svg.php"))
-                ($inclusionResult = (bool)include_once __DIR__ . "/store/assets/$assetId-$direction-$type.svg.php");
-            else $inclusionResult = false;
+            ($inclusionResult = (bool)include_once __DIR__ . "/assetdata/$dname");
             if (!$inclusionResult) {
                 echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";
             }
             ob_end_flush();
         }
 
+        // required in assets
         $assetsEquipped = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
         function hasEquipped(int $id): bool
         {
@@ -108,31 +113,7 @@ $stroke = 1;
             return in_array($id, $assetsEquipped);
         }
 
-        foreach ($GLOBALS['assets-'] as $asset) {
-            $ZindexLayer = array('');
-            $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            $jsonArray = $json["assets"]["$assetId-$direction-.svg"] ?? array();
-            if (array_key_exists('ZindexLayer', $jsonArray)) {
-                $ZindexLayer = $jsonArray['ZindexLayer'];
-                if (count($ZindexLayer) == 0) {
-                    $ZindexLayer = array('');
-                }
-            }
-            if (in_array('Back', $ZindexLayer))
-                createAsset($asset, 'Back');
-            if (in_array('', $ZindexLayer)) {
-                $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-                if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-.svg.php")) {
-                    $normal[] = $asset;
-                }
-            }
-            if (in_array('Front', $ZindexLayer)) {
-                $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-                if (file_exists(__DIR__ . "/store/assets/$assetId-$direction-Front.svg.php")) {
-                    $fronts[] = $asset;
-                }
-            }
-        }
+        foreach ($back_s as $asset) createAsset($asset, 'Back');
         foreach ($normal as $asset) createAsset($asset, '');
         foreach ($fronts as $asset) createAsset($asset, 'Front');
         echo '<!-- PHPX -->' ?></g>

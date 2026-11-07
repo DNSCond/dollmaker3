@@ -1,8 +1,7 @@
-<?php /** @noinspection HtmlUnknownTarget */
-
-use DataViewed\BinaryView;
+<?php use DataViewed\BinaryView;
 use function ANTHeader\create_head3;
 use function DataViewed\RGBToRGBA32;
+use function Helpers\Getters\getThingOrNull;
 
 function htmlspecialchars12(string $value): string
 {
@@ -11,10 +10,10 @@ function htmlspecialchars12(string $value): string
 
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/';
 require_once "preprocessor.php";
-global $colors;
+global $colors, $assetdata;
 
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
-create_head3('Character Customizer Version5', [
+create_head3($title = 'Character Customizer Version6', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
         'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}", 'base' => '/dollmaker3/',
         'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
@@ -22,8 +21,7 @@ create_head3('Character Customizer Version5', [
 global $opaque;
 $isopaque = $opaque ? 'checked' : 'data-checked' ?>
 <div class=divs>
-    <h1><a href=?>Character Customizer Version5</a></h1>
-    <script type=module src=/gallery/JSONScript.js></script>
+    <h1><a href=?><?= $title ?></a></h1>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?" . htmlspecialchars12($_SERVER['QUERY_STRING'])
             . "\" id=main-svg width=800 height=1280 alt='the result'>" . (function () use ($isopaque, $colors) {
@@ -58,41 +56,18 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
                 echo "<input type=hidden value=$id name=assets[]>" ?></div>
     </form>
 </div>
-<!--suppress JSCheckFunctionSignatures, JSUnresolvedReference -->
-<script type=module>
-    const img = document.querySelector('#main-svg'), a = document.createElement('a');
-    document.querySelector('button[type=button].convertpng').addEventListener('click',
-        () => createImageBitmap(img).then(imageBitmap => {
-            const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
-            canvas.getContext("2d").drawImage(imageBitmap, 0, 0);
-            return canvas.convertToBlob();
-        }).then(blob => {
-            a.download = Date();
-            const blobHref = a.href = URL.createObjectURL(blob);
-            document.body.append(a);
-            a.click();
-            return new Promise(resolve => setTimeout(resolve, 5000, blobHref));
-        }).then(URL.revokeObjectURL).finally(() => a.remove()),
-    );
-</script>
+<SCRIPT type=module src=statics/index.js></SCRIPT>
 <form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
     $afterColors = (7 * 4);
-    foreach ($colors as $name => $color) {
-        echo "<input type=hidden value=$color name=$name>";
-    }
-    $appleLocked = array();
+    foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
     echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
-    $filegc = file_get_contents(__DIR__ . '/store/assets.json');
-    if ($filegc) $json = json_decode($filegc, true); else $json = array();
-    foreach ($json['assets'] as $key => $item) {
+    foreach ($assetdata['d'] as $key => $item) {
+        $item = $item['f-']['data'];
+        if (!is_array($item)) continue;
         if (array_key_exists('private', $item) && $item['private']) continue;
         $htmlName = htmlspecialchars12($item['name']);
         $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
-        $isAppleLocked = false;
-        if (array_key_exists('appleLocked', $item))
-            if ($item['appleLocked']) $isAppleLocked = true;
-
         $writeCount = 1;
         if (array_key_exists('baseBody', $item)) $writeCount++;
 
@@ -125,27 +100,11 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $integerid = +$matches[1];
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
-        $echo = "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
+        echo "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
                 " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname><img src" .
                 "=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 class=store-img></label></div><dl"
-                . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>" .
-                "</character-display>";
-        if ($isAppleLocked) {
-            $writeCount++;
-            $view->resize($afterColors + 2 + ($writeCount * 3));
-            $view->setUint8($afterColors + 1, $writeCount);
-            $view->setUint16($baseOffset + ($assetIdx * 3), 5000);
-            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
-            $assetIdx++;
-            $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
-            $appleLocked[] = $echo;
-            $inputname = "$inputname-unblocked";
-            echo "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
-                    " value=$integerid id=$inputname name=$iname disabled></label></div><div><label for=" .
-                    "$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\" width=800 height=1280 " .
-                    "class=store-img></label></div><dl class=descLi><div data-key=cost><dt>cost<dd>" .
-                    "$cost</div></dl></character-display>";
-        } else echo $echo;
+                . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>";
+        echo "</character-display>";
     }
     global $dirByte;
     echo "\n<div class=marginal2><button type=submit>apply preview</button></div>" ?></form>
@@ -161,9 +120,10 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         $assetCheckoutTotal = 0;
         foreach ($GLOBALS['assets-'] as $asset) {
             $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
-            $jsonic = $json['assets']["$antiNull-$direction-.svg"];
-            $asset['name'] = $jsonic['name'];
-            $asset['cost'] = $jsonic['cost'];
+            if (is_null($dataThis = getThingOrNull($assetdata,
+                    ['d', $antiNull, $direction, 'data']))) continue;
+            $asset['name'] = $dataThis['name'];
+            $asset['cost'] = $dataThis['cost'];
             $assetCheckout[] = $asset;
             $cost = match ($asset['cost']) {
                 false => 'Off Sale',
@@ -176,13 +136,11 @@ $isopaque = $opaque ? 'checked' : 'data-checked' ?>
         }
         if ($count) echo "<tFoot><TR><TH COLSPAN=1 SCOPE=row>Total<TD>$assetCheckoutTotal Units</TABLE>" ?></DETAILS>
 </DIV>
-<TEMPLATE is=applelocked-unblocked><?= implode('', $appleLocked) ?></TEMPLATE>
-<SCRIPT type=module src=statics/index.js></SCRIPT>
 <SCRIPT type=application/json is=output-script><?= json_encode([
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
             'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal,
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
-<div class=divs><?= "<h2 class=store-header style=margin-bottom:0;border:none>Presets</h2>" . (function () {
+<div class=divs><?= "<h2 class='store-header preset-h2'>Presets</h2>" . (function () {
         $array = array(
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
                 'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQD0AcA0QcA0wcA',

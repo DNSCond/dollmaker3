@@ -1,16 +1,21 @@
-<?php use DataViewed\BinaryView;
+<?php use function Helpers\Getters\isPresent;
+use function Helpers\Getters\readJSON;
 use function DataViewed\RGBToRGBA32;
+use DataViewed\BinaryView;
+
+require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
 
 require_once "BinaryHelper.php";
 
 $TChar = 0;
+$specified = 0;
+$opaque = false;
+$dirByte = 0b100;
 $direction = 'f-';
 $assets = array();
-$fullDirection = '';
 $isLocked = false;
-$dirByte = 0b100;
-$opaque = false;
-$specified = 0;
+$fullDirection = '';
+$assetdata = $GLOBALS['assetdata'] = readJSON(__DIR__ . '/assetdata/.assets.json');
 if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matches)) {
     if (+$matches[1] !== 1) {
         http_response_code(400);
@@ -44,7 +49,7 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
         default => '-',
     };
     $maxAssetCount = 50;
-    if ($TChar) header('TChar-Direction: ' . ($fullDirection = trim("$y-$x", '-')));
+    if ($TChar) header("TChar-Direction:\x20" . ($fullDirection = trim("$y-$x", '-')));
     $specified = $assetCount = $dataView->getUint8(++$offset);
     ++$offset;
     $assetCount = $assetCount === false ? 0 : $assetCount;
@@ -54,16 +59,18 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
         $assetId = $dataView->getUint16($offset + $index);
         $assetOpt = $dataView->getUint8($offset + $index + 2) & 0b11;
         $assetIdStr = str_pad($assetId, 4, '0', STR_PAD_LEFT);
-        if (!file_exists("store/assets/$assetIdStr-$direction-.svg.metadata.json")) continue;
+        if (!isPresent($assetdata, ['d', $assetIdStr, $direction])) continue;
         if ($TChar) header("TChar-asset-Addition: assetid=$assetId, option=$assetOpt", false);
         $assets[] = array('id' => $assetId, 'opt' => $assetOpt);
         if ($assetId === 5000) $isLocked = true;
     }
 } else {
-    header('x-error: no dataview found');
+    if ($TChar) header('x-error: no dataview found');
     $dataView = null;
     $assetCount = 0;
+    $x = $y = '-';
 }
+
 usort($assets, fn($le, $ri) => $le['id'] - $ri['id']);
 if ($TChar) header("TChar-asset-Count: assetCount=$assetCount, specified=$specified, actual=" . count($assets));
 require_once 'getColor.php';
@@ -104,10 +111,12 @@ $canonicalized->resize((7 * 4) + 1 + 1 + ($assetsCounted * 3));
 $GLOBALS['assets-'] = $assets;
 $original = $dataView?->toBase64URL();
 $GLOBALS['isCanonical'] = ($cDNA = $canonicalized->toBase64URL()) === $original;
-header("T-Canonical-DNAString: $cDNA; isCanonical=?" . (int)($GLOBALS['isCanonical']));
+if ($TChar) header("T-Canonical-DNAString: $cDNA; isCanonical=?" . (int)($GLOBALS['isCanonical']));
 $GLOBALS['canonicalFullString'] = "v1u." . ($GLOBALS['canonicalB64'] = $cDNA);
-header("X-CO:$original");
-header("X-CC:$cDNA");
+if ($TChar) {
+    header("X-CO:$original");
+    header("X-CC:$cDNA");
+}
 
 $origBytes = $dataView?->asArray();
 $canonBytes = $canonicalized->asArray();

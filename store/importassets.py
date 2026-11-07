@@ -2,7 +2,7 @@ from glob import glob
 import pathlib, re
 
 
-@lambda _: _()
+# @lambda _: _()
 def main():
     base = pathlib.Path('assets2')
     for i in glob('assets/*'):

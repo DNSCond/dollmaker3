@@ -125,3 +125,10 @@ h1 {
     /*noinspection CssInvalidPropertyValue,CssInvalidFunction*/
     background-color: attr(data-ori type(<color>), #00a8f3);
 }
+
+h2.preset-h2 {
+    margin-bottom: 0;
+    padding-top: 0;
+    margin-top: 0;
+    border: none;
+}
