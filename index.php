@@ -42,17 +42,17 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             $index = 0;
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
             foreach ($colors as $name => $color) {
-                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name" .
-                        " id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
+                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name " .
+                        "id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
                         . "<td class=bg data-ori=$color><span>$color</span>";
                 if ($name === 'skin') $index++; else RGBToRGBA32($view, hexdec(trim(
                                 $color, '#')) ^ 0xffFFff, $index++ * 4);
             }
-            echo "$thead<tbody>$result</tbody><tfoot><tr><td><label for=opaque>opaque</label><td><input name=opaque" .
-                    " type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'checked' : 'not checked') .
+            echo "$thead<tbody>$result</tbody><tfoot><tr><td><label for=opaque>opaque</label><td><input name" .
+                    "=opaque type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'On' : 'Off') .
                     "<tr><td><label for=pfpMode>Profile Image Mode</label><td><input name=pfpMode $pfpEnabled" .
-                    " id=pfpMode type=checkbox><TD>" . ($pfpEnabled === 'checked' ? 'checked' : 'not checked') .
-                    "<tr><td colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
+                    " id=pfpMode type=checkbox><TD>" . ($pfpEnabled === 'checked' ? 'On' : 'Off') . '<tr><td ' .
+                    "colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
                     "<button type=button class=convertpng>Convert to PNG</button>, <a href=v1u." .
                     "{$view->toBase64URL()}>Invert Colors</a></div>" ?></div>
         <div hidden><?= (function () {
@@ -173,6 +173,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
                 'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
                 'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
+                'v1u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEBgAABwAA0AcA3wcA',
+                'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA'
         ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {

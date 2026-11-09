@@ -19,6 +19,7 @@ def main():
             if not path.with_name('main' + suffix).exists(): continue
             src_path = path.with_name('main' + suffix)
             if data.get('dev-mode'):
+                print('dev-mode found at', repr(data.get('name')), f'id={path.parent.parent.name}')
                 with open(pathlib.Path('../assetdata') / fn, 'wt', encoding='utf8') as out:
                     doc_root = "$_SERVER['DOCUMENT_ROOT']"
                     out.write(f'<?php\x20require_once\"{{{doc_root}}}/dollmaker3/store/assets/')

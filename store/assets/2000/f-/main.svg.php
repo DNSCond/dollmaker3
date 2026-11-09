@@ -14,11 +14,12 @@
     $armLengthReturn = $armLength + 30 ?>-->
     <!--<?= 'PHPIF';
     $addBottom = true;
-    $but_no_bottom_if = array(2002, 2005, 2015);
+    $but_no_bottom_if = array(2002, 2005, 2015, 2016, 2017);
     foreach ($but_no_bottom_if as $item)
         $addBottom = $addBottom && !hasEquipped($item);
-    if ($addBottom): ?>-->
-    <path d="<?= "M $dressWidth 400 L 610 1210 L 190 1210 L $dressWidthInverted 400 Z" ?>"
+    if ($addBottom):
+    $yBottom = 1250 ?>-->
+    <path d="<?= "M $dressWidth 400 L 610 $yBottom L 190 $yBottom L $dressWidthInverted 400 Z" ?>"
           fill="<?= "{$GLOBALS['colors']['pants']}" ?>" stroke-width="8"
           stroke="#000000" stroke-linejoin="round"/>
     <!--<?= 'PHPENDIF';
