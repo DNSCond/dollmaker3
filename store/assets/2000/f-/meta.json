@@ -1,5 +1,8 @@
 {
   "name": "body",
   "cost": 0,
-  "baseBody": 2000
+  "baseBody": 2000,
+  "options": [
+    "Other Body"
+  ]
 }

@@ -55,12 +55,12 @@ if (preg_match('/^v(\\d+)\\.?(u)\\.([A-Za-z0-9\\-_]+)$/D', $_GET['dna'], $matche
     for ($i = 0; $i < $clamped; $i++) {
         $index = $i * 3;
         $assetId = $dataView->getUint16($offset + $index);
-        $assetOpt = $dataView->getUint8($offset + $index + 2) & 0b11;
+        $assetOpt = $dataView->getUint8($offset + $index + 2);
         $assetIdStr = str_pad($assetId, 4, '0', STR_PAD_LEFT);
         if (!isPresent($assetdata, ['d', $assetIdStr, $direction])) continue;
         if ($TChar) header("TChar-asset-Addition: assetid=$assetId, option=$assetOpt", false);
         $assets[] = array('id' => $assetId, 'opt' => $assetOpt);
-        if ($assetId === 5000) $isLocked = true;
+        if ($assetId === 5000) $isLocked = !($assetOpt & 1 << 0);
     }
 } else {
     if ($TChar) header('x-error: no dataview found');
@@ -93,9 +93,12 @@ $canonicalColorIndex *= 4;
 $canonicalized->setUint8($canonicalColorIndex++, ($dirByte & 0b111) | ($opaque << 3) | ($pfpMode << 4));
 $canonicalized->setUint8($assetCountByte = $canonicalColorIndex++, 0);
 $matchedAssets = array(0 => true);
+$assetOptions = array();
 $assetsCounted = 0;
 foreach ($assets as $asset) {
     ['id' => $assetId, 'opt' => $assetOpt] = $asset;
+    $assetOptions[+$assetId] = $assetOpt;
+    header("TChar-Data: {$assetId}__$assetOpt", false);
     if (array_key_exists($assetId, $matchedAssets)) continue;
     $matchedAssets[$assetId] = true;
     $index = $canonicalColorIndex + ($i++ * 3);
@@ -126,17 +129,16 @@ if (array_key_exists('canonical_redir_path', $GLOBALS)) {
     }
 }
 if (array_key_exists('isFor', $GLOBALS)) {
-    if ($isLocked && $GLOBALS['isFor'] === 'svgDisplay')
-        foreach ($colors as $color => $value)
-            if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
-                $r = hexdec($matches[1]);
-                $g = hexdec($matches[2]);
-                $b = hexdec($matches[3]);
-                $gray = (int)round(0.299 * $r + 0.587 * $g + 0.114 * $b);
-                $r = $g = $b = $gray;
-                $r = $r & -3;
-                $g = $g & -3;
-                $b = $b & -3;
-                $colors[$color] = '#' . dechex($r << 16 | $g << 8 | $b);
-            }
+    if ($isLocked && $GLOBALS['isFor'] === 'svgDisplay') foreach ($colors as $color => $value)
+        if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
+            $r = hexdec($matches[1]);
+            $g = hexdec($matches[2]);
+            $b = hexdec($matches[3]);
+            $gray = (int)round(0.299 * $r + 0.587 * $g + 0.114 * $b);
+            $r = $g = $b = $gray;
+            $r = $r & -3;
+            $g = $g & -3;
+            $b = $b & -3;
+            $colors[$color] = '#' . dechex($r << 16 | $g << 8 | $b);
+        }
 }

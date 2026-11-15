@@ -1,13 +1,15 @@
 <?php use DataViewed\BinaryView;
 use function DataViewed\RGBToRGBA32;
+use function Helpers\Getters\isPresent;
 
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 global $colors;
 $keys = array_keys($colors);
-if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
-    implode(';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
-        $keys)) . ';', $matches)) {
+require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
+if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D', implode(';',
+        array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
+            $keys)) . ';', $matches)) {
     $afterColors = (7 * 4); // 28 bytes
 
     // 1. Gather and sanitize incoming assets from POST
@@ -70,8 +72,14 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D',
         // Write the 2-byte Asset ID (uint16) at current offset
         $result->setUint16($currentOffset, $assetId);
 
+        $byte = 0;
+        $assetPadded = str_pad($assetId, 4, '0', STR_PAD_LEFT);
+        for ($i = 0; $i < 8; $i++) if (array_key_exists("asset-{$assetPadded}_$i", $_POST)) {
+            $byte = $byte | (1 << $i);
+        }
+
         // Write the 1-byte Asset Option (uint8) right after the ID (+2 bytes)
-        $result->setUint8($currentOffset + 2, 0); // Currently hardcoded to 0
+        $result->setUint8($currentOffset + 2, $byte);
 
         // Move pointer forward by exactly 3 bytes for the next block
         $currentOffset += 3;

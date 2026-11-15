@@ -1,5 +1,9 @@
 {
   "name": "Oizee's dress",
   "cost": 50,
-  "baseBody": 2000
+  "baseBody": 2000,
+  "options": [
+    "Lower Dress",
+    "Happy corners"
+  ]
 }

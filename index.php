@@ -2,6 +2,7 @@
 use function ANTHeader\create_head3;
 use function DataViewed\RGBToRGBA32;
 use function Helpers\Getters\getThingOrNull;
+use function Helpers\Getters\isPresent;
 
 function htmlspecialchars12(string $value): string
 {
@@ -38,12 +39,13 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
-            $result = '';
             $index = 0;
+            $result = '';
+            $type = 'color';
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
             foreach ($colors as $name => $color) {
-                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name " .
-                        "id=color-$name value=\"$color\" size=7 type=text pattern=^#[a-f0-9]{6}$>"
+                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name id"
+                        . "=color-$name value=\"$color\" size=7 type=$type pattern=^#[a-f0-9]{6}$>"
                         . "<td class=bg data-ori=$color><span>$color</span>";
                 if ($name === 'skin') $index++; else RGBToRGBA32($view, hexdec(trim(
                                 $color, '#')) ^ 0xffFFff, $index++ * 4);
@@ -71,6 +73,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
 <form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
     $afterColors = (7 * 4);
+    global $assetOptions;
     if ($pfpMode) echo "<input type=hidden value=on name=pfpMode>";
     foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
     echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
@@ -98,7 +101,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 
         if (array_key_exists('baseBody', $item)) {
             $view->setUint16($baseOffset + ($assetIdx * 3), $item['baseBody']);
-            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 2);
+            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
             $assetIdx++;
         }
 
@@ -113,11 +116,24 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         $integerid = +$matches[1];
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
-        echo "<character-display><div class=padding><label for=$inputname>$htmlName <input type=checkbox" .
-                " value=$integerid id=$inputname name=$iname></label></div><div><label for=$inputname>" .
-                "<img src=\"$img_src\" alt=\"Equip $htmlName\" $size class=store-img></label></div><dl"
-                . " class=descLi><div data-key=cost><dt>cost<dd>$cost</div></dl>";
-        echo "</character-display>";
+        echo "<character-display><div class=padding><label for=$inputname>$htmlName" .
+                " <input type=checkbox value=$integerid id=$inputname name=$iname>" .
+                "</label></div><div><label for=$inputname><img src=\"$img_src\" " .
+                "alt=\"Equip $htmlName\" $size class=store-img loading=lazy>" .
+                "</label></div><dl class=descLi><div data-key=cost>" .
+                "<dt>cost<dd>$cost</div></dl><div class=options>";
+        $options = $assetOptions[$integerid];
+        for ($i = 0; $i < 3; $i++) {
+            $enabled = isPresent($item, ['options', "$i"]);
+            $disabled = !$enabled ? 'disabled' : '';
+            $checked = $options & 1 << $i ? 'checked' : '';
+            echo "<div><label><input type=checkbox name={$inputname}_$i $checked $disabled>\x20";
+            if ($enabled) {
+                echo htmlspecialchars12("{$item['options'][$i]}");
+            } else echo "Unknown\x20" . ($i + 1);
+            echo "</label></div>";
+        }
+        echo "</div></character-display>";
     }
     global $dirByte;
     echo "\n<div class=marginal2><button type=submit>apply preview</button></div>" ?></form>
@@ -173,14 +189,14 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
                 'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
                 'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
-                'v1u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEBgAABwAA0AcA3wcA',
-                'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA'
+                'v1u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEBgAABwAA0AcA3wcD',
+                'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA',
         ); //f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
             $output[] = "<div class=store-div><div CLASS=padding><a href=\"$href\">$name</a></div>" .
-                    "<a href=\"$href\"><img src=\"endpoint.svg.php?dna=$href\" class=store-img\x20" .
-                    "width=800 height=1280 alt=\"clothing option &quot;$name&quot;\"/></a></div>";
+                    "<a href=\"$href\"><img src=\"endpoint.svg.php?dna=$href\" class=store-img width" .
+                    "=800 height=1280 alt=\"clothing option &quot;$name&quot;\" loading=lazy></a></div>";
         }
         return "\n" . implode("", $output);
     })() . "\n" ?></div>

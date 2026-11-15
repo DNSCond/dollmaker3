@@ -1,8 +1,5 @@
 {
   "name": "bow",
   "cost": 25,
-  "baseBody": 1,
-  "ZindexLayer": [
-    "Front"
-  ]
+  "baseBody": 1
 }

@@ -1,6 +1,5 @@
 {
   "name": "Sunstone",
   "cost": 75,
-  "baseBody": 2000,
-  "appleLocked": true
+  "baseBody": 2000
 }

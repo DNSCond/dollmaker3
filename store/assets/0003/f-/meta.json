@@ -1,8 +1,5 @@
 {
   "name": "long cape",
   "cost": 50,
-  "baseBody": 1,
-  "ZindexLayer": [
-    "Back"
-  ]
+  "baseBody": 1
 }

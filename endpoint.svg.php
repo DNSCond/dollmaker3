@@ -62,7 +62,7 @@ foreach ($GLOBALS['assets-'] as $asset) {
     $devMode = $devMode || $assetObj['data']['dev-mode'];
 }
 if ($devMode) {
-    header('cache-control: private, max-age=0');
+    header('cache-control: public, max-age=0');
 } else {
     header('cache-control: public, max-age=15, s-max-age=15');
 }
@@ -114,10 +114,12 @@ $bottomWall = ''; ?>
     <g class="PHPX" visibility='visible'><?= '<!-- PHPX -->';
         function createAsset(array $asset, string $type): void
         {
+            $opacity = 1;
             $dname = $asset['name'];
             $asset = $asset['asset'];
+            $GLOBALS['opts'] = $asset['opt'];
             $svgType = $type === '' ? 'Middle' : $type;
-            $opacity = ($asset['opt'] & (1 << 1)) !== 0 ? '0.8' : 1;
+            //$opacity=($asset['opt'] & (1 << 1)) !== 0 ? '0.8' : 1;
             //$opacity=($asset['opt'] & (1 << 1)) !== 0 ?'0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(fn(string $string): string => "<g opacity='$opacity' data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
@@ -126,6 +128,11 @@ $bottomWall = ''; ?>
                 echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";
             }
             ob_end_flush();
+        }
+
+        function hasOption(int $opt): bool
+        {
+            return ($GLOBALS['opts'] & (1 << ($opt - 1)));
         }
 
         // required in assets

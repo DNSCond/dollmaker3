@@ -11,19 +11,20 @@
     $headDownward = 0;
     // ---
     $armLength = 120 * 3;
-    $armLengthReturn = $armLength + 30 ?>-->
-    <!--<?= 'PHPIF';
+    $armLengthReturn = $armLength + 30;
+    echo '-->';
+    //if (hasOption(1)) {} else {
     $addBottom = true;
     $but_no_bottom_if = array(2002, 2005, 2015, 2016, 2017);
     foreach ($but_no_bottom_if as $item)
         $addBottom = $addBottom && !hasEquipped($item);
-    if ($addBottom):
-    $yBottom = 1250 ?>-->
-    <path d="<?= "M $dressWidth 400 L 610 $yBottom L 190 $yBottom L $dressWidthInverted 400 Z" ?>"
-          fill="<?= "{$GLOBALS['colors']['pants']}" ?>" stroke-width="8"
-          stroke="#000000" stroke-linejoin="round"/>
-    <!--<?= 'PHPENDIF';
-    endif ?>-->
+    if ($addBottom) {
+        $yBottom = 1250;
+        $d = "M $dressWidth 400 L 610 $yBottom L 190 $yBottom L $dressWidthInverted 400 Z";
+        echo "<path d='$d' fill='{$GLOBALS['colors']['pants']}' stroke-width='8' stroke='#000000' stroke-linejoin='round'/>";
+        //}
+    }
+    echo '<!-- GoodByte' ?>-->
     <path d="M 530 430 l -15 <?= $topHeight ?> H 285 l -15 -<?= $topHeight ?> L 400 360 Z"
           fill="<?= "{$GLOBALS['secondary']}" ?>" stroke-width="8" stroke="#000000"/>
     <g>

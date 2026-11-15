@@ -1,6 +1,7 @@
 <svg>
-    <rect x="0" y="0" width="800" height="1280" fill="#000000" opacity="0.5"/>
-    <!--<?= $handle = 450;
+    <rect x="0" y="0" width="800" height="1280" fill="#000000" opacity="<?= hasOption(1) ? '0' : '0.5' ?>"/>
+    <!--<?= hasOption(1) ? 'true' : 'false';
+    $handle = 450;
     $bottom = 500 ?>-->
     <path d="<?= "M 250 $handle A 50 50 5 0 1 550 $handle V $bottom H 500 V $handle A 50 50 5 0 0 300 $handle V $bottom H 250 Z" ?>"
           fill="#808080" stroke='black' stroke-width='8'/>
