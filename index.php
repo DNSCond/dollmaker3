@@ -16,8 +16,9 @@ global $colors, $assetdata;
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
 create_head3($title = 'Character Customizer Version6', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
-        'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}", 'base' => '/dollmaker3/',
         'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
+        'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}",
+        'base' => '/dollmaker3/',
 ]);
 global $opaque, $pfpMode;
 $GLOBALS['inherited'] = true;
@@ -44,9 +45,9 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             $type = 'color';
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
             foreach ($colors as $name => $color) {
-                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name=$name id"
-                        . "=color-$name value=\"$color\" size=7 type=$type pattern=^#[a-f0-9]{6}$>"
-                        . "<td class=bg data-ori=$color><span>$color</span>";
+                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name="
+                        . "$name id=color-$name value=\"$color\" size=7 type=$type pattern="
+                        . "^#[a-f0-9]{6}$><td class=bg data-ori=$color><span>$color</span>";
                 if ($name === 'skin') $index++; else RGBToRGBA32($view, hexdec(trim(
                                 $color, '#')) ^ 0xffFFff, $index++ * 4);
             }
@@ -61,8 +62,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 $result = '';
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z)
                     $result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
-                foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) $result .=
-                        "<div><label for=dir-$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
+                foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) $result .= "<div><label for=dir-"
+                        . "$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
                 return $result;
             })();
             $mapped = array_map(fn($mapped) => +$mapped['id'], $GLOBALS['assets-']);

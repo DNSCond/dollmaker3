@@ -22,7 +22,8 @@ def main():
                 print('dev-mode found at', repr(data.get('name')), f'id={path.parent.parent.name}')
                 with open(pathlib.Path('../assetdata') / fn, 'wt', encoding='utf8') as out:
                     doc_root = "$_SERVER['DOCUMENT_ROOT']"
-                    out.write(f'<?php\x20require_once\"{{{doc_root}}}/dollmaker3/store/assets/')
+                    out.write('<?= "<!-- Dev Mode Enabled -->";')
+                    out.write(f'\x20require_once\"{{{doc_root}}}/dollmaker3/store/assets/')
                     out.write(f"{path.parent.parent.name}/{path.parent.name}/{src_path.name}\";")
             else:
                 copyfile(src_path, pathlib.Path('../assetdata') / fn)

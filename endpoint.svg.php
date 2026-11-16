@@ -77,53 +77,24 @@ if ($pfpMode) {
     $w = 800;
     $h = 1280;
     $xoffset = 0;
-}
-$bottomWall = ''; ?>
+} ?>
 <svg width="<?= $w ?>" height="<?= $h ?>" viewBox="<?= "$xoffset $yoffset $w $h" ?>" xmlns="http://www.w3.org/2000/svg">
-    <g class="background" stroke-width="0" visibility='visible'>
-        <!--<?php if ($isTransparent) { ?>-->
-        <rect width="800" height="1280" fill="#FfFfFf"/>
-        <g opacity="<?= $opaque ? '1' : '0.7' ?>">
-            <rect width="800" height="1280" fill="<?= "$hair" ?>" class="bgc"/>
-            <path d="M 0 384 L 800 576 L 800 1280 L 0 1280 Z" fill="<?= $bgcolor ?>" class="bgc"/>
-            <path d="M 0 896 L 800 1000 L 800 1280 L 0 1280 Z" fill="<?= $pants ?>" class="bgc"/>
-            <path d="M 600 0 L 400 1280 L 800 1280 L 800 0 Z" fill="<?= $shoes ?>" class="bgc"/>
-        </g>
-        <!--<?php } ?>-->
-    </g>
-    <g fill='#ae782f'><?= (function () use ($pfpMode, $w, $h, $xoffset, &$bottomWall) {
-            $width = $pfpMode ? 10 : 20;
-            $RightX = $xoffset + $w - $width;
-            $DownY = $h - $width;
-            if ($pfpMode) {
-                // add $yoffset here
-                $bottomWall = "<rect x='0' y='$DownY' width='800' height='$width' class='wall down' fill='#ae782f'/>";
-                return "\n" . <<<SVG
-                <rect x="$xoffset" y="0" width="$width" height="1280" class="wall left"/>
-                <rect x="$RightX" y="0" width="$width" height="1280" class="wall right"/>
-                <rect x="0" y="0" width="800" height="$width" class="wall up"/>
-                SVG;
-            }
-            return "\n" . <<<SVG
-            <rect x="0" y="0" width="$width" height="1280" class="wall left"/>
-            <rect x="$RightX" y="0" width="$width" height="1280" class="wall right"/>
-            <rect x="0" y="$DownY" width="800" height="$width" class="wall down"/>
-            <rect x="0" y="0" width="800" height="$width" class="wall up"/>
-            SVG;
-        })() . "\n" ?></g>
-    <g class="PHPX" visibility='visible'><?= '<!-- PHPX -->';
+    <g class="background outer"><?= '<!-- PHPY -->';
+        ob_start(fn(string $string): string => str_replace(
+                "\x3cg", "\x3cg class='background inner'",
+                str_replace('svg', 'g', $string)));
+        if ($isTransparent) require_once __DIR__ . '/Bg.php';
+        ob_end_flush() ?></g>
+    <g><?= '<!-- PHPX -->';
         function createAsset(array $asset, string $type): void
         {
-            $opacity = 1;
             $dname = $asset['name'];
             $asset = $asset['asset'];
             $GLOBALS['opts'] = $asset['opt'];
             $svgType = $type === '' ? 'Middle' : $type;
-            //$opacity=($asset['opt'] & (1 << 1)) !== 0 ? '0.8' : 1;
-            //$opacity=($asset['opt'] & (1 << 1)) !== 0 ?'0.55' : 1;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            ob_start(fn(string $string): string => "<g opacity='$opacity' data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
-            ($inclusionResult = (bool)include_once __DIR__ . "/assetdata/$dname");
+            ob_start(fn(string $string): string => "<g data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
+            $inclusionResult = (bool)(include __DIR__ . "/assetdata/$dname");
             if (!$inclusionResult) {
                 echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";
             }
@@ -145,6 +116,5 @@ $bottomWall = ''; ?>
 
         foreach ($back_s as $asset) createAsset($asset, 'Back');
         foreach ($normal as $asset) createAsset($asset, '');
-        foreach ($fronts as $asset) createAsset($asset, 'Front');
-        echo $bottomWall ?: '<!-- PHPX -->' ?></g>
+        foreach ($fronts as $asset) createAsset($asset, 'Front') ?></g>
 </svg>
