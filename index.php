@@ -125,11 +125,17 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 "<dt>cost<dd>$cost</div></dl><div class=options>";
         $options = $assetOptions[$integerid];
         for ($i = 0; $i < 3; $i++) {
+            $nullOption = false;
             $enabled = isPresent($item, ['options', "$i"]);
+            if ($enabled && !is_string($item['options'][$i])) {
+               $enabled = false; $nullOption = true;
+            }
             $disabled = !$enabled ? 'disabled' : '';
             $checked = $options & 1 << $i ? 'checked' : '';
             echo "<div><label><input type=checkbox name={$inputname}_$i $checked $disabled>\x20";
-            if ($enabled) {
+            if ($nullOption) {
+                echo "Unusable\x20" . ($i + 1);
+            } elseif ($enabled) {
                 echo htmlspecialchars12("{$item['options'][$i]}");
             } else echo "Unknown\x20" . ($i + 1);
             echo "</label></div>";
