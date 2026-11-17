@@ -14,7 +14,7 @@ require_once "preprocessor.php";
 global $colors, $assetdata;
 
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
-create_head3($title = 'Character Customizer Version6', [
+create_head3($title = 'Character Customizer', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
         'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
         'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}",
@@ -181,7 +181,6 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
                 'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQD0AcA0QcA0wcA',
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
-                'Card Basic' => 'v1u._wAspP8ALKT_ueH8_wCkAP-kcQD_vYnk_wDx_QQEAQABAgABBgABBwAB',
                 'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
                 'Lime Like' => 'v1u._yyVWf8slVn_ueH8_13xhP_8Can_hCAh_wDx_QQCAQABAgAB',
                 'Red' => 'v1u._1xtHP9cbRz_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCAQABAgAB',
@@ -189,7 +188,6 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
                 'randInt' => 'v1u._5HYqP-lBSX_1UlZ_wgZGf_0EQz__Vhx_1QtzQQFAQAABAAABQAABwAA1AcA',
                 'some?' => 'v1u.__QtRf8ZkQz_ueH8_8T96f99uMX_nZGU_-jcUQQD0AcA0QcA0gcA',
-                'v1u._-R9GP8NDJn_ueH8_8CxAf8F3JT_iSyU_3ip7AQFAQAABAAABQAABgAABwAA',
                 'v1u._4llUf-gBcj_ueH8_wlZ4P_dcGD_fE1R_0glfQQBAQAA',
                 'bright' => 'v1u.__zpcf9cJEH_ueH8_yj44f_Qyf3_DNXw_1z1MAQE0AcA0gcA0wcA1AcA',
                 'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
@@ -199,6 +197,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'v1u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEBgAABwAA0AcA3wcD',
                 'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA',
                 'v1u.__3RWf8AAAD_ueH8__1Z_f9ZjP3_QHQZ__0MAAQCuAsAuQsA',
+                'v1u._-R9GP8NDJn_ueH8_8CxAf8F3JT_iSyU_3ip7AQCugsAuwsA',
         ); // f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
