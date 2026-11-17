@@ -117,18 +117,19 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         $integerid = +$matches[1];
         $iname = 'assets[]';
         if (in_array($integerid, $mapped)) $iname = "$iname\x20checked";
-        echo "<character-display><div class=padding><label for=$inputname>$htmlName" .
-                " <input type=checkbox value=$integerid id=$inputname name=$iname>" .
-                "</label></div><div><label for=$inputname><img src=\"$img_src\" " .
-                "alt=\"Equip $htmlName\" $size class=store-img loading=lazy>" .
-                "</label></div><dl class=descLi><div data-key=cost>" .
-                "<dt>cost<dd>$cost</div></dl><div class=options>";
+        echo "<character-display><div class=padding><label for=$inputname>$htmlName <input" .
+                " type=checkbox value=$integerid id=$inputname name=$iname></label></div>" .
+                "<div><label for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\"" .
+                " $size class=store-img loading=lazy></label></div><dl class=descLi><div da" .
+                "ta-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>$matches[1]" .
+                "</div></dl><div class=options>";
         $options = $assetOptions[$integerid];
         for ($i = 0; $i < 3; $i++) {
             $nullOption = false;
             $enabled = isPresent($item, ['options', "$i"]);
             if ($enabled && !is_string($item['options'][$i])) {
-               $enabled = false; $nullOption = true;
+                $enabled = false;
+                $nullOption = true;
             }
             $disabled = !$enabled ? 'disabled' : '';
             $checked = $options & 1 << $i ? 'checked' : '';

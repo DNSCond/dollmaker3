@@ -138,6 +138,8 @@ if (array_key_exists('isFor', $GLOBALS)) {
             $r = $r & -3;
             $g = $g & -3;
             $b = $b & -3;
-            $colors[$color] = '#' . dechex($r << 16 | $g << 8 | $b);
+
+            $colors[$color] = '#' . str_pad(dechex($r << 16 | $g << 8 | $b),
+                    6, '0', STR_PAD_LEFT);
         }
 }

@@ -5,7 +5,7 @@ table {
 }
 
 th, td {
-    border: 3px solid #7c7c7c;
+    border: 2px solid #7c7c7c;
     text-align: left;
     padding: 8px;
     box-sizing: border-box;
@@ -29,12 +29,12 @@ td:nth-child(3) > span {
 /*.border {border: 2px solid grey;}*/
 
 dl.descLi {
-    border: 3px solid #7c7c7c;
+    border: 2px solid #7c7c7c;
     margin: 0;
 
     div {
         padding: 1ch;
-        border-top: 3px solid #7c7c7c;
+        border-top: 2px solid #7c7c7c;
     }
 
     div:first-child {

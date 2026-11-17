@@ -1,5 +1,5 @@
 {
   "name": "New Phase Head",
-  "cost": false,
+  "cost": true,
   "options": []
 }
