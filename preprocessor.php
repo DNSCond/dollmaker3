@@ -98,7 +98,6 @@ $assetsCounted = 0;
 foreach ($assets as $asset) {
     ['id' => $assetId, 'opt' => $assetOpt] = $asset;
     $assetOptions[+$assetId] = $assetOpt;
-    header("TChar-Data: {$assetId}__$assetOpt", false);
     if (array_key_exists($assetId, $matchedAssets)) continue;
     $matchedAssets[$assetId] = true;
     $index = $canonicalColorIndex + ($i++ * 3);

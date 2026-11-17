@@ -1,8 +1,6 @@
 <svg>
     <rect width="800" height="1280" fill="#FfFfFf"/>
-    <image href="<?= "/gallery/imgdata/H91FYoQ5Gyj.webp" ?>"/>
-    <g opacity="<?= '0.5';
-    // $GLOBALS['opaque'] ? '1' : '0.7';
+    <g opacity="<?= $GLOBALS['opaque'] ? '1' : '0.7';
     global $hair, $bgcolor, $pants, $shoes ?>" stroke-width="0">
         <rect width="800" height="1280" fill="<?= "$hair" ?>" class="bgc"/>
         <path d="M 0 384 L 800 576 L 800 1280 L 0 1280 Z" fill="<?= $bgcolor ?>" class="bgc"/>

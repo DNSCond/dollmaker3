@@ -64,7 +64,7 @@ foreach ($GLOBALS['assets-'] as $asset) {
 if ($devMode) {
     header('cache-control: public, max-age=0');
 } else {
-    header('cache-control: public, max-age=15, s-max-age=15');
+    header('cache-control: public, max-age=15, s-maxage=15');
 }
 $yoffset = 0;
 global $pfpMode;
@@ -85,7 +85,7 @@ if ($pfpMode) {
                 str_replace('svg', 'g', $string)));
         if ($isTransparent) require_once __DIR__ . '/Bg.php';
         ob_end_flush() ?></g>
-    <g><?= '<!-- PHPX -->';
+    <g stroke-linecap="round"><?= '<!-- PHPX -->';
         function createAsset(array $asset, string $type): void
         {
             $dname = $asset['name'];
