@@ -7,6 +7,7 @@
         <path d="M 0 896 L 800 1000 L 800 1280 L 0 1280 Z" fill="<?= $pants ?>" class="bgc"/>
         <path d="M 600 0 L 400 1280 L 800 1280 L 800 0 Z" fill="<?= $shoes ?>" class="bgc"/>
     </g>
+    <!--<image href="/gallery/imgdata/g3vbG2_4czt.avif"/>-->
     <g fill='#ae782f'><?= (function () {
             global $pfpMode, $w, $h, $xoffset;
             $width = $pfpMode ? 10 : 20;
