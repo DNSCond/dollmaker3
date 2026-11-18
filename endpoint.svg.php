@@ -114,6 +114,10 @@ if ($pfpMode) {
             return in_array($id, $assetsEquipped);
         }
 
+        global $xoffset;
+        $Favicar_offsetY = 0;
+        $Favicar_multiplySize = 16;
+        $Favicar_offsetX = $xoffset;
         foreach ($back_s as $asset) createAsset($asset, 'Back');
         foreach ($normal as $asset) createAsset($asset, '');
         foreach ($fronts as $asset) createAsset($asset, 'Front') ?></g>

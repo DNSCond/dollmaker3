@@ -2,36 +2,33 @@
     <g>
         <!--<?= ' draw the main body /';
         // 512 by 512 originally.
-        global $xoffset;
-        $offsetX = $xoffset;
-        $offsetY = 0;
-        $multiplySize = 16 ?>-->
-        <rect fill="<?= $GLOBALS['colors']['body'] ?>" width="<?= 30 * $multiplySize ?>"
-              x="<?= $multiplySize + $offsetX ?>" height="<?= 21 * $multiplySize ?>"
-              y="<?= 3 * $multiplySize + $offsetY ?>"/>
-        <rect fill="<?= $GLOBALS['colors']['secondary'] ?>" width="<?= 26 * $multiplySize ?>"
-              x="<?= 3 * $multiplySize + $offsetX ?>" y="<?= 5 * $multiplySize + $offsetY ?>"
-              height="<?= 12 * $multiplySize ?>"/>
+        global $Favicar_offsetX, $Favicar_offsetY, $Favicar_multiplySize ?>-->
+        <rect fill="<?= $GLOBALS['colors']['body'] ?>" width="<?= 30 * $Favicar_multiplySize ?>"
+              x="<?= $Favicar_multiplySize + $Favicar_offsetX ?>" height="<?= 21 * $Favicar_multiplySize ?>"
+              y="<?= 3 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['secondary'] ?>" width="<?= 26 * $Favicar_multiplySize ?>"
+              x="<?= 3 * $Favicar_multiplySize + $Favicar_offsetX ?>" y="<?= 5 * $Favicar_multiplySize + $Favicar_offsetY ?>"
+              height="<?= 12 * $Favicar_multiplySize ?>"/>
         <!-- draw the lights /-->
-        <rect fill="<?= $GLOBALS['colors']['lights'] ?>" width="<?= 4 * $multiplySize ?>"
-              height="<?= 4 * $multiplySize ?>" x="<?= 24 * $multiplySize + $offsetX ?>"
-              y="<?= 18 * $multiplySize + $offsetY ?>"/>
-        <rect fill="<?= $GLOBALS['colors']['lights'] ?>" width="<?= 4 * $multiplySize ?>"
-              x="<?= 4 * $multiplySize + $offsetX ?>" height="<?= 4 * $multiplySize ?>"
-              y="<?= 18 * $multiplySize + $offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['lights'] ?>" width="<?= 4 * $Favicar_multiplySize ?>"
+              height="<?= 4 * $Favicar_multiplySize ?>" x="<?= 24 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 18 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['lights'] ?>" width="<?= 4 * $Favicar_multiplySize ?>"
+              x="<?= 4 * $Favicar_multiplySize + $Favicar_offsetX ?>" height="<?= 4 * $Favicar_multiplySize ?>"
+              y="<?= 18 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
         <!-- draw the wheels /-->
-        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $multiplySize ?>"
-              height="<?= 6 * $multiplySize ?>" x="<?= 3 * $multiplySize + $offsetX ?>"
-              y="<?= 24 * $multiplySize + $offsetY ?>"/>
-        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $multiplySize ?>"
-              height="<?= 6 * $multiplySize ?>" x="<?= 21 * $multiplySize + $offsetX ?>"
-              y="<?= 24 * $multiplySize + $offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $Favicar_multiplySize ?>"
+              height="<?= 6 * $Favicar_multiplySize ?>" x="<?= 3 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 24 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $Favicar_multiplySize ?>"
+              height="<?= 6 * $Favicar_multiplySize ?>" x="<?= 21 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 24 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
         <!-- draw the wheels /-->
-        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $multiplySize ?>"
-              height="<?= 6 * $multiplySize ?>" x="<?= 3 * $multiplySize + $offsetX ?>"
-              y="<?= 24 * $multiplySize + $offsetY ?>"/>
-        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $multiplySize ?>"
-              height="<?= 6 * $multiplySize ?>" x="<?= 21 * $multiplySize + $offsetX ?>"
-              y="<?= 24 * $multiplySize + $offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $Favicar_multiplySize ?>"
+              height="<?= 6 * $Favicar_multiplySize ?>" x="<?= 3 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 24 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
+        <rect fill="<?= $GLOBALS['colors']['shoes'] ?>" width="<?= 8 * $Favicar_multiplySize ?>"
+              height="<?= 6 * $Favicar_multiplySize ?>" x="<?= 21 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 24 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
     </g>
 </svg>
