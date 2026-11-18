@@ -42,12 +42,13 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
             $index = 0;
             $result = '';
-            $type = 'select';
+            $type = 'text';
             if (array_key_exists('optiontype', $_GET)) {
                 $type = match ("{$_GET['optiontype']}") {
-                    'color' => 'color',
                     'select' => 'select',
-                    default => 'text',
+                    'color' => 'color',
+                    'text' => 'text',
+                    default => $type,
                 };
             }
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
@@ -208,7 +209,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
                 'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
                 'Lime Like' => 'v1u._yyVWf8slVn_ueH8_13xhP_8Can_hCAh_wDx_QQCAQABAgAB',
-                'Red' => 'v1u._1xtHP9cbRz_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCAQABAgAB',
+                'Red' => 'v1u._1xtHP9sVR3_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCugsAvAsA',
                 'Peasant' => 'v1u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFAQABAgABAwABBgABBwAB',
                 'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
                 'randInt' => 'v1u._5HYqP-lBSX_1UlZ_wgZGf_0EQz__Vhx_1QtzQQFAQAABAAABQAABwAA1AcA',
