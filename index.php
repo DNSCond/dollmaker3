@@ -42,14 +42,27 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
             $index = 0;
             $result = '';
-            $type = 'color';
+            $type = 'select';
+            if (array_key_exists('optiontype', $_GET)) {
+                $type = match ("{$_GET['optiontype']}") {
+                    'color' => 'color',
+                    'text' => 'text',
+                    default => 'select',
+                };
+            }
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
+            require_once 'preselected-colors.php';
             foreach ($colors as $name => $color) {
-                $result .= "\n<tr><td><label for=color-$name>$name:</label><td><input name="
-                        . "$name id=color-$name value=\"$color\" size=7 type=$type pattern="
-                        . "^#[a-f0-9]{6}$><td class=bg data-ori=$color><span>$color</span>";
-                if ($name === 'skin') $index++; else RGBToRGBA32($view, hexdec(trim(
-                                $color, '#')) ^ 0xffFFff, $index++ * 4);
+                $result .= "\n<tr><td><label for=color-$name>$name:</label><td>";
+                if ($type === 'select') {
+                    $result .= preselectedcolors($name, $color);
+                } else {
+                    $result .= "<input name=$name id=color-$name value=\"$color\" size=7 type=$type required pattern=^#[a-f0-9]{6}$>";
+                }
+                $result .= "<td class=bg data-ori=$color><span>$color</span>";
+                if ($name === 'skin') $index++; else {
+                    RGBToRGBA32($view, hexdec(trim($color, '#')) ^ 0xffFFff, $index++ * 4);
+                }
             }
             echo "$thead<tbody>$result</tbody><tfoot><tr><td><label for=opaque>opaque</label><td><input name" .
                     "=opaque type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'On' : 'Off') .
@@ -58,6 +71,17 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     "colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
                     "<button type=button class=convertpng>Convert to PNG</button>, <a href=v1u." .
                     "{$view->toBase64URL()}>Invert Colors</a></div>" ?></div>
+        <DETAILS class=presel open><?= "<summary>Preselectable Colors</summary><h2>Preselectable Colors</h2>";
+            global $preselectedcolors;
+            foreach ($preselectedcolors as $outer => $colorsArray) {
+                echo '<h3>' . htmlspecialchars12($outer) . '</h3>';
+                foreach ($colorsArray as $key => $val) {
+                    /** @noinspection CssUnresolvedCustomProperty */
+                    $innerHTML = "<template shadowrootmode=open><link rel=stylesheet href=colors/inner.css>" .
+                            "<div class=outer data-val=$val><span class=inner><slot></slot></span></div>";
+                    echo "<color-block color=$val>$innerHTML</template>&quot;$key&quot; $val;</color-block>";
+                }
+            } ?></DETAILS>
         <div hidden><?= (function () {
                 $result = '';
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z)

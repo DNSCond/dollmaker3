@@ -76,17 +76,10 @@ global $colors;
 $canonicalColorIndex = 0;
 $canonicalized = new BinaryView((7 * 4) + 1 + 1 + ($assetCount * 3));
 foreach ($colors as $color => $value) {
-    if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
-        $r = hexdec($matches[1]);
-        $g = hexdec($matches[2]);
-        $b = hexdec($matches[3]);
-        // might edit
-        $r = $r & -3;
-        $g = $g & -3;
-        $b = $b & -3;
-        RGBToRGBA32($canonicalized, $r << 16 | $g << 8 | $b, $canonicalColorIndex++ * 4);
-    }
-    if ($TChar) header("TChar-Color-$color:$value");
+    $colorInt = normalizeColor($value);
+    if (is_int($colorInt)) {
+        RGBToRGBA32($canonicalized, $colorInt, $canonicalColorIndex++ * 4);
+    } else $canonicalColorIndex++;
 }
 $i = 0;
 $canonicalColorIndex *= 4;
@@ -139,7 +132,6 @@ if (array_key_exists('isFor', $GLOBALS)) {
             $g = $g & -3;
             $b = $b & -3;
 
-            $colors[$color] = '#' . str_pad(dechex($r << 16 | $g << 8 | $b),
-                    6, '0', STR_PAD_LEFT);
+            $colors[$color] = colorIntToString($r << 16 | $g << 8 | $b);
         }
 }
