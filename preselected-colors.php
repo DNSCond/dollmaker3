@@ -69,15 +69,6 @@ $preselectedcolors = [
         'Night Secondary' => '#a9cded',
         'Night Pants' => '#85c0fd',
         'Night Shoes' => '#85cce9'
-    ], 'Computer Neon' => [
-        'Red' => '#ff0000',
-        'Blue' => '#0000ff',
-        'Green' => '#00ff00',
-        'Yellow' => '#ffff00',
-        'Cyan' => '#00ffff',
-        'Magenta' => '#ff00ff',
-        'White' => '#ffffff',
-        'Black' => '#000000',
     ],
 ];
 
@@ -98,7 +89,6 @@ function preselectedcolors(string $name, string $preselect): string
                 $attrs = "$attrs\x20selected";
                 $checked = true;
             }
-            $attrs = $attrs . "\x20data-preselect=$preselect";
             $result = "$result<OPTION $attrs>$name ($color)</OPTION>";
         }
         $result = "$result</OPTgroup>";

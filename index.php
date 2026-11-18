@@ -71,7 +71,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     "colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
                     "<button type=button class=convertpng>Convert to PNG</button>, <a href=v1u." .
                     "{$view->toBase64URL()}>Invert Colors</a></div>" ?></div>
-        <DETAILS class=presel open><?= "<summary>Preselectable Colors</summary><h2>Preselectable Colors</h2>";
+        <DETAILS class=presel><?= "<summary>Preselectable Colors</summary><h2>Preselectable Colors</h2>";
             global $preselectedcolors;
             foreach ($preselectedcolors as $outer => $colorsArray) {
                 echo '<h3>' . htmlspecialchars12($outer) . '</h3>';
