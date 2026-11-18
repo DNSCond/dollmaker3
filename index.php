@@ -46,8 +46,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             if (array_key_exists('optiontype', $_GET)) {
                 $type = match ("{$_GET['optiontype']}") {
                     'color' => 'color',
-                    'text' => 'text',
-                    default => 'select',
+                    'select' => 'select',
+                    default => 'text',
                 };
             }
             $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
