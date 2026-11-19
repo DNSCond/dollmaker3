@@ -10,9 +10,8 @@ if (!$inherited) {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 }
 ob_start(function (string $string): string {
-    $string = preg_replace('/\\s+/', " ", $string);
-    $string = preg_replace('/\\s*<\\/?svg>\\s*/', " ", $string);
-    return "$string</svg>";
+//    $string = preg_replace('/\\s+/', " ", $string);
+    return "$string";
 });
 
 function mkshadow(string $shadow, int $shadowpercent): string
@@ -39,14 +38,7 @@ $opacity = 1;
 $stroke = 1;
 {
     global $colors;
-    $shoes = $colors['shoes'];
-    $pants = $colors['pants'];
-    $bgcolor = $colors['body'];
-    $lights = $colors['lights'];
-    $hair = $eyes = $colors['eyes'];
-    $skin = $arms = $colors['skin'];
-    $secondary = $colors['secondary'];
-    global $bgcolor, $pants, $shoes, $fgcolor, $backgroundColor, $sleeves, $lights, $wheels, $secondary;
+    $colors = completeColorArray($colors);
 } global $opaque;
 $devMode = false;
 global $direction;
@@ -59,7 +51,7 @@ foreach ($GLOBALS['assets-'] as $asset) {
     if (array_key_exists('Front', $assetObj)) $fronts[] = ['asset' => $asset, 'name' => $assetObj['Front']];
     if (array_key_exists('Back', $assetObj)) $back_s[] = ['asset' => $asset, 'name' => $assetObj['Back']];
     if (array_key_exists('fn', $assetObj)) $normal[] = ['asset' => $asset, 'name' => $assetObj['fn']];
-    $devMode = $devMode || $assetObj['data']['dev-mode'];
+    $devMode = $devMode || getThingOrNull($assetObj, ['data', 'dev-mode']);
 }
 if ($devMode) {
     header('cache-control: public, max-age=0');
@@ -85,7 +77,7 @@ if ($pfpMode) {
                 str_replace('svg', 'g', $string)));
         if ($isTransparent) require_once __DIR__ . '/Bg.php';
         ob_end_flush() ?></g>
-    <g stroke-linecap="round"><?= '<!-- PHPX -->';
+    <g stroke-linecap="round" stroke-width="8" stroke="#000000"><?= '<!-- PHPX -->';
         function createAsset(array $asset, string $type): void
         {
             $dname = $asset['name'];
@@ -93,11 +85,15 @@ if ($pfpMode) {
             $GLOBALS['opts'] = $asset['opt'];
             $svgType = $type === '' ? 'Middle' : $type;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
-            ob_start(fn(string $string): string => "<g data-id=\"{$asset['id']}\" data-type=\"$svgType\">$string</g>");
-            $inclusionResult = (bool)(include __DIR__ . "/assetdata/$dname");
-            if (!$inclusionResult) {
-                echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";
-            }
+            ob_start(function (string $string) use ($svgType, $asset): string {
+                if (str_starts_with($string, '<svg ') && preg_match
+                        ('/(<\\/svg>)$/', $string, $matches)) {
+                    $substr = substr($string, 5, strlen($string) - strlen($matches[1]));
+                    return "<g>data-id='{$asset['id']}'</g>";
+                }  return '';
+            });// $inclusionResult =
+            (bool)(include __DIR__ . "/assetdata/$dname");
+            //if (!$inclusionResult) {echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";}
             ob_end_flush();
         }
 

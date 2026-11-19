@@ -7,7 +7,8 @@
               x="<?= $Favicar_multiplySize + $Favicar_offsetX ?>" height="<?= 21 * $Favicar_multiplySize ?>"
               y="<?= 3 * $Favicar_multiplySize + $Favicar_offsetY ?>"/>
         <rect fill="<?= $GLOBALS['colors']['secondary'] ?>" width="<?= 26 * $Favicar_multiplySize ?>"
-              x="<?= 3 * $Favicar_multiplySize + $Favicar_offsetX ?>" y="<?= 5 * $Favicar_multiplySize + $Favicar_offsetY ?>"
+              x="<?= 3 * $Favicar_multiplySize + $Favicar_offsetX ?>"
+              y="<?= 5 * $Favicar_multiplySize + $Favicar_offsetY ?>"
               height="<?= 12 * $Favicar_multiplySize ?>"/>
         <!-- draw the lights /-->
         <rect fill="<?= $GLOBALS['colors']['lights'] ?>" width="<?= 4 * $Favicar_multiplySize ?>"

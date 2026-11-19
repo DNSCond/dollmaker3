@@ -1,5 +1,5 @@
 <svg>
-    <g stroke-width="8" stroke="#000000" stroke-linejoin="round">
+    <g>
         <circle r="143" cx="400" cy="254" fill="<?= "{$GLOBALS['colors']['skin']}";
         ['pathStart' => $pathStart, 'pathNext' => $pathNext] = $GLOBALS['p3004'] ?>"/>
         <ellipse rx="40" ry="70" cx="345" cy="250" fill="white"/>

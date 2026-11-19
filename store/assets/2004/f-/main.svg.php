@@ -21,9 +21,7 @@
             $x3 = $cx + cos($a3) * $innerRadius;
             $y3 = $cy + sin($a3) * $innerRadius;
 
-            echo "<polygon points='$x1,$y1 $x2,$y2 $x3,$y3' fill='$c' stroke='$c' stroke-width='2'/>\n";
+            echo "<polygon points='$x1,$y1 $x2,$y2 $x3,$y3' fill='$c' stroke='$c' stroke-width='2'/>";
         } ?></g>
-    <circle stroke='black' stroke-width='2'
-            cx="400" cy="525" r="35"
-            fill="<?= $c ?>"/>
+    <circle stroke-width='2' cx="400" cy="525" r="35" fill="<?= $c ?>"/>
 </svg>

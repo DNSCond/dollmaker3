@@ -17,11 +17,11 @@ require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
 create_head3($title = 'Character Customizer', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
         'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/display.css'],
-        'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalFullString']}",
+        'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalized_serialized']}",
         'base' => '/dollmaker3/',
 ]);
-global $opaque, $pfpMode;
 $GLOBALS['inherited'] = true;
+global $opaque, $pfpMode, $colorList;
 $isopaque = $opaque ? 'checked' : 'data-checked';
 $pfpEnabled = $pfpMode ? 'checked' : 'data-check';
 if ($pfpMode) {
@@ -51,13 +51,14 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     default => $type,
                 };
             }
-            $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
+            global $colorsFull, $colorDisplayList;
+            $view = BinaryView::fromBase64URL($GLOBALS['canonicalized']->toBase64Url());
             require_once 'preselected-colors.php';
-            foreach ($colors as $name => $color) {
+            $colorsPull = completeColorArray($colors);
+            foreach ($colorDisplayList as $name) {
+                $color = $colorsPull[$name];
                 $result .= "\n<tr><td><label for=color-$name>$name:</label><td>";
-                if ($type === 'select') {
-                    $result .= preselectedcolors($name, $color);
-                } else {
+                if ($type === 'select') $result .= preselectedcolors($name, $color); else {
                     $result .= "<input name=$name id=color-$name value=\"$color\" size=7 type=$type required pattern=^#[a-f0-9]{6}$>";
                 }
                 $result .= "<td class=bg data-ori=$color><span>$color</span>";
@@ -98,7 +99,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 </div>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
 <form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
-    $afterColors = (7 * 4);
+    $afterColors = (ColorConstantIndex * 4);
     global $assetOptions;
     if ($pfpMode) echo "<input type=hidden value=on name=pfpMode>";
     foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
@@ -107,28 +108,13 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         $item = $item['f-']['data'];
         if (!is_array($item)) continue;
         if (array_key_exists('private', $item) && $item['private']) continue;
-        $htmlName = htmlspecialchars12($item['name']);
-        $view = BinaryView::fromBase64URL($GLOBALS['canonicalB64']);
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
-        $writeCount = 1;
-        if (array_key_exists('baseBody', $item)) $writeCount++;
-
-        $view->resize($afterColors + 2);
-        $view->resize($afterColors + 2 + ($writeCount * 3));
-        $view->setUint8($afterColors + 1, $writeCount);
-        $view->setUint8($afterColors, ($GLOBALS['dirByte'] ?? 0b100));
-        $baseOffset = $afterColors + 2;
-        $assetIdx = 0;
-
-        // Asset 1: Primary Asset
-        $view->setUint16($baseOffset + ($assetIdx * 3), (int)$matches[1]);
-        $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
-        $assetIdx++;
+        $htmlName = htmlspecialchars12($item['name']);
+        $view = $GLOBALS['canonicalized']->cloneColors();
+        $view->addAsset(+$matches[1], 0);
 
         if (array_key_exists('baseBody', $item)) {
-            $view->setUint16($baseOffset + ($assetIdx * 3), $item['baseBody']);
-            $view->setUint8($baseOffset + ($assetIdx * 3) + 2, 0);
-            $assetIdx++;
+            $view->addAsset(+$item['baseBody'], 0);
         }
 
         if (array_key_exists('cost', $item)) $cost = match ($item['cost']) {
@@ -137,7 +123,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             null, 0 => 'Free',
             default => "{$item['cost']} units",
         }; else $cost = 'Free';
-        $img_src = htmlspecialchars12("endpoint.svg.php?dna=v1u.{$view->toBase64URL()}");
+        $img_src = htmlspecialchars12("endpoint.svg.php?dna=v2u.{$view->toBase64URL(true)}");
         $inputname = "asset-$matches[1]";
         $integerid = +$matches[1];
         $iname = 'assets[]';
@@ -145,10 +131,10 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         echo "<character-display><div class=padding><label for=$inputname>$htmlName <input" .
                 " type=checkbox value=$integerid id=$inputname name=$iname></label></div>" .
                 "<div><label for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\"" .
-                " $size class=store-img loading=lazy></label></div><dl class=descLi><div da" .
-                "ta-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>$matches[1]" .
-                "</div></dl><div class=options>";
-        $options = $assetOptions[$integerid];
+                " $size class=store-img loading=lazy></label></div><dl class=descLi><div" .
+                " data-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>" .
+                "$matches[1]</div></dl><div class=options>";
+        $options = 0;//$assetOptions[$integerid];
         for ($i = 0; $i < 3; $i++) {
             $nullOption = false;
             $enabled = isPresent($item, ['options', "$i"]);

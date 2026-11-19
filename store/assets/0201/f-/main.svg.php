@@ -1,5 +1,5 @@
 <svg>
-    <g stroke-width="8" stroke="#000000" stroke-linejoin="round">
+    <g>
         <path d="M 350 850 l -50 200 h 225 L 450 850"
               fill="<?= "{$GLOBALS['colors']['shoes']}" ?>"/>
         <path d="M 200 900 Q 100 1000 70 1250 Q 150 970 300 900"

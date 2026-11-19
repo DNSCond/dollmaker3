@@ -1,16 +1,16 @@
 <?php use DataViewed\BinaryView;
 use function DataViewed\RGBToRGBA32;
-use function Helpers\Getters\isPresent;
 
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 global $colors;
+const ColorConstantIndex = 10;
 $keys = array_keys($colors);
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
-if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D', implode(';',
+if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) . '$/D', implode(';',
         array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
             $keys)) . ';', $matches)) {
-    $afterColors = (7 * 4); // 28 bytes
+    $afterColors = (ColorConstantIndex * 4); // 28 bytes
 
     // 1. Gather and sanitize incoming assets from POST
     $validAssets = [];
@@ -87,7 +87,7 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', 7)) . '$/D', implode('
 
     http_response_code(303);
     header("dataview-length:{$result->getLength()}");
-    header("Location: /dollmaker3/v1u.{$result->toBase64URL()}");
+    header("Location: /dollmaker3/v2u.{$result->toBase64URL()}");
     exit;
 }
 

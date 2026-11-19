@@ -40,10 +40,28 @@ $colors = [
     'shoes' => '#002d40',
     'lights' => '#fff100',
 ];
-if ($dataView) {
-    foreach (array_keys($colors) as $keyDex => $key) try {
-        $normalized = normalizeColor(RGBA32ToRGB($dataView, $keyDex * 4));
-        if (is_int($normalized)) $colors[$key] = colorIntToString($normalized);
-    } catch (OutOfBoundsException) {
+$colorList = ['body', 'secondary', 'skin', 'eyes', 'pants',
+    'shoes', 'lights', 'hair', 'bottom', 'placeholder'];
+$colorDisplayList = ['body', 'secondary', 'skin', 'eyes', 'hair',
+    'pants', 'shoes', 'bottom', 'lights', 'placeholder'];
+$colorsFull = completeColorArray($colors);
+function completeColorArray(array $array): array
+{
+    global $colors;
+    if (!array_key_exists('hair', $array))
+        $array['hair'] = getThisOrThat($array, 'eyes', $colors['eyes']);
+    if (!array_key_exists('bottom', $array))
+        $array['bottom'] = getThisOrThat($array, 'shoes', $colors['shoes']);
+    if (!array_key_exists('placeholder', $array)) $array['placeholder'] = '#000000';
+    return $array;
+}
+
+function getThisOrThat(array $array, string|int $key, mixed $default, bool $mustNotBeNull = false): mixed
+{
+    if (array_key_exists($key, $array)) {
+        $mixed = $array[$key];
+        if ($mustNotBeNull && is_null($mixed)) return $default;
+        return $mixed;
     }
+    return $default;
 }

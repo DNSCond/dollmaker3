@@ -1,5 +1,5 @@
 <svg>
-    <g stroke-width="8" stroke="#000000" stroke-linejoin="round">
+    <g>
         <rect fill="<?= "{$GLOBALS['colors']['pants']}";
         $lowerAmount = (hasOption(1) ? 30 : 0);
         $lowerAmountHalf = $lowerAmount / 2;
