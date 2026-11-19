@@ -11,7 +11,7 @@
             <path d="M 355 620 L 125 950 q 5 90 65 67 L 345 700"/>
         </g>
         <path d="M 315 460 m -30 40 l -50 300 l +50 -30 l +50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
-        <path d="M 485 460 m +30 40 l +50 300 l -50 -30 l -50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
+        <path d="M 485 460 m +43 40 l +50 300 l -50 -30 l -50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
         <path d="M 315 460 l -40 20 l -5 50 l 270 -5 l -5 -50 l -40 -20"
               fill="<?= "{$GLOBALS['colors']['secondary']}" ?>"/>
         <path d="M 315 460 l 40 160 l 102 -5 l 40 -160 L 400 420 Z" fill="<?= "{$GLOBALS['colors']['body']}" ?>"/>

@@ -7,7 +7,7 @@
         <path d="<?= "M 125 950 m 25 -30 Q 450 1130 605 850 L 672 957 Q 400 1250 125 950 Z" ?>"
               fill="<?= "{$GLOBALS['colors']['secondary']}" ?>"/>
         <path d="M 315 460 m -30 40 l -50 300 l +50 -30 l +50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
-        <path d="M 485 460 m +30 40 l +50 300 l -50 -30 l -50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
+        <path d="M 485 460 m +43 40 l +50 300 l -50 -30 l -50 -300" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
         <path d="M 315 460 l -40 20 l -5 50 l 270 -5 l -5 -50 l -40 -20"
               fill="<?= "{$GLOBALS['colors']['secondary']}" ?>"/>
         <path d="M 315 460 l 40 160 l 102 -5 l 40 -160 L 400 420 Z" fill="<?= "{$GLOBALS['colors']['body']}" ?>"/>

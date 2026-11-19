@@ -10,7 +10,7 @@ if (!$inherited) {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 }
 ob_start(function (string $string): string {
-    // $string = preg_replace('/\\s+/', " ", $string);
+    $string = preg_replace('/\\s+/', " ", $string);
     return "$string";
 });
 
@@ -76,7 +76,7 @@ if ($pfpMode) {
                 str_replace('svg', 'g', $string)));
         if ($isTransparent) require_once __DIR__ . '/Bg.php';
         ob_end_flush();
-        echo "</g><g stroke-linecap='round' stroke-width='$strokeWidth' stroke='#000000'>";
+        echo "</g><g stroke-linecap='round' stroke-width='$strokeWidth' stroke='#000000' stroke-linejoin='round'>";
         function createAsset(array $asset, string $type): void
         {
             $dname = $asset['name'];
@@ -86,15 +86,17 @@ if ($pfpMode) {
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(function (string $string) use ($svgType, $asset): string {
                 $string = rtrim($string);
+                if (str_starts_with($string, '<!-- Dev Mode Enabled -->'))
+                    $string = substr($string, 25);
                 if (str_starts_with($string, '<svg>') &&
                         str_ends_with($string, '</svg>')) {
                     $substr = substr($string, 5, -6);
                     return "<g data-id='{$asset['id']}'>$substr</g>";
                 }
-                return '';
-            });// $inclusionResult =
-            (bool)(include __DIR__ . "/assetdata/$dname");
-            //if (!$inclusionResult) {echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";}
+                //$b64 = base64_encode($string);
+                return "<g data-id='{$asset['id']}' data-failed-to-load='\'/>";
+            });
+            (include __DIR__ . "/assetdata/$dname");
             ob_end_flush();
         }
 

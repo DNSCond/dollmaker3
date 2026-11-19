@@ -7,7 +7,7 @@
         $y900 = 900 + $lowerAmountHalf ?>" x="300" y="550" width="200" height="300"/>
         <!---->
         <path d="<?= "M 150 900 L 100 $y L 270 1250 H 530 L 700 $y L 650 900 Z" ?>"
-              fill="<?= "{$GLOBALS['colors']['lights']}" ?>"/>
+              fill="<?= hasOption(3) ? "{$GLOBALS['colors']['bottom']}" : "{$GLOBALS['colors']['lights']}" ?>"/>
         <!---->
         <path d="<?= "M 150 $y900 l -50 170 q +50 50 +100 0 q +50 50 +100 0 q +50 50 +100 0 V +800" ?>"
               fill="<?= "{$GLOBALS['colors']['shoes']}" ?>"/>

@@ -44,7 +44,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
     <script type=module src=statics/plaintext.js></script>
-    <script type=text/plain is=plaintext-log><?= var_string($colors) ?></script>
+    <script type=text/plain is=plaintext-log><?= var_string($GLOBALS['assets-']) ?></script>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
@@ -68,7 +68,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 $color = $colorsPull[$name];
                 $result .= "\n<tr><td><label for=color-$name>$name:</label><td>";
                 if ($type === 'select') $result .= preselectedcolors($name, $color); else {
-                    $result .= "<input name=$name id=color-$name value=\"$color\" size=7 type=$type required pattern=^#[a-f0-9]{6}$>";
+                    $result .= "<input name=$name id=color-$name value=\"$color\" size=7 type" .
+                            "=$type required pattern=^#[a-f0-9]{6}$ pattern=^#[a-f0-9A-F]{6}$>";
                 }
                 $result .= "<td class=bg data-ori=$color><span>$color</span>";
                 if ($name === 'skin') $index++; else {
@@ -79,9 +80,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                     "=opaque type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'On' : 'Off') .
                     "<tr><td><label for=pfpMode>Profile Image Mode</label><td><input name=pfpMode $pfpEnabled" .
                     " id=pfpMode type=checkbox><TD>" . ($pfpEnabled === 'checked' ? 'On' : 'Off') . '<tr><td ' .
-                    "colspan=3><button type=submit>apply colors</button></table><div class=inline-block>" .
-                    "<button type=button class=convertpng>Convert to PNG</button>, <a href=v1u." .
-                    "{$view->toBase64URL()}>Invert Colors</a></div>" ?></div>
+                    "colspan=3><button type=submit>apply colors</button></table><div class=inline-block><button " .
+                    " type=button class=convertpng>Convert to PNG</button>, <a>Invert Colors</a></div>" ?></div>
         <DETAILS class=presel><?= "<summary>Preselectable Colors</summary><h2>Preselectable Colors</h2>";
             global $preselectedcolors;
             foreach ($preselectedcolors as $outer => $colorsArray) {
@@ -143,9 +143,9 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 "<div><label for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\"" .
                 " $size class=store-img loading=lazy></label></div><dl class=descLi><div" .
                 " data-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>" .
-                "$matches[1]</div></dl><div class=options>";
+                "$matches[1]</div></dl>\x3c!--<div class=options>";
         $options = 0;//$assetOptions[$integerid];
-        for ($i = 0; $i < 3; $i++) {
+        /*for ($i = 0; $i < 3; $i++) {
             $nullOption = false;
             $enabled = isPresent($item, ['options', "$i"]);
             if ($enabled && !is_string($item['options'][$i])) {
@@ -161,8 +161,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 echo htmlspecialchars12("{$item['options'][$i]}");
             } else echo "Unknown\x20" . ($i + 1);
             echo "</label></div>";
-        }
-        echo "</div></character-display>";
+        }*/
+        echo "</div>--></character-display>";
     }
     global $dirByte;
     echo "\n<div class=marginal2><button type=submit>apply preview</button></div>" ?></form>
@@ -220,6 +220,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA',
                 'v1u.__3RWf8AAAD_ueH8__1Z_f9ZjP3_QHQZ__0MAAQCuAsAuQsA',
                 'New Ciolor' => 'v1u._-R9GP8NDJn_ueH8_8CxAf8F3JT_iSyU_3ip7AQCugsAuwsA',
+                'v2u._628_P_98K3_JDVZ_wBF_f-kcQD_xa39_wDx_f-t5f3_xa39_wAAAAQAAggAAIkTAA',
         ); // f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {

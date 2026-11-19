@@ -36,3 +36,12 @@ $colors = $canonicalized->getComputedColors();
 $GLOBALS['assets-'] = $canonicalized->getAssets();
 $pfpMode = $canonicalized->getPFPMode();
 $opaque = $canonicalized->getOpaque();
+
+//if (array_key_exists('isFor', $GLOBALS)) {
+//if ($isLocked && $GLOBALS['isFor'] === 'svgDisplay') foreach ($colors as $color => $value)
+//if (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/D', strtolower("$value"), $matches)) {
+//$r = hexdec($matches[1]);$g = hexdec($matches[2]);$b = hexdec($matches[3]);
+//$gray = (int)round(0.299 * $r + 0.587 * $g + 0.114 * $b);
+//$r = $g = $b = $gray;$r = $r & -3;$g = $g & -3;$b = $b & -3;
+//$colors[$color] = colorIntToString($r << 16 | $g << 8 | $b);
+//}}
