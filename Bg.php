@@ -1,6 +1,6 @@
 <svg>
     <rect width="800" height="1280" fill="#FfFfFf"/>
-    <g opacity="<?= $GLOBALS['opaque'] ? '1' : '0.7'?>" stroke-width="0">
+    <g opacity="<?= $GLOBALS['opaque'] ? '1' : '0.7' ?>" stroke-width="0">
         <rect width="800" height="1280" fill="<?= "{$GLOBALS['colors']['eyes']}" ?>" class="bgc"/>
         <path d="M 0 384 L 800 576 L 800 1280 L 0 1280 Z" fill="<?= "{$GLOBALS['colors']['body']}" ?>"/>
         <path d="M 0 896 L 800 1000 L 800 1280 L 0 1280 Z" fill="<?= "{$GLOBALS['colors']['pants']}" ?>"/>

@@ -1,4 +1,4 @@
-<svg><?= '<g>';
+<svg><?= '<g stroke-width="0">';
     global $Favicar_offsetX, $Favicar_offsetY, $Favicar_multiplySize;
     $fill = "{$GLOBALS['colors']['lights']}";
     $w128 = $Favicar_multiplySize * 8;

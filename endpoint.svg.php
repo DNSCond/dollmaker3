@@ -10,7 +10,7 @@ if (!$inherited) {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 }
 ob_start(function (string $string): string {
-//    $string = preg_replace('/\\s+/', " ", $string);
+    // $string = preg_replace('/\\s+/', " ", $string);
     return "$string";
 });
 
@@ -36,10 +36,8 @@ if (isset($GLOBALS['CharacterTransparent'])) {
 $isTransparent = !$isTransparent;
 $opacity = 1;
 $stroke = 1;
-{
-    global $colors;
-    $colors = completeColorArray($colors);
-} global $opaque;
+//$colors = completeColorArray($colors);
+global $colors, $opaque;
 $devMode = false;
 global $direction;
 $normal = array();
@@ -58,6 +56,7 @@ if ($devMode) {
 } else {
     header('cache-control: public, max-age=15, s-maxage=15');
 }
+$strokeWidth = (!(array_key_exists('no-stroke', $_GET) && $_GET['no-stroke'])) * 8;
 $yoffset = 0;
 global $pfpMode;
 if ($pfpMode) {
@@ -76,8 +75,8 @@ if ($pfpMode) {
                 "\x3cg", "\x3cg class='background inner'",
                 str_replace('svg', 'g', $string)));
         if ($isTransparent) require_once __DIR__ . '/Bg.php';
-        ob_end_flush() ?></g>
-    <g stroke-linecap="round" stroke-width="8" stroke="#000000"><?= '<!-- PHPX -->';
+        ob_end_flush();
+        echo "</g><g stroke-linecap='round' stroke-width='$strokeWidth' stroke='#000000'>";
         function createAsset(array $asset, string $type): void
         {
             $dname = $asset['name'];
@@ -86,11 +85,13 @@ if ($pfpMode) {
             $svgType = $type === '' ? 'Middle' : $type;
             $assetId = str_pad($asset['id'], 4, '0', STR_PAD_LEFT);
             ob_start(function (string $string) use ($svgType, $asset): string {
-                if (str_starts_with($string, '<svg ') && preg_match
-                        ('/(<\\/svg>)$/', $string, $matches)) {
-                    $substr = substr($string, 5, strlen($string) - strlen($matches[1]));
-                    return "<g>data-id='{$asset['id']}'</g>";
-                }  return '';
+                $string = rtrim($string);
+                if (str_starts_with($string, '<svg>') &&
+                        str_ends_with($string, '</svg>')) {
+                    $substr = substr($string, 5, -6);
+                    return "<g data-id='{$asset['id']}'>$substr</g>";
+                }
+                return '';
             });// $inclusionResult =
             (bool)(include __DIR__ . "/assetdata/$dname");
             //if (!$inclusionResult) {echo "<g data-opts=\"inclusion-failed\" data-id=\"{$asset['id']}\" data-type=\"$svgType\"/>";}

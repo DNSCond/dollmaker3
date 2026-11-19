@@ -1,21 +1,20 @@
 <?php use DataViewed\BinaryView;
 use function DataViewed\RGBToRGBA32;
 
+global $colorList;
+const ColorConstantIndex = 10;
 require_once "BinaryHelper.php";
 require_once "getColor.php";
-global $colors;
-const ColorConstantIndex = 10;
-$keys = array_keys($colors);
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
 if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) . '$/D', implode(';',
         array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
-            $keys)) . ';', $matches)) {
+            $colorList)) . ';', $matches)) {
     $afterColors = (ColorConstantIndex * 4); // 28 bytes
 
     // 1. Gather and sanitize incoming assets from POST
-    $validAssets = [];
     $max = 50;
     $count = 0;
+    $validAssets = [];
     if (array_key_exists('assets', $_POST) && is_array($_POST['assets'])) {
         foreach ($_POST['assets'] as $assetId) {
             // Ensure it's a valid number fitting within uint16 (0 - 65535)
@@ -35,7 +34,7 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) .
     $result = new BinaryView($totalBytes);
 
     // 3. Write Colors (Bytes 0 to 27)
-    foreach ($keys as $index => $_colorKey) {
+    foreach ($colorList as $index => $_colorKey) {
         RGBToRGBA32($result, (int)hexdec($matches[$index + 1]), $index * 4);
     }
 
@@ -54,7 +53,6 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) .
     }
 
     if (array_key_exists('opaque', $_POST)) {
-        header('dev-result: ' . decbin(+(bool)$_POST['opaque'] << 3));
         $b111 |= +(bool)$_POST['opaque'] << 3;
     }
 
@@ -63,7 +61,7 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) .
     }
 
     // Write the Global Options Byte at index 28
-    $result->setUint8($afterColors, $b111);
+    $result->setUint16($afterColors++, $b111);
     $result->setUint8(++$afterColors, count($validAssets));
 
     // 5. Pack the Assets sequentially right after the flag byte

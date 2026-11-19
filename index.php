@@ -31,11 +31,20 @@ if ($pfpMode) {
     $w = 800;
     $h = 1280;
 }
+function var_string(...$vars): false|string
+{
+    ob_start();
+    var_dump(...$vars);
+    return ob_get_clean();
+}
+
 $size = "width=$w height=$h";
 $mainSize = $size . ($pfpMode ? "\x20class=size512" : '');
 $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
+    <script type=module src=statics/plaintext.js></script>
+    <script type=text/plain is=plaintext-log><?= var_string($colors) ?></script>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
@@ -52,7 +61,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 };
             }
             global $colorsFull, $colorDisplayList;
-            $view = BinaryView::fromBase64URL($GLOBALS['canonicalized']->toBase64Url());
+            $view = BinaryView::fromBase64URL($GLOBALS['canonicalized_dnastring']);
             require_once 'preselected-colors.php';
             $colorsPull = completeColorArray($colors);
             foreach ($colorDisplayList as $name) {
@@ -110,7 +119,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         if (array_key_exists('private', $item) && $item['private']) continue;
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
         $htmlName = htmlspecialchars12($item['name']);
-        $view = $GLOBALS['canonicalized']->cloneColors();
+        $view = new AssetHelper($GLOBALS['canonicalized_dnastring'], 2);
+        $view->clearAssets();
         $view->addAsset(+$matches[1], 0);
 
         if (array_key_exists('baseBody', $item)) {
@@ -123,7 +133,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             null, 0 => 'Free',
             default => "{$item['cost']} units",
         }; else $cost = 'Free';
-        $img_src = htmlspecialchars12("endpoint.svg.php?dna=v2u.{$view->toBase64URL(true)}");
+        $img_src = htmlspecialchars12("endpoint.svg.php?dna=v2u.{$view->toBase64URL()}");
         $inputname = "asset-$matches[1]";
         $integerid = +$matches[1];
         $iname = 'assets[]';

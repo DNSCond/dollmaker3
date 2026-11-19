@@ -1,4 +1,4 @@
-<svg><?= '<g>';
+<svg><?= '<!-- Hello -->';
     global $Favicar_offsetX, $Favicar_offsetY, $Favicar_multiplySize;
 
     // Base reference size these coordinates were designed for
@@ -11,5 +11,4 @@
     $strokeWith = $Favicar_multiplySize / 2;
     $q128 = 128 * $scale;
     $q64 = 64 * $scale;
-    echo "<path d='M $x $y q $q64 $q64 $q128 0' fill='none' stroke-width='$strokeWith'/>";
-    echo '</g>' ?></svg>
+    echo "<path d='M $x $y q $q64 $q64 $q128 0' fill='none' stroke-width='$strokeWith'/>" ?></svg>

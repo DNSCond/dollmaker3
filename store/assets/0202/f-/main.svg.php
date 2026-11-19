@@ -1,5 +1,5 @@
 <svg>
-    <g>
+    <g stroke-width="0">
         <!--<?= ' draw the main body /';
         // 512 by 512 originally.
         global $Favicar_offsetX, $Favicar_offsetY, $Favicar_multiplySize ?>-->

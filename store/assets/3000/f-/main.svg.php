@@ -1,5 +1,5 @@
 <svg>
-    <>
+    <g>
         <circle r="143" cx="400" cy="254" fill="<?= "{$GLOBALS['colors']['skin']}" ?>"/>
         <ellipse rx="40" ry="70" cx="345" cy="250" fill="white"/>
         <ellipse rx="40" ry="70" cx="455" cy="250" fill="white"/>
@@ -13,5 +13,5 @@
         " q -50 10 -66 125 q 0 75 13 150 l 23 30 q 0 -130 65 -220" ?>" fill="<?= "{$GLOBALS['colors']['eyes']}" ?>"/>
         <path d="<?= $path ?>" fill="none"/>
         <path d="M 368 350 q 32 32 64 0" fill="none" class="mouth"/>
-    </>
+    </g>
 </svg>
