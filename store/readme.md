@@ -4,12 +4,12 @@ for new assets only.
 
 | Range (uint16) | Category / Slot                                     |
 |----------------|-----------------------------------------------------|
-| 1 – 1999       | "Facial Features (Eyes, Brows, Mouths, Noses)"      |
-| 2000 – 4999    | "Hair Styles (Front, Back, Bangs, Accessories)"     |
+| 1 – 1999       | Facial Features (Eyes, Brows, Mouths, Noses)        |
+| 2000 – 4999    | Hair Styles (Front, Back, Bangs, Accessories)       |
 | 5000 – 8999    | Tops, Outerwear, and Dreses                         |
-| 9000 – 12999   | "Bottoms (Pants, Skirts, Shorts)"                   |
+| 9000 – 12999   | Bottoms (Pants, Skirts, Shorts)                     |
 | 13000 – 15999  | Shoes and Socks                                     |
-| 16000 – 23999  | "Accessories and Gear (Hats, Glasses, Wings, Pets)" |
+| 16000 – 23999  | Accessories and Gear (Hats, Glasses, Wings, Pets)   |
 | 24000 – 29999  | Backgrounds and Foreground Overlays                 |
 | 30000 – 65535  | Future Expansions and DLC                           | 
 

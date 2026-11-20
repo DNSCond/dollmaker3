@@ -43,8 +43,6 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '');
 $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
-    <script type=module src=statics/plaintext.js></script>
-    <script type=text/plain is=plaintext-log><?= var_string($GLOBALS['assets-']) ?></script>
     <form method=post action=oninput.php>
         <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
@@ -206,9 +204,10 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
                 'randInt' => 'v1u._5HYqP-lBSX_1UlZ_wgZGf_0EQz__Vhx_1QtzQQFAQAABAAABQAABwAA1AcA',
                 'some?' => 'v1u.__QtRf8ZkQz_ueH8_8T96f99uMX_nZGU_-jcUQQD0AcA0QcA0gcA',
-                'v1u._4llUf-gBcj_ueH8_wlZ4P_dcGD_fE1R_0glfQQBAQAA',
+                'Kine' => 'v2u._4llUf-gBcj_ueH8_wlZ4P_dcGD_fE1R_0glff8JWeD_fE1R_wAAAAQAAgkAAIoTAA',
                 'bright' => 'v1u.__zpcf9cJEH_ueH8_yj44f_Qyf3_DNXw_1z1MAQE0AcA0gcA0wcA1AcA',
                 'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
+                'v2u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_2gVNP9kDHT_aBU0_wAAAAQAAwYAANAHAN8HAA',
                 'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
                 'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
                 'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
@@ -220,7 +219,6 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Lime' => 'v2u._yyVWf8ApAD_ueH8_13xhP_8Can_hCAh_wDx_f9d8YT_hCAh_wAAAAQAArwLAIoTAA',
                 'Red' => 'v1u._1xtHP9sVR3_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCugsAvAsA',
                 'Peasant' => 'v2u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_f-kaOj_iWTE_wAAAAQAAggAAIsTAA',
-                'v2u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_2gVNP9kDHT_aBU0_wAAAAQAAwYAANAHAN8HAA'
         ); // f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {

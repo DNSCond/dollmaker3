@@ -46,5 +46,5 @@ def copyfile(src_path, out_path):
 
 
 if __name__ == '__main__':
-    main()
+    main(); input('enter to exit:')
 pass
