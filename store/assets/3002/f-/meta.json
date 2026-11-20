@@ -1,6 +1,6 @@
 {
   "name": "New Phase Body 2",
-  "cost": true,
+  "cost": 75,
   "baseBody": 3003,
   "options": []
 }

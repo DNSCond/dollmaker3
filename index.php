@@ -203,8 +203,6 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
                 'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQD0AcA0QcA0wcA',
                 'V3id' => 'v1u._wAspP_9_f3_ueH8_wCkAP-kcQD_vYnk_wDx_QQC0AcB0QcB',
-                'Card Basic 2' => 'v1u._x28Ff8dvBX_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEAQABAgABBgABBwAB',
-                'Peasant' => 'v1u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFAQABAgABAwABBgABBwAB',
                 'Fire' => 'v1u._1WU_f9VlP3_ZZW9_1W8_f80JNH_JSgs_wAAgAQDAQABAgABBwAB',
                 'randInt' => 'v1u._5HYqP-lBSX_1UlZ_wgZGf_0EQz__Vhx_1QtzQQFAQAABAAABQAABwAA1AcA',
                 'some?' => 'v1u.__QtRf8ZkQz_ueH8_8T96f99uMX_nZGU_-jcUQQD0AcA0QcA0gcA',
@@ -221,6 +219,8 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'v2u._628_P_98K3_JDVZ_wBF_f-kcQD_xa39_wDx_f-t5f3_xa39_wAAAAQAAggAAIkTAA',
                 'Lime' => 'v2u._yyVWf8ApAD_ueH8_13xhP_8Can_hCAh_wDx_f9d8YT_hCAh_wAAAAQAArwLAIoTAA',
                 'Red' => 'v1u._1xtHP9sVR3_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCugsAvAsA',
+                'Peasant' => 'v2u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_f-kaOj_iWTE_wAAAAQAAggAAIsTAA',
+                'v2u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_2gVNP9kDHT_aBU0_wAAAAQAAwYAANAHAN8HAA'
         ); // f4e0f0; 78bdf8
         $output = [];
         foreach ($array as $name => $href) {
