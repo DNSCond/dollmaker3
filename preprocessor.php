@@ -19,6 +19,8 @@ if (is_null($assetHelper)) {
     $assetHelper = new AssetHelper('__GoAP_4_Yz_ueH8_31YAP9lRAD_QC0A_wDx_QQA', 1);
 }
 
+if (array_key_exists('pfpmode', $_GET))
+    $assetHelper->setPFPMode((bool)$_GET['pfpmode']);
 [$v, $canonicalized_dnastring] = $assetHelper->canonicalize();
 $canonicalized = new AssetHelper($canonicalized_dnastring, 2);
 if (array_key_exists('canonical_redir_path', $GLOBALS)) {
@@ -43,5 +45,4 @@ $opaque = $canonicalized->getOpaque();
 //$r = hexdec($matches[1]);$g = hexdec($matches[2]);$b = hexdec($matches[3]);
 //$gray = (int)round(0.299 * $r + 0.587 * $g + 0.114 * $b);
 //$r = $g = $b = $gray;$r = $r & -3;$g = $g & -3;$b = $b & -3;
-//$colors[$color] = colorIntToString($r << 16 | $g << 8 | $b);
-//}}
+//$colors[$color]=colorIntToString($r << 16 | $g << 8 | $b);}}

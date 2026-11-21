@@ -39,12 +39,11 @@ function var_string(...$vars): false|string
 }
 
 $size = "width=$w height=$h";
-$mainSize = $size . ($pfpMode ? "\x20class=size512" : '');
-$htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
+$mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
     <form method=post action=oninput.php>
-        <div><?= "<img src=\"endpoint.svg.php?$htmlQuery\" id=main-svg $mainSize alt='the result'>";
+        <div><?= "<img src=img/{$GLOBALS['canonicalized_serialized']} $mainSize alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
             $index = 0;
@@ -94,7 +93,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
         <div hidden><?= (function () {
                 $result = '';
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z)
-                    $result .= "<div><label for=$z>$z:<input type=radio name=direction value=$z id=$z></label></div>";
+                    $result .= "<div><label for=$z>$z:n<input type=radio name=direction value=$z id=$z></label></div>";
                 foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) $result .= "<div><label for=dir-"
                         . "$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
                 return $result;
@@ -131,7 +130,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             null, 0 => 'Free',
             default => "{$item['cost']} units",
         }; else $cost = 'Free';
-        $img_src = htmlspecialchars12("endpoint.svg.php?dna=v2u.{$view->toBase64URL()}");
+        $img_src = htmlspecialchars12("img/v2u.{$view->toBase64URL()}");
         $inputname = "asset-$matches[1]";
         $integerid = +$matches[1];
         $iname = 'assets[]';
@@ -196,7 +195,7 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
             '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
             'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal,
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
-<div class=divs><?= "<h2 class='store-header preset-h2'>Presets</h2>" . (function () {
+<div class=divs><?= "<h2 class='store-header preset-h2'>Presets</h2>" . (function () use ($pfpMode, $size) {
         $array = array(
                 'Sun' => 'v1u._1WU_f9VvP3_ZZW9_1W8_f80JNH_JSgs_wDx_QQD0AcA0QcA1AcA',
                 'Moon' => 'v1u._3AZGf_tzan_0eD9__j9jP_9wIX_6cyF_wDx_QQD0AcA0QcA0wcA',
@@ -207,24 +206,24 @@ $htmlQuery = htmlspecialchars12($_SERVER['QUERY_STRING']) ?>
                 'Kine' => 'v2u._4llUf-gBcj_ueH8_wlZ4P_dcGD_fE1R_0glff8JWeD_fE1R_wAAAAQAAgkAAIoTAA',
                 'bright' => 'v1u.__zpcf9cJEH_ueH8_yj44f_Qyf3_DNXw_1z1MAQE0AcA0gcA0wcA1AcA',
                 'dark' => 'v1u._7k1nf9JRLX_ueH8_1ksif_UzBz_5HwU_7hdZAQD0AcA0gcA0wcA',
-                'v2u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_2gVNP9kDHT_aBU0_wAAAAQAAwYAANAHAN8HAA',
-                'v1u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzAQDAQAAAwAABgAA',
-                'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
-                'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
-                'v1u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_wDx_QQEBgAABwAA0AcA3wcD',
-                'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA',
-                'v1u.__3RWf8AAAD_ueH8__1Z_f9ZjP3_QHQZ__0MAAQCuAsAuQsA',
+                'v1/2' => 'v2u._x28Ff_9_f3_ueH8_2QMdP_Y6K3_0DFt_2gVNP9kDHT_aBU0_wAAAAQAAwYAANAHAN8HAA',
+                'transistor' => 'v1u._8WZ-P-wDFj_ueH8_2CtWf_4tAX_9IWM_yh1eAQCAQAAAwAA',
+                'Red Moon' => 'v1u._zwcmf_9_f3_ueH8_zEVff8lEGX_GQxA_wDx_QQD0AcA0gcA0wcA',
+                'ball' => 'v1u._wR9Zf_9_f3_ueH8_6Ro6P9QcLT_iWTE_wDx_QQFBQAABgAABwAA0AcA4AcA',
+                'prototype' => 'v1u.__3RWf8AAAD_ueH8__1Z_f9ZjP3_QHQZ__0MAAQCuAsAuQsA',
                 'New Ciolor' => 'v1u._-R9GP8NDJn_ueH8_8CxAf8F3JT_iSyU_3ip7AQCugsAuwsA',
-                'v2u._628_P_98K3_JDVZ_wBF_f-kcQD_xa39_wDx_f-t5f3_xa39_wAAAAQAAggAAIkTAA',
+                'brown' => 'v2u._628_P_98K3_JDVZ_wBF_f-kcQD_xa39_wDx_f-t5f3_xa39_wAAAAQAAggAAIkTAA',
                 'Lime' => 'v2u._yyVWf8ApAD_ueH8_13xhP_8Can_hCAh_wDx_f9d8YT_hCAh_wAAAAQAArwLAIoTAA',
                 'Red' => 'v1u._1xtHP9sVR3_ueH8_xkQ5P_s2Uz_uWWg_wDx_QQCugsAvAsA',
                 'Peasant' => 'v2u._wR9Zf8EfWX_ueH8_6Ro6P9QcLT_iWTE_wDx_f-kaOj_iWTE_wAAAAQAAggAAIsTAA',
+                'cruft' => 'v2u._3VN1f8szeD_ueH8__GYTP_obVT_MDm9_zgYzP_xmEz_PDw8_wAAAAQAAgkAAIwTAA',
         ); // f4e0f0; 78bdf8
-        $output = [];
+        $output = array();
         foreach ($array as $name => $href) {
-            $output[] = "<div class=store-div><div CLASS=padding><a href=\"$href\">$name</a></div>" .
-                    "<a href=\"$href\"><img src=\"endpoint.svg.php?dna=$href\" class=store-img width" .
-                    "=800 height=1280 alt=\"clothing option &quot;$name&quot;\" loading=lazy></a></div>";
+            if ($pfpMode) $href = "$href?pfpmode=1";
+            $output[] = "<div class=store-div><div CLASS=padding><a href=$href>$name" .
+                    "</a></div><a href=$href><img src=img/$href alt=\"clothing option" .
+                    " &quot;$name&quot;\" loading=lazy class=store-img $size></a></div>";
         }
         return "\n" . implode("", $output);
     })() . "\n" ?></div>

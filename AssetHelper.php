@@ -143,6 +143,15 @@ class AssetHelper
         return $this->dirByte & (1 << 4);
     }
 
+    public function setPFPMode(bool $enabled): void
+    {
+        if ($enabled) {
+            $this->dirByte |= +(1 << 4);
+        } else {
+            $this->dirByte &= ~(1 << 4);
+        }
+    }
+
     public function getOpaque(): bool
     {
         return $this->dirByte & (1 << 3);
