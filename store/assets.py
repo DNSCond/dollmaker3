@@ -35,8 +35,11 @@ def main():
                     array[path.parent.parent.name][path.parent.name]['Front'] = fn
                 case '-Back.svg.php':
                     array[path.parent.parent.name][path.parent.name]['Back'] = fn
+    new = dict()
+    for key in sorted(array.keys(), key=int):
+        new[key]=array[key]
     with open('../assetdata/.assets.json', 'wt', encoding='utf8') as file:
-        file.write(json.dumps(dict(d=array)))
+        file.write(json.dumps(dict(d=new), sort_keys=False))
     pass
 
 
