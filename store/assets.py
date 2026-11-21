@@ -4,7 +4,8 @@ from glob import glob
 
 def main():
     array = dict()
-    shutil.rmtree('../assetdata')
+    if pathlib.Path('../assetdata').exists():
+        shutil.rmtree('../assetdata')
     pathlib.Path('../assetdata').mkdir(exist_ok=True, parents=True)
     for i in glob('./assets/*/*/meta.json'):
         path = pathlib.Path(i)
