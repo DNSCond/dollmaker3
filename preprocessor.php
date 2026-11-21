@@ -33,9 +33,10 @@ if (array_key_exists('canonical_redir_path', $GLOBALS)) {
 
 $fullDirection = '';
 $GLOBALS['canonicalized_serialized'] = "$v$canonicalized_dnastring";
-$direction = $canonicalized->getDirection();
-$colors = $canonicalized->getComputedColors();
+$directionName = $canonicalized->getDirectionName();
 $GLOBALS['assets-'] = $canonicalized->getAssets();
+$colors = $canonicalized->getComputedColors();
+$direction = $canonicalized->getDirection();
 $pfpMode = $canonicalized->getPFPMode();
 $opaque = $canonicalized->getOpaque();
 

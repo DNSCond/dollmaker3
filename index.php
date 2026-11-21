@@ -11,8 +11,7 @@ function htmlspecialchars12(string $value): string
 
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/';
 require_once "preprocessor.php";
-global $colors, $assetdata;
-
+global $colors, $assetdata, $opaque, $pfpMode, $colorList, $directionName;
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
 create_head3($title = 'Character Customizer', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
@@ -21,7 +20,6 @@ create_head3($title = 'Character Customizer', [
         'base' => '/dollmaker3/',
 ]);
 $GLOBALS['inherited'] = true;
-global $opaque, $pfpMode, $colorList;
 $isopaque = $opaque ? 'checked' : 'data-checked';
 $pfpEnabled = $pfpMode ? 'checked' : 'data-check';
 if ($pfpMode) {
@@ -65,20 +63,39 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
                 $color = $colorsPull[$name];
                 $result .= "\n<tr><td><label for=color-$name>$name:</label><td>";
                 if ($type === 'select') $result .= preselectedcolors($name, $color); else {
-                    $result .= "<input name=$name id=color-$name value=\"$color\" size=7 type" .
-                            "=$type required pattern=^#[a-f0-9]{6}$ pattern=^#[a-f0-9A-F]{6}$>";
+                    $result .= "<input name=$name id=color-$name value=\"$color\"" .
+                            " size=7 type=$type required pattern=^#[a-f0-9]{6}$>";
                 }
                 $result .= "<td class=bg data-ori=$color><span>$color</span>";
                 if ($name === 'skin') $index++; else {
                     RGBToRGBA32($view, hexdec(trim($color, '#')) ^ 0xffFFff, $index++ * 4);
                 }
             }
+            $result .= (function () use ($directionName) {
+                $result = '';
+                foreach (['Front', 'Back', 'Right', 'Left'] as $z) {
+                    $checked = $z === "{$directionName['hori']}{$directionName['verti']}" ? 'Checked' : '';
+                    if ("$z" !== 'Front') $checked .= "\x20disabled";
+                    $result .= "<TR><TD><label for=dir-$z>$z: <TD><input name=direction type=radio" .
+                            " $checked value=$z id=dir-$z></label><TD>" . ($checked ?: 'Unchecked');
+                }
+                foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) {
+                    $checked = "$y-$x" === "{$directionName['hori']}-{$directionName['verti']}" ? 'checked' : '';
+                    if ("$y-$x" !== 'Front-Right') $checked .= "\x20disabled";
+                    $result .= "<TR><TD><label for=dir-$y-$x>$y-$x: <TD><input name=direction type=radio" .
+                            " $checked value=$y-$x id=dir-$y-$x></label><TD>" . ($checked ?: 'Unchecked');
+                }
+                return "$result";
+            })();
             echo "$thead<tbody>$result</tbody><tfoot><tr><td><label for=opaque>opaque</label><td><input name" .
                     "=opaque type=checkbox $isopaque id=opaque><td>" . ($isopaque === 'checked' ? 'On' : 'Off') .
                     "<tr><td><label for=pfpMode>Profile Image Mode</label><td><input name=pfpMode $pfpEnabled" .
                     " id=pfpMode type=checkbox><TD>" . ($pfpEnabled === 'checked' ? 'On' : 'Off') . '<tr><td ' .
                     "colspan=3><button type=submit>apply colors</button></table><div class=inline-block><button " .
-                    " type=button class=convertpng>Convert to PNG</button>, <a>Invert Colors</a></div>" ?></div>
+                    " type=button class=convertpng>Convert to PNG</button>, <a>Invert Colors</a></div>";
+            $mapped = array_map(fn($mapped) => +$mapped['id'], $GLOBALS['assets-']);
+            foreach ($mapped as $id) if (in_array($id, $mapped))
+                echo "<input type=hidden value=$id name=assets[]>" ?></div>
         <DETAILS class=presel><?= "<summary>Preselectable Colors</summary><h2>Preselectable Colors</h2>";
             global $preselectedcolors;
             foreach ($preselectedcolors as $outer => $colorsArray) {
@@ -90,28 +107,18 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
                     echo "<color-block color=$val>$innerHTML</template>&quot;$key&quot; $val;</color-block>";
                 }
             } ?></DETAILS>
-        <div hidden><?= (function () {
-                $result = '';
-                foreach (['Front', 'Back', 'Right', 'Left'] as $z)
-                    $result .= "<div><label for=$z>$z:n<input type=radio name=direction value=$z id=$z></label></div>";
-                foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) $result .= "<div><label for=dir-"
-                        . "$y-$x>$y-$x:<input type=radio name=direction value=$y-$x id=dir-$y-$x></label></div>";
-                return $result;
-            })();
-            $mapped = array_map(fn($mapped) => +$mapped['id'], $GLOBALS['assets-']);
-            foreach ($mapped as $id) if (in_array($id, $mapped))
-                echo "<input type=hidden value=$id name=assets[]>" ?></div>
     </form>
 </div>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
 <form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
     $afterColors = (ColorConstantIndex * 4);
-    global $assetOptions;
+    global $assetOptions, $direction;
     if ($pfpMode) echo "<input type=hidden value=on name=pfpMode>";
     foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
     echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
     foreach ($assetdata['d'] as $key => $item) {
-        $item = $item['f-']['data'];
+        if (!array_key_exists($direction, $item)) continue;
+        $item = $item[$direction]['data'];
         if (!is_array($item)) continue;
         if (array_key_exists('private', $item) && $item['private']) continue;
         if (!preg_match('/^(\\d+)/', $key, $matches)) continue;
@@ -119,11 +126,8 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
         $view = new AssetHelper($GLOBALS['canonicalized_dnastring'], 2);
         $view->clearAssets();
         $view->addAsset(+$matches[1], 0);
-
-        if (array_key_exists('baseBody', $item)) {
+        if (array_key_exists('baseBody', $item))
             $view->addAsset(+$item['baseBody'], 0);
-        }
-
         if (array_key_exists('cost', $item)) $cost = match ($item['cost']) {
             false => 'Off Sale',
             true => 'default',
@@ -171,7 +175,6 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
             echo '<TABLE CLASS=mt><THEAD><TR><TH SCOPE=col>Item Name<TH SCOPE=col>Item Price<tBODY>';
         } else echo "<p>No Checkout Needed.";
         $assetCheckout = array();
-        global $direction;
         $assetCheckoutTotal = 0;
         foreach ($GLOBALS['assets-'] as $asset) {
             $antiNull = str_pad("{$asset['id']}", 4, '0', STR_PAD_LEFT);
@@ -192,8 +195,9 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
         if ($count) echo "<tFoot><TR><TH COLSPAN=1 SCOPE=row>Total<TD>$assetCheckoutTotal Units</TABLE>" ?></DETAILS>
 </DIV>
 <SCRIPT type=application/json is=output-script><?= json_encode([
-            '$colors' => $colors, 'direction' => ['horizontal' => $GLOBALS['x'], 'vertical' => $GLOBALS['y']],
-            'currentlyEquipped' => $assetCheckout, 'assetCheckoutTotal' => $assetCheckoutTotal,
+            'colors' => $colors, 'directionName' => $directionName,
+            'assetCheckoutTotal' => $assetCheckoutTotal,
+            'currentlyEquipped' => $assetCheckout,
     ], JSON_INVALID_UTF8_SUBSTITUTE) ?></SCRIPT>
 <div class=divs><?= "<h2 class='store-header preset-h2'>Presets</h2>" . (function () use ($pfpMode, $size) {
         $array = array(

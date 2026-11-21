@@ -6,7 +6,7 @@ def main():
     array = dict()
     shutil.rmtree('../assetdata')
     pathlib.Path('../assetdata').mkdir(exist_ok=True, parents=True)
-    for i in glob('./assets/*/f-/meta.json'):
+    for i in glob('./assets/*/*/meta.json'):
         path = pathlib.Path(i)
         array[path.parent.parent.name] = array.get(path.parent.parent.name, dict())
         array[path.parent.parent.name][path.parent.name] = array[path.parent.parent.name].get(path.parent.name, dict())
@@ -23,7 +23,7 @@ def main():
                 with open(pathlib.Path('../assetdata') / fn, 'wt', encoding='utf8') as out:
                     doc_root = "$_SERVER['DOCUMENT_ROOT']"
                     out.write('<?= "<!-- Dev Mode Enabled -->";')
-                    out.write(f'\x20require_once\"{{{doc_root}}}/dollmaker3/store/assets/')
+                    out.write(f'\x20require_once\x20\"{{{doc_root}}}/dollmaker3/store/assets/')
                     out.write(f"{path.parent.parent.name}/{path.parent.name}/{src_path.name}\";")
             else:
                 copyfile(src_path, pathlib.Path('../assetdata') / fn)

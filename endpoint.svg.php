@@ -113,6 +113,11 @@ if ($pfpMode) {
             return in_array($id, $assetsEquipped);
         }
 
+        function multiplyString(float $with, string $string): string
+        {
+            return preg_replace_callback('/\\d+/', fn(array $matches) => (+$matches[0]) * $with, $string);
+        }
+
         global $xoffset;
         $Favicar_offsetY = 0;
         $Favicar_multiplySize = 16;

@@ -67,8 +67,6 @@ class AssetHelper
             'fr' => 'f-',
         };
         return $direction;
-        //$y = match ($direction[0]) {'f' => 'Front', 'b' => 'Back', default => '-'};
-        //$x = match ($direction[1]) {'r' => 'Right', 'l' => 'Left', default => '-'};
     }
 
     public function canonicalize(): array
@@ -126,6 +124,22 @@ class AssetHelper
     public function getDirByte(): int
     {
         return $this->dirByte;
+    }
+
+    public function getDirectionName(): array
+    {
+        $direction = $this->getDirection();
+        $y = match ($direction[0]) {
+            'f' => 'Front',
+            'b' => 'Back',
+            default => null,
+        };
+        $x = match ($direction[1]) {
+            'r' => 'Right',
+            'l' => 'Left',
+            default => null,
+        };
+        return ['hori' => $y, 'verti' => $x, 'both' => $direction];
     }
 
     public function getAssetCount(): int

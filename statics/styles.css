@@ -15,10 +15,6 @@ img#main-svg {
     flex-wrap: wrap;
 }
 
-html, input[type=text] {
-    font-family: monospace;
-}
-
 /* */
 h2.store-header {
     margin-top: 0.5em;
