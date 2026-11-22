@@ -6,15 +6,15 @@ const ColorConstantIndex = 10;
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
-if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) . '$/D', implode(';',
-        array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
-            $colorList)) . ';', $matches)) {
+if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) . '$/D', implode(
+        ';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
+        $colorList)) . ';', $matches)) {
     $afterColors = (ColorConstantIndex * 4); // 28 bytes
 
     // 1. Gather and sanitize incoming assets from POST
     $max = 50;
     $count = 0;
-    $validAssets = [];
+    $validAssets = array();
     if (array_key_exists('assets', $_POST) && is_array($_POST['assets'])) {
         foreach ($_POST['assets'] as $assetId) {
             // Ensure it's a valid number fitting within uint16 (0 - 65535)
@@ -30,7 +30,7 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) .
 
     // 2. Calculate exact buffer size dynamically
     // 28 bytes (colors) + 1 byte (flags) + 1 byte (asset count) + (3 bytes per asset)
-    $totalBytes = $afterColors + 2 + (count($validAssets) * 3);
+    $totalBytes = $afterColors + 2 + 1 + (count($validAssets) * 3);
     $result = new BinaryView($totalBytes);
 
     // 3. Write Colors (Bytes 0 to 27)

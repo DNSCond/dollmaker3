@@ -44,8 +44,7 @@ class AssetHelper
             $value1 = $binaryView->getUint16($offset);
             $offset += 2;
 
-            $value2 = $binaryView->getUint8($offset);
-            $offset += 1;
+            $value2 = $binaryView->getUint8($offset++);
 
             $this->assets[] = ['id' => $value1, 'opt' => $value2];
         }
@@ -139,7 +138,15 @@ class AssetHelper
             'l' => 'Left',
             default => null,
         };
-        return ['hori' => $y, 'verti' => $x, 'both' => $direction];
+        if (is_string($y) && is_string($x)) {
+            $name = "$y-$x";
+        } elseif (is_string($y) && is_null($x)) {
+            $name = $y;
+        } elseif (is_null($y) && is_string($x)) {
+            $name = $x;
+        } else $name = 'Front'; // default
+
+        return ['hori' => $y, 'verti' => $x, 'both' => $direction, 'name' => $name];
     }
 
     public function getAssetCount(): int
@@ -150,6 +157,13 @@ class AssetHelper
     public function getAssets(): array
     {
         return $this->assets;
+    }
+
+    public function getAssociativeAssets(): array
+    {
+        $result = array();
+        foreach ($this->assets as $asset) $result[$asset['id']] = $asset['opt'];
+        return $result;
     }
 
     public function getPFPMode(): bool

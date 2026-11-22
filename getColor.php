@@ -31,7 +31,7 @@ function colorIntToString(?int $color): ?string
     return '#' . str_pad(dechex($color), 6, '0', STR_PAD_LEFT);
 }
 
-$colors=$default_colors = [
+$colors = $default_colors = [
     'body' => '#00a8f3',
     'secondary' => '#8cfffa',
     'skin' => '#fee1b9',
@@ -50,8 +50,7 @@ function completeColorArray(array $array): array
     global $default_colors;
     if (!array_key_exists('hair', $array))
         $array['hair'] = getThisOrThat($array, 'eyes', $default_colors['eyes']);
-    if (!array_key_exists('bottom', $array))
-        $array['bottom'] = getThisOrThat($array, 'shoes', $default_colors['shoes']);
+    if (!array_key_exists('bottom', $array)) $array['bottom'] = '#001620';
     if (!array_key_exists('placeholder', $array)) $array['placeholder'] = '#000000';
     return $array;
 }

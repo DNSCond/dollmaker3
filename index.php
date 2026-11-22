@@ -110,9 +110,11 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
     </form>
 </div>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
-<form class=divs method=post action=oninput.php><?= "<H2>Store</H2>";
+<form class=divs method=post action=oninput.php><?= "<H2 id=store>Store</H2>";
     $afterColors = (ColorConstantIndex * 4);
-    global $assetOptions, $direction;
+    global $direction, $assetHelper;
+    $assetOptions = $assetHelper->getAssociativeAssets();
+    echo "<input type=hidden value='{$directionName['name']}' name=direction>";
     if ($pfpMode) echo "<input type=hidden value=on name=pfpMode>";
     foreach ($colors as $name => $color) echo "<input type=hidden value=$color name=$name>";
     echo "\n<div class=marginal><button type=submit>apply preview</button></div>";
@@ -144,9 +146,9 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
                 "<div><label for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\"" .
                 " $size class=store-img loading=lazy></label></div><dl class=descLi><div" .
                 " data-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>" .
-                "$matches[1]</div></dl>\x3c!--<div class=options>";
-        $options = 0;//$assetOptions[$integerid];
-        /*for ($i = 0; $i < 3; $i++) {
+                "$matches[1]</div></dl><div class=options>";
+        $options = $assetOptions[$integerid];
+        for ($i = 0; $i < 3; $i++) {
             $nullOption = false;
             $enabled = isPresent($item, ['options', "$i"]);
             if ($enabled && !is_string($item['options'][$i])) {
@@ -156,14 +158,12 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
             $disabled = !$enabled ? 'disabled' : '';
             $checked = $options & 1 << $i ? 'checked' : '';
             echo "<div><label><input type=checkbox name={$inputname}_$i $checked $disabled>\x20";
-            if ($nullOption) {
-                echo "Unusable\x20" . ($i + 1);
-            } elseif ($enabled) {
+            if ($nullOption) echo "Unusable\x20" . ($i + 1); elseif ($enabled) {
                 echo htmlspecialchars12("{$item['options'][$i]}");
             } else echo "Unknown\x20" . ($i + 1);
             echo "</label></div>";
-        }*/
-        echo "</div>--></character-display>";
+        }
+        echo "</div></character-display>";
     }
     global $dirByte;
     echo "\n<div class=marginal2><button type=submit>apply preview</button></div>" ?></form>

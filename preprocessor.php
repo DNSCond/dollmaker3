@@ -38,6 +38,7 @@ $GLOBALS['assets-'] = $canonicalized->getAssets();
 $colors = $canonicalized->getComputedColors();
 $direction = $canonicalized->getDirection();
 $pfpMode = $canonicalized->getPFPMode();
+//$assetHelper->getAssociativeAssets();
 $opaque = $canonicalized->getOpaque();
 
 //if (array_key_exists('isFor', $GLOBALS)) {
