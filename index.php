@@ -102,8 +102,8 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
                 echo '<h3>' . htmlspecialchars12($outer) . '</h3>';
                 foreach ($colorsArray as $key => $val) {
                     /** @noinspection CssUnresolvedCustomProperty */
-                    $innerHTML = "<template shadowrootmode=open><link rel=stylesheet href=colors/inner.css>" .
-                            "<div class=outer data-val=$val><span class=inner><slot></slot></span></div>";
+                    $innerHTML = "<template shadowrootmode=open><link rel=stylesheet href=colors/inner.css>"
+                            . "<div class=outer  data-val=$val><span class=inner><slot></slot></span></div>";
                     echo "<color-block color=$val>$innerHTML</template>&quot;$key&quot; $val;</color-block>";
                 }
             } ?></DETAILS>
@@ -226,8 +226,8 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
         foreach ($array as $name => $href) {
             if ($pfpMode) $href = "$href?pfpmode=1";
             $output[] = "<div class=store-div><div CLASS=padding><a href=$href>$name" .
-                    "</a></div><a href=$href><img src=img/$href alt=\"clothing option" .
-                    " &quot;$name&quot;\" loading=lazy class=store-img $size></a></div>";
+                    "</a></div><a href=$href><img src=img/$href alt=\"clothing option " .
+                    "&quot;$name&quot;\" loading=lazy class=store-img $size></a></div>";
         }
         return "\n" . implode("", $output);
     })() . "\n" ?></div>
