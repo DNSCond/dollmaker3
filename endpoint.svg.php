@@ -2,12 +2,12 @@
 
 $GLOBALS['canonical_redir_path'] = '/dollmaker3/endpoint.svg.php?dna=';
 $GLOBALS['isFor'] = 'svgDisplay';
-require_once "preprocessor.php";
 require_once 'PathSVG.php';
 $inherited = array_key_exists('inherited', $GLOBALS) && $GLOBALS['inherited'];
 if (!$inherited) {
     header('content-type: image/svg+xml');
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    require_once "preprocessor.php";
 }
 ob_start(function (string $string): string {
     $string = preg_replace('/\\s+/', " ", $string);
@@ -69,7 +69,9 @@ if ($pfpMode) {
     $h = 1280;
     $xoffset = 0;
 } ?>
-<svg width="<?= $w ?>" height="<?= $h ?>" viewBox="<?= "$xoffset $yoffset $w $h" ?>" xmlns="http://www.w3.org/2000/svg">
+<svg width="<?= $w ?>" height="<?= $h ?>"
+     viewBox="<?= "$xoffset $yoffset $w $h" ?>"
+     xmlns="http://www.w3.org/2000/svg" id='main-svg'>
     <g class="background outer"><?= '<!-- PHPY -->';
         ob_start(fn(string $string): string => str_replace(
                 "\x3cg", "\x3cg class='background inner'",

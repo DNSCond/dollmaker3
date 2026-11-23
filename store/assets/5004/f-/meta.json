@@ -1,5 +1,9 @@
 {
   "name": "New Phase Body 5",
   "cost": true,
-  "baseBody": 9
+  "baseBody": 9,
+  "dev-mode": true,
+  "options": [
+    "animated"
+  ]
 }

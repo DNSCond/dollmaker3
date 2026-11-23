@@ -37,11 +37,18 @@ function var_string(...$vars): false|string
 }
 
 $size = "width=$w height=$h";
-$mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
+$mainSize = $size . ($pfpMode ? "\x20class=size512" : '') ?>
 <div class=divs>
     <h1><a href=?><?= $title ?></a></h1>
     <form method=post action=oninput.php>
-        <div><?= "<img src=img/{$GLOBALS['canonicalized_serialized']} $mainSize alt='the result'>";
+        <div><?= (function () use ($size) {
+                ob_start();
+                $s = "id='main-svg'";
+                require_once './endpoint.svg.php';
+                $r = "id=main-svg\x20class=size512";
+                $return = str_replace($s, $r, ob_get_clean());
+                return trim(preg_replace('/\\s+/', "\x20", $return));
+            })();//"<img src=img/{$GLOBALS['canonicalized_serialized']} $mainSize id=main-svg alt='the result'>";
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
             $index = 0;
@@ -61,7 +68,7 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
             $colorsPull = completeColorArray($colors);
             foreach ($colorDisplayList as $name) {
                 $color = $colorsPull[$name];
-                $result .= "\n<tr><td><label for=color-$name>$name:</label><td>";
+                $result .= "<tr><td><label for=color-$name>$name: </label><td>";
                 if ($type === 'select') $result .= preselectedcolors($name, $color); else {
                     $result .= "<input name=$name id=color-$name value=\"$color\"" .
                             " size=7 type=$type required pattern=^#[a-f0-9]{6}$>";
@@ -76,14 +83,14 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') . "\x20id=main-svg" ?>
                 foreach (['Front', 'Back', 'Right', 'Left'] as $z) {
                     $checked = $z === "{$directionName['hori']}{$directionName['verti']}" ? 'Checked' : '';
                     if ("$z" !== 'Front') $checked .= "\x20disabled";
-                    $result .= "<TR><TD><label for=dir-$z>$z: <TD><input name=direction type=radio" .
-                            " $checked value=$z id=dir-$z></label><TD>" . ($checked ?: 'Unchecked');
+                    $result .= "<TR><TD><label for=dir-$z>$z: </label><TD><input name=direction type" .
+                            "=radio $checked value=$z id=dir-$z><TD>" . ($checked ?: 'Unchecked');
                 }
                 foreach (['Right', 'Left'] as $x) foreach (['Front', 'Back'] as $y) {
                     $checked = "$y-$x" === "{$directionName['hori']}-{$directionName['verti']}" ? 'checked' : '';
                     if ("$y-$x" !== 'Front-Right') $checked .= "\x20disabled";
-                    $result .= "<TR><TD><label for=dir-$y-$x>$y-$x: <TD><input name=direction type=radio" .
-                            " $checked value=$y-$x id=dir-$y-$x></label><TD>" . ($checked ?: 'Unchecked');
+                    $result .= "<TR><TD><label for=dir-$y-$x>$y-$x: </label><TD><input type=radio name" .
+                            "=direction $checked value=$y-$x id=dir-$y-$x><TD>" . ($checked ?: 'Unchecked');
                 }
                 return "$result";
             })();
