@@ -1,5 +1,6 @@
 {
   "name": "Hair style 5",
   "cost": 50,
-  "options": []
+  "options": [],
+  "BaseBodyName": "new-phase"
 }

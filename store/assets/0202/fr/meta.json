@@ -1,5 +1,6 @@
 {
   "name": "Square Sideways",
   "cost": 550,
-  "options": []
+  "options": [],
+  "BaseBodyName": "favicond"
 }

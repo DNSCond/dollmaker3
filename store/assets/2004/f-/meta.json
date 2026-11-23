@@ -1,5 +1,6 @@
 {
   "name": "Sunstone",
   "cost": 75,
-  "baseBody": 2000
+  "baseBody": 2000,
+  "BaseBodyName": "legacy-one"
 }

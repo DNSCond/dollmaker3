@@ -68,7 +68,15 @@ if ($pfpMode) {
     $w = 800;
     $h = 1280;
     $xoffset = 0;
-} ?>
+}
+
+//Favicar
+$Favicar_offsetY = 0;
+$Favicar_multiplySize = 16;
+$Favicar_offsetX = $xoffset;
+$GLOBALS['Fv_offsetY'] = 0;
+$GLOBALS['Fv_multiplySize'] = 16;
+$GLOBALS['Fv_offsetX'] = $xoffset ?>
 <svg width="<?= $w ?>" height="<?= $h ?>"
      viewBox="<?= "$xoffset $yoffset $w $h" ?>"
      xmlns="http://www.w3.org/2000/svg" id='main-svg'>
@@ -108,11 +116,10 @@ if ($pfpMode) {
         }
 
         // required in assets
-        $assetsEquipped = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
+        $GLOBALS['assetsEquipped'] = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
         function hasEquipped(int $id): bool
         {
-            global $assetsEquipped;
-            return in_array($id, $assetsEquipped);
+            return in_array($id, $GLOBALS['assetsEquipped']);
         }
 
         function multiplyString(float $with, string $string): string
@@ -120,10 +127,6 @@ if ($pfpMode) {
             return preg_replace_callback('/\\d+/', fn(array $matches) => (+$matches[0]) * $with, $string);
         }
 
-        global $xoffset;
-        $Favicar_offsetY = 0;
-        $Favicar_multiplySize = 16;
-        $Favicar_offsetX = $xoffset;
         foreach ($back_s as $asset) createAsset($asset, 'Back');
         foreach ($normal as $asset) createAsset($asset, '');
         foreach ($fronts as $asset) createAsset($asset, 'Front') ?></g>

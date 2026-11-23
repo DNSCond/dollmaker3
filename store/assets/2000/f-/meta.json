@@ -4,5 +4,6 @@
   "baseBody": 2000,
   "options": [
     "Other Body"
-  ]
+  ],
+  "BaseBodyName": "legacy-one"
 }

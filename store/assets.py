@@ -1,4 +1,4 @@
-import json, shutil, pathlib, re
+import json, shutil, pathlib
 from glob import glob
 
 
@@ -36,11 +36,36 @@ def main():
                 case '-Back.svg.php':
                     array[path.parent.parent.name][path.parent.name]['Back'] = fn
     new = dict()
-    for key in sorted(array.keys(), key=int):
-        new[key]=array[key]
+    listing = set()
+    for key, value in sorted(array.items(), key=sorter):
+        new[key] = array[key]
+        if bodyname := array[key].get('f-', dict()).get('data', dict()).get('BaseBodyName'):
+            listing.add(bodyname)
+    listing.remove('new-phase')
+    listing = ['new-phase'] + sorted(listing)
+    jsonic = dict(d=new, bodynames=listing, redirects=dict())
+    for i in glob('./assets/*/meta.json'):
+        with open(i, 'rt', encoding='utf8') as file:
+            data = json.loads(file.read())
+        if redirects := data.get('redirect'):
+            jsonic['redirects'][pathlib.Path(i).parent.name] = redirects
     with open('../assetdata/.assets.json', 'wt', encoding='utf8') as file:
-        file.write(json.dumps(dict(d=new), sort_keys=False))
+        file.write(json.dumps(jsonic, sort_keys=False))
     pass
+
+
+def sorter(v):
+    bodyname = v[1].get('f-', dict()).get('data', dict()).get('BaseBodyName')
+    integer = int(v[0])
+
+    # 'new-phase' still goes first
+    is_not_new_phase = -1 if bodyname == 'new-phase' else 0
+    to_last = 1 if bodyname is None else 0
+
+    # Fallback None to an empty string so Python doesn't throw a TypeError
+    sort_bodyname = bodyname if bodyname is not None else ""
+
+    return is_not_new_phase, to_last, sort_bodyname, integer
 
 
 def copyfile(src_path, out_path):
@@ -50,5 +75,6 @@ def copyfile(src_path, out_path):
 
 
 if __name__ == '__main__':
-    main(); input('enter to exit:')
+    main()
+    input('enter to exit:')
 pass

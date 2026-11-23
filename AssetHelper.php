@@ -80,8 +80,17 @@ class AssetHelper
             $assetOpt = $this->assets[$i]['opt'];
             if (array_key_exists($assetId, $matchedAssets)) continue;
             $assetIdStr = str_pad($assetId, 4, '0', STR_PAD_LEFT);
+            if (isPresent($assetdata, ['redirects', $assetIdStr])) {
+                foreach ($assetdata['redirects'][$assetIdStr] as $assetIdNew) {
+                    if (array_key_exists($assetIdNew, $matchedAssets)) continue;
+                    $new[] = array('id' => $assetIdNew, 'opt' => 0);
+                    $matchedAssets[$assetIdNew] = true;
+                }
+                continue;
+            }
             if (!isPresent($assetdata, ['d', $assetIdStr, $direction])) continue;
             $new[] = array('id' => $assetId, 'opt' => $assetOpt);
+            $matchedAssets[$assetId] = true;
         }
         $canonicalColorIndex = 0;
         $assetCount = count($new);

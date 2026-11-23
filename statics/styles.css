@@ -1,8 +1,7 @@
 /* img#main-svg  */
 #main-svg {
-    vertical-align: top;
-    /*border: 10px solid #ae782f;*/
     max-height: 700px;
+    vertical-align: top;
     max-width: calc(100% - 20px);
     box-sizing: content-box;
     display: inline-block;
@@ -18,9 +17,9 @@
 /* */
 h2.store-header {
     margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.5rem;
     border-top: 2px solid gray;
-    padding: 0.5em 0.5em 0;
+    padding: 0.5rem 0.5rem 0;
 }
 
 .head.alternate {
@@ -31,7 +30,7 @@ h2.store-header {
 .store-div {
     border: 2px solid gray;
     display: inline-block;
-    margin: 1em 0 0 1em;
+    margin: 1rem 0 0 1rem;
 }
 
 .store-img {
@@ -90,6 +89,11 @@ div.divs.nav-home {
 
 h1 {
     margin-top: 0;
+
+    &.index {
+        margin-left: 1rem;
+        margin-bottom: 0;
+    }
 }
 
 .inline-table {
@@ -105,19 +109,19 @@ h1 {
 }
 
 .marginal {
-    margin: 1em 0 0 1em;
+    margin: 1rem 0 0 1rem;
 }
 
 .marginal2 {
-    margin: 1em 0 1em 1em;
+    margin: 1rem 0 1rem 1rem;
 }
 
 .mt {
-    margin-top: 1em;
+    margin-top: 1rem;
 }
 
 .padding {
-    padding: 0.5em;
+    padding: 0.5rem;
 }
 
 [data-ori] {
@@ -133,7 +137,36 @@ h2.preset-h2 {
 }
 
 .presel {
-    padding: 0.5em 0 0.5em 0.5em;
+    padding: 0.5rem 0 0.5rem 0.5rem;
     border: 2px solid gray;
     border-top: none;
+}
+
+character-display {
+    border: 2px solid gray;
+    display: inline-block;
+    margin: 1em 0 0 1em;
+
+    dl.descLi {
+        border-bottom: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    input {
+        vertical-align: middle;
+    }
+
+    .options {
+        border-top: 2px solid gray;
+        padding: 1ch;
+    }
+}
+
+
+character-display .store-img {
+    width: 200px;
+    height: auto;
+    border-top: 2px solid grey;
+    display: block;
 }

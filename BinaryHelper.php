@@ -30,7 +30,7 @@ class BinaryView
         $currentLength = strlen($this->string);
 
         if ($to > $currentLength) {
-            $this->string = str_pad($this->string, $to, "\x00");
+            $this->string = str_pad($this->string, $to, "\0");
         } else {
             $this->string = substr($this->string, 0, $to);
         }

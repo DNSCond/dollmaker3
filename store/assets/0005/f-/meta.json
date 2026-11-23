@@ -1,5 +1,6 @@
 {
   "name": "Wings",
   "cost": 50,
-  "baseBody": 1
+  "baseBody": 1,
+  "BaseBodyName": "legacy-one"
 }

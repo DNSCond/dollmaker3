@@ -1,11 +1,16 @@
 <?php use DataViewed\BinaryView;
 use function DataViewed\RGBToRGBA32;
 
+$bodyType = null;
 global $colorList;
 const ColorConstantIndex = 10;
 require_once "BinaryHelper.php";
 require_once "getColor.php";
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
+if (array_key_exists('bodyType', $_POST) &&
+    preg_match('/^[a-z\\-]+$/D', $_POST['bodyType'])) {
+    $bodyType = $_POST['bodyType'];
+}
 if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) . '$/D', implode(
         ';', array_map(fn($color) => is_string($_POST[$color]) ? $_POST[$color] : 'Invalid-',
         $colorList)) . ';', $matches)) {
@@ -83,9 +88,15 @@ if (preg_match('/^' . (str_repeat('#?([a-f-A-F0-9]{6});', ColorConstantIndex)) .
         $currentOffset += 3;
     }
 
+    if (is_null($bodyType)) {
+        http_response_code(404);
+        require_once "{$_SERVER['DOCUMENT_ROOT']}/require/404document.php";
+        exit;
+    }
+
     http_response_code(303);
     header("dataview-length:{$result->getLength()}");
-    header("Location: /dollmaker3/v2u.{$result->toBase64URL()}");
+    header("Location: /dollmaker3/_$bodyType/v2u.{$result->toBase64URL()}");
     exit;
 }
 

@@ -1,5 +1,6 @@
 {
   "name": "Simple Pants",
   "cost": 25,
-  "baseBody": 2000
+  "baseBody": 2000,
+  "BaseBodyName": "legacy-one"
 }

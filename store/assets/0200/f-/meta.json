@@ -1,4 +1,5 @@
 {
   "name": "Door Handle",
-  "cost": 0
+  "cost": 0,
+  "BaseBodyName": "door"
 }

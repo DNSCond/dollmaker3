@@ -1,11 +1,10 @@
 <svg><?= '<g stroke-width="0">';
-    global $Favicar_offsetX, $Favicar_offsetY, $Favicar_multiplySize;
 
-    $l32 = $Favicar_multiplySize * 2;
-    $l48 = $Favicar_multiplySize * 3;
-    $earY = $Favicar_multiplySize * 3 + $Favicar_offsetY;
-    $earLeftX = $Favicar_multiplySize * 4 + $Favicar_offsetX;
-    $earRighX = $Favicar_multiplySize * 24 + $Favicar_offsetX;
+    $l32 = $GLOBALS['Fv_multiplySize'] * 2;
+    $l48 = $GLOBALS['Fv_multiplySize'] * 3;
+    $earY = $GLOBALS['Fv_multiplySize'] * 3 + $GLOBALS['Fv_offsetY'];
+    $earLeftX = $GLOBALS['Fv_multiplySize'] * 4 + $GLOBALS['Fv_offsetX'];
+    $earRighX = $GLOBALS['Fv_multiplySize'] * 24 + $GLOBALS['Fv_offsetX'];
     echo "<path d='M $earLeftX $earY l $l32 -$l48 l $l32 $l48' fill='{$GLOBALS['colors']['body']}'/>";
     echo "<path d='M $earRighX $earY l $l32 -$l48 l $l32 $l48' fill='{$GLOBALS['colors']['body']}'/>";
     echo "</g>" ?></svg>

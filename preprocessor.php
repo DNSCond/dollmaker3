@@ -32,6 +32,7 @@ if (array_key_exists('canonical_redir_path', $GLOBALS)) {
 }
 
 $fullDirection = '';
+$GLOBALS['canonicalized_serializedB64U'] = "$canonicalized_dnastring";
 $GLOBALS['canonicalized_serialized'] = "$v$canonicalized_dnastring";
 $directionName = $canonicalized->getDirectionName();
 $GLOBALS['assets-'] = $canonicalized->getAssets();

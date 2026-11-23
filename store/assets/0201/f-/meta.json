@@ -1,5 +1,6 @@
 {
   "name": "Rocket",
   "cost": false,
-  "options": []
+  "options": [],
+  "BaseBodyName": "rocket"
 }

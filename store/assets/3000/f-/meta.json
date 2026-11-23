@@ -1,5 +1,6 @@
 {
   "name": "New Phase Head",
   "cost": true,
-  "options": []
+  "options": [],
+  "BaseBodyName": "new-phase"
 }

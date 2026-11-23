@@ -2,5 +2,5 @@
   "name": "Lightbar",
   "cost": 250,
   "options": [],
-  "baseBody": 202
+  "BaseBodyName": "favicond"
 }

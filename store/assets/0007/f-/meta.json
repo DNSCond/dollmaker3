@@ -1,5 +1,6 @@
 {
   "name": "bow",
   "cost": 25,
-  "baseBody": 1
+  "baseBody": 1,
+  "BaseBodyName": "legacy-one"
 }
