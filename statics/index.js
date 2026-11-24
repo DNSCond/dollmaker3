@@ -1,5 +1,5 @@
 // datadex
-const img = document.querySelector('#main-svg'), a = document.createElement('a');
+const img = document.querySelector('#main-img'), a = document.createElement('a');
 document.querySelector('button[type=button].convertpng').addEventListener('click',
     () => createImageBitmap(img).then(imageBitmap => {
         const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);

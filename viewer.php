@@ -54,7 +54,7 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') ?>
                 $r = "id=main-svg\x20class=size512";
                 $return = str_replace($s, $r, ob_get_clean());
                 return trim(preg_replace('/\\s+/', "\x20", $return));
-            })();//"<img src=img/{$GLOBALS['canonicalized_serialized']} $mainSize id=main-svg alt='the result'>";
+            })();
             $thead = '<table class=inline-table><thead><tr><th scope=col>Description<th' .
                     ' scope=col>Color Selector<th scope=col>Original Selection</thead>';
             $index = 0;
@@ -126,7 +126,10 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') ?>
                             . "<div class=outer  data-val=$val><span class=inner><slot></slot></span></div>";
                     echo "<color-block color=$val>$innerHTML</template>&quot;$key&quot; $val;</color-block>";
                 }
-            } ?></DETAILS>
+            }
+            $c = $GLOBALS['canonicalized_serialized'] ?></DETAILS>
+        <DETAILS class='presel padding-right'><?= "<summary>Big Image</summary>".
+            "<img src=img/$c $size alt='the result' id=main-img>" ?></DETAILS>
     </form>
 </div>
 <SCRIPT type=module src=statics/index.js></SCRIPT>
