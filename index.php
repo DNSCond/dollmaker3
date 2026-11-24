@@ -6,7 +6,10 @@ require_once "{$_SERVER['DOCUMENT_ROOT']}/require/helpers.php";
 $assetdata = readJSON(__DIR__ . '/assetdata/.assets.json');
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
 create_head3($title = 'Pick a Base (Character Customizer)', [
-    'stylelinks' => ['statics/styles.css'], 'base' => '/dollmaker3/',
+    'stylelinks' => ['statics/styles.css'], 'base' => '/dollmaker3/', 'bread' => [
+        array('text' => 'Favicond\'s Character Gallery', 'href' => '/'),
+        array('text' => 'Character Customizer', 'href' => '/dollmaker3/'),
+    ],
 ]);
 $assetHelper = new AssetHelper('__GoAP_4_Yz_ueH8_31YAP9lRAD_QC0A_wDx_QQA', 1)->canonicalize();
 echo "<div class=divs><h1 class=index>$title</h1>";
@@ -58,7 +61,7 @@ echo "</div><div class=divs><h2 class='store-header preset-h2'>Presets</h2>" . (
         $output = array();
         foreach ($array as $name => $href) $output[] = "<div class=store-div><div" .
             " CLASS=padding><a href=$href>$name</a></div><a href=$href><img src" .
-            "=img/$href alt=\"clothing option &quot;$name&quot;\" loading=lazy".
+            "=img/$href alt=\"clothing option &quot;$name&quot;\" loading=lazy" .
             " class=store-img $size></a></div>";
         return "\n" . implode("", $output);
     })() . "</div>";

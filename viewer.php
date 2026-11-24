@@ -24,9 +24,10 @@ global $colors, $assetdata, $opaque, $pfpMode, $colorList, $directionName;
 require_once "{$_SERVER['DOCUMENT_ROOT']}/require/header3/head3.php";
 create_head3($title = 'Character Customizer', [
         'desc' => 'ANTRequest.nl\'s Character Creator, create your ANTRequest.nl\'s Character lookalike here',
-        'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/deg.css'],
-    //'canonical' => "https://antrequest.nl/dollmaker3/{$GLOBALS['canonicalized_serialized']}",
-        'base' => '/dollmaker3/',
+        'stylelinks' => ['statics/styles.css', 'statics/ddDL-table.css', 'statics/deg.css'], 'bread' => [
+                array('text' => 'Favicond\'s Character Gallery', 'href' => '/'),
+                array('text' => 'Character Customizer', 'href' => '/dollmaker3/'),
+        ], 'base' => '/dollmaker3/',
 ]);
 $GLOBALS['inherited'] = true;
 $isopaque = $opaque ? 'checked' : 'data-checked';
@@ -128,7 +129,7 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') ?>
                 }
             }
             $c = $GLOBALS['canonicalized_serialized'] ?></DETAILS>
-        <DETAILS class='presel padding-right'><?= "<summary>Big Image</summary>".
+        <DETAILS class='presel padding-right'><?= "<summary>Big Image</summary>" .
             "<img src=img/$c $size alt='the result' id=main-img>" ?></DETAILS>
     </form>
 </div>
