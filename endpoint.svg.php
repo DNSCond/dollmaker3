@@ -33,7 +33,6 @@ $isTransparent = false;
 if (isset($GLOBALS['CharacterTransparent'])) {
     $isTransparent = $GLOBALS['CharacterTransparent'];
 }
-$isTransparent = !$isTransparent;
 $opacity = 1;
 $stroke = 1;
 //$colors = completeColorArray($colors);
@@ -51,6 +50,12 @@ foreach ($GLOBALS['assets-'] as $asset) {
     if (array_key_exists('fn', $assetObj)) $normal[] = ['asset' => $asset, 'name' => $assetObj['fn']];
     $devMode = $devMode || getThingOrNull($assetObj, ['data', 'dev-mode']);
 }
+
+$GLOBALS['assetsEquipped'] = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
+foreach ($GLOBALS['assetsEquipped'] as $id) {
+    if (+$id >= 24000 && +$id <= 29999) $isTransparent = true;
+}
+
 if ($devMode) {
     header('cache-control: public, max-age=0');
 } else {
@@ -84,7 +89,7 @@ $GLOBALS['Fv_offsetX'] = $xoffset ?>
         ob_start(fn(string $string): string => str_replace(
                 "\x3cg", "\x3cg class='background inner'",
                 str_replace('svg', 'g', $string)));
-        if ($isTransparent) require_once __DIR__ . '/Bg.php';
+        if (!$isTransparent) require_once __DIR__ . '/Bg.php';
         ob_end_flush();
         echo "</g><g stroke-linecap='round' stroke-width='$strokeWidth' stroke='#000000' stroke-linejoin='round'>";
         function createAsset(array $asset, string $type): void
@@ -116,7 +121,6 @@ $GLOBALS['Fv_offsetX'] = $xoffset ?>
         }
 
         // required in assets
-        $GLOBALS['assetsEquipped'] = array_map(fn($asset) => +$asset['id'], $GLOBALS['assets-']);
         function hasEquipped(int $id): bool
         {
             return in_array($id, $GLOBALS['assetsEquipped']);

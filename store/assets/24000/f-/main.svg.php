@@ -1,0 +1,1 @@
+<svg><!--MUST-NT be empty--></svg>

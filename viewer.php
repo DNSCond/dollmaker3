@@ -174,7 +174,7 @@ $mainSize = $size . ($pfpMode ? "\x20class=size512" : '') ?>
                 "<label for=$inputname><img src=\"$img_src\" alt=\"Equip $htmlName\" $size" .
                 " class=store-img loading=lazy></label></div><dl class=descLi><div data" .
                 "-key=cost><dt>cost<dd>$cost</div><div data-key=id><dt>id<dd>$matches[1]" .
-                "</div><div><dt>BodyName<dd>{$item['BaseBodyName']}</div></dl><div class=options>";
+                "</div></dl><div class=options>";//<div><dt>BodyName<dd>{$item['BaseBodyName']}</div>
         $options = $assetOptions[$integerid];
         for ($i = 0; $i < 3; $i++) {
             $nullOption = false;
